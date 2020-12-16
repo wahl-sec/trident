@@ -1,0 +1,14 @@
+image: python:3.8
+
+build trident:
+    stage: build
+    script:
+        - make install
+    artifacts:
+        paths:
+            - dist/*.egg
+
+test trident:
+    stage: test
+    script:
+        - make test

@@ -1,0 +1,15 @@
+# Development Environment
+venv/*
+*__pycache__*
+.pytest_cache/*
+.DS_Store
+.vscode/*
+
+# Build
+build/*
+dist/*
+*.egg*
+*.pyc
+
+# Data Storage
+data/*
