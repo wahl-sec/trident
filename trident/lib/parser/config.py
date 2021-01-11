@@ -6,26 +6,20 @@ Parses and validates the required config file passed to the program.
 @author: Jacob Wahlman
 """
 
+from pathlib import Path
+from configparser import ConfigParser
+
+from typing import Dict
+
 import logging
 logger = logging.getLogger("__main__")
 
-from pathlib import Path
-from configparser import ConfigParser
-from typing import Dict
-
 
 class TridentConfigParser:
-    def __init__(self, config_file_path, config_file_section):
+    def __init__(self, config_file_path: str, config_file_section: str):
         self.args = self._setup_parser(config_file_path, config_file_section)
 
-    @property
-    def valid_config(self) -> bool:
-        if self.config_file_path is None:
-            return False
-
-        return True
-
-    def _setup_parser(self, config_file_path, config_file_section) -> Dict[str, str]:
+    def _setup_parser(self, config_file_path: str, config_file_section: str) -> Dict[str, str]:
         config_file_path_n = self._normalize_config_file_path(config_file_path)
         parser = ConfigParser()
 
@@ -40,7 +34,7 @@ class TridentConfigParser:
 
         return dict(parser[config_file_section])
 
-    def _normalize_config_file_path(self, config_file_path) -> None:
+    def _normalize_config_file_path(self, config_file_path) -> Path:
         try:
             normalized_path = Path(config_file_path)
         except Exception as e:
@@ -49,7 +43,7 @@ class TridentConfigParser:
 
         return normalized_path
 
-    def _verify_config_file_section(self, config_section_args) -> bool:
+    def _verify_config_file_section(self, config_section_args: Dict[str, str]) -> bool:
         for key in ["logging_level"]:
             if key not in config_section_args:
                 logger.warning(f"Couldn't read value from config value with key: '{key}'")

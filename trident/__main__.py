@@ -51,7 +51,10 @@ if __name__ == "__main__":
         exit(1)
 
     try:
-        trident_config_parser = TridentConfigParser(trident_argument_parser.args.config, trident_argument_parser.args.section)
+        trident_config_parser = TridentConfigParser(
+            config_file_path=trident_argument_parser.args.config,
+            config_file_section=trident_argument_parser.args.section
+        )
     except Exception as e:
         logger.fatal(f"Trident config parser failed with unrecoverable error: {e}")
         exit(1)

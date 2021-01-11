@@ -6,20 +6,20 @@ Runs and controls the execution of a valid plugin.
 @author: Jacob Wahlman
 """
 
-import logging
-logger = logging.getLogger("__main__")
-
 from pathlib import Path
 from threading import Event
 from inspect import signature
 from dataclasses import dataclass
 from importlib import import_module
-from typing import NewType, Dict, Union, List, Any
 
-from trident.lib.daemon.data_storage import TridentDataDaemonConfig, TridentDataDaemon
-
+from typing import NewType, Dict, Union, List, Any, NoReturn, Generator, Tuple
 Module = NewType("Module", object)
 PluginClass = NewType("PluginClass", object)
+
+import logging
+logger = logging.getLogger("__main__")
+
+from trident.lib.daemon.data_storage import TridentDataDaemonConfig, TridentDataDaemon
 
 
 @dataclass
@@ -33,7 +33,7 @@ class TridentRunnerConfig:
     dont_store_on_error: bool
     thread_event: Event
 
-    def __init__(self, plugin_path, plugin_args, resource_queues, dont_store_on_error):
+    def __init__(self, plugin_path: str, plugin_args: Dict[str, Any], resource_queues: Dict[str, List[str]], dont_store_on_error: bool):
         self.plugin_path = plugin_path
         self.plugin_args = plugin_args
         self.resource_queues = resource_queues
@@ -47,9 +47,10 @@ class TridentRunnerConfig:
         component_name = components[0].title() if len(components) == 1 else components[-1].title()
         if "_" in component_name:
             return "".join(component_name.split("_"))
+
         return component_name
 
-    def _initialize_runner_config(self) -> (PluginClass, Module):
+    def _initialize_runner_config(self) -> Union[Tuple[PluginClass, Module], None]:
         try:
             plugin_module, plugin_instance = None, None
             plugin_module = import_module(self.plugin_path, package=__package__)
@@ -59,20 +60,20 @@ class TridentRunnerConfig:
 
             return plugin_instance, plugin_module
         except Exception as e:
-            logger.error(f"Failed to initialize plugin: {self.plugin_path} with error: {e}")
+            logger.error(f"Failed to initialize plugin: '{self.plugin_path}' with error: {e}")
             raise e
 
 
 class TridentRunner:
-    def __init__(self, runner_config, runner_id, data_daemon_config):
+    def __init__(self, runner_config: TridentRunnerConfig, runner_id: str, data_daemon_config: TridentDataDaemonConfig):
         self.runner_config = runner_config
         self.runner_id = runner_id
 
         self.data_daemon_config = data_daemon_config
         self.data_daemon = self._initialize_data_daemon()
 
-    def start_runner(self) -> None:
-        logger.info(f"Starting runner: {self.runner_id} ...")
+    def start_runner(self) -> NoReturn:
+        logger.info(f"Starting runner: '{self.runner_id}' ...")
         try:
             # The thread event is used to allow the daemon to stop already started plugins.
             if "thread_event" not in signature(self.runner_config.plugin_instance.execute_plugin).parameters:
@@ -108,12 +109,12 @@ class TridentRunner:
                 store_path=store_path,
                 store_name=self.runner_id
             )
-            return TridentDataDaemon(trident_data_config)
+            return TridentDataDaemon(daemon_config=trident_data_config)
         except Exception as e:
-            logger.error(f"Failed to initialize data daemon for runner: {self.runner_id}")
+            logger.error(f"Failed to initialize data daemon for runner: '{self.runner_id}'")
             raise e
 
-    def _evaluate_result(self, result, result_index) -> None:
+    def _evaluate_result(self, result: Any, result_index: int) -> NoReturn:
         if self.data_daemon is None or self.runner_config.thread_event.is_set():
             return
 
@@ -122,7 +123,7 @@ class TridentRunner:
         except Exception as e:
             raise e
 
-    def _evaluate_plugin(self, generator) -> None:
+    def _evaluate_plugin(self, generator: Generator[Any, Any, Any]) -> NoReturn:
         results_index = 0
         while not self.runner_config.thread_event.is_set():
             try:
