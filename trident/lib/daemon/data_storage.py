@@ -11,7 +11,9 @@ from os import path, rename
 from pathlib import Path
 from dataclasses import dataclass
 from functools import reduce
-from typing import Dict
+
+from typing import Dict, NewType, Any, NoReturn
+TridentRunner = NewType("TridentRunner", None)
 
 import logging
 logger = logging.getLogger("__main__")
@@ -23,12 +25,12 @@ class TridentDataDaemonConfig:
     store_path: Path
     store_name: str
 
-    def __init__(self, runner, store_path, store_name):
+    def __init__(self, runner: TridentRunner, store_path: str, store_name: str):
         self.runner = runner
         self.store_name = store_name
         self.store_path = self._determine_store_path(store_path)
 
-    def _determine_store_path(self, store_path) -> Path:
+    def _determine_store_path(self, store_path: str) -> Path:
         store_path_n = self._normalize_store_path(store_path)
         if path.isfile(store_path_n):
             logger.debug(f"Using existing store path: '{store_path_n}' for runner: '{self.runner.runner_id}'")
@@ -42,7 +44,7 @@ class TridentDataDaemonConfig:
         else:
             raise FileNotFoundError(f"Store path: {store_path_n} does not exist for runner: '{self.runner.runner_id}'")
 
-    def _normalize_store_path(self, store_path) -> Path:
+    def _normalize_store_path(self, store_path: str) -> Path:
         try:
             store_path_n = Path(store_path)
         except Exception as e:
@@ -53,20 +55,20 @@ class TridentDataDaemonConfig:
 
 
 class TridentDataDaemon:
-    def __init__(self, daemon_config):
+    def __init__(self, daemon_config: TridentDataDaemonConfig):
         self.daemon_config = daemon_config
         self.store_data = self._initialize_daemon()
         self.run_index = self._get_run_index()
         logger.debug(f"Trident data daemon initialized for runner: '{self.daemon_config.runner.runner_id}'")
 
-    def store_runner_result(self, result) -> None:
+    def store_runner_result(self, result: Any) -> NoReturn:
         logger.debug(f"Updating store with: '{result}' for runner: '{self.daemon_config.runner.runner_id}'")
         try:
             self._update_store_content(result)
         except Exception as e:
             raise e
 
-    def write_to_store(self) -> None:
+    def write_to_store(self) -> NoReturn:
         logger.debug(f"Writing to store at path: '{self.daemon_config.store_path}'")
         try:
             with open(self.daemon_config.store_path, "r+") as store_obj:
@@ -76,7 +78,7 @@ class TridentDataDaemon:
         except Exception as e:
             logger.error(f"Failed to write to store: '{self.daemon_config.store_path}'")
 
-    def merge_store_data(self) -> None:
+    def merge_store_data(self) -> NoReturn:
         logger.debug(f"Merging store data with existing store at: '{self.daemon_config.store_path}'")
         try:
             def _merge(runner, store):
@@ -95,7 +97,7 @@ class TridentDataDaemon:
         except Exception as e:
             raise e
 
-    def _update_store_content(self, result) -> None:
+    def _update_store_content(self, result: Any) -> NoReturn:
         try:
             results = self._get_runner_results()
             if self.run_index not in results:
@@ -117,7 +119,7 @@ class TridentDataDaemon:
 
         return self._get_store_data()
 
-    def _get_runner_content(self) -> Dict[str, Dict]:
+    def _get_runner_content(self) -> Dict[str, Dict[int, Dict[int, Any]]]:
         try:
             if "runners" not in self.store_data or self.daemon_config.runner.runner_id not in self.store_data["runners"]:
                 raise ValueError(f"Store: '{self.daemon_config.store_path}' has not been initialized yet")
@@ -127,7 +129,7 @@ class TridentDataDaemon:
             logger.error(f"Failed to get runner content for store: '{self.daemon_config.store_path}'")
             raise e
 
-    def _get_runner_results(self) -> Dict[str, str]:
+    def _get_runner_results(self) -> Dict[int, Dict[int, Any]]:
         content = self._get_runner_content()
         try:
             return content["results"]
