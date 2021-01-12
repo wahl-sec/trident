@@ -2,13 +2,25 @@ SHELL := /usr/bin/env bash
 
 .TRIDENT: install
 install:
+	pip install setuptools
+	sudo python setup.py install
+
+.TRIDENT: install-win
+install-win:
+	pip install setuptools
 	python setup.py install
 
-.TRIDENT: install external
-install external:
+.TRIDENT: install-external-win
+install-external-win:
 	pip install -r dev-requirements.txt
 	pip install -r requirements.txt
 	python setup.py install
+
+.TRIDENT: install-external
+install-external:
+	pip install -r dev-requirements.txt
+	pip install -r requirements.txt
+	sudo python setup.py install
 
 .TRIDENT: clean
 clean:
@@ -20,6 +32,5 @@ clean:
 
 .TRIDENT: test
 test:
-	python setup.py install
 	pip install pytest
 	pytest
