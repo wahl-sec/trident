@@ -1,0 +1,71 @@
+# GitHub CI Workflow
+name: trident
+
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+
+jobs:
+    build-ubuntu:
+        strategy:
+            matrix:
+                versions: ["", "-external"]
+                python-version: [3.7]
+        
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Setup Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v2
+              with:
+                python-version: ${{ matrix.python-version }}
+
+            - name: Install Trident
+              run: make install${{ matrix.versions }}
+
+            - name: Test Trident
+              run: make test
+
+    build-macos:
+        strategy:
+            matrix:
+                versions: ["", "-external"]
+                python-version: [3.7]
+        
+        runs-on: macos-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Setup Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v2
+              with:
+                python-version: ${{ matrix.python-version }}
+
+            - name: Install Trident
+              run: make install${{ matrix.versions }}
+
+            - name: Test Trident
+              run: make test
+
+    build-windows:
+        strategy:
+            matrix:
+                versions: ["", "-external"]
+                python-version: [3.7]
+        
+        runs-on: windows-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Setup Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v2
+              with:
+                python-version: ${{ matrix.python-version }}
+
+            - name: Install Trident
+              run: make install${{ matrix.versions }}-win
+
+            - name: Test Trident
+              run: make test
