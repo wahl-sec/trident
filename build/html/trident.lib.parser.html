@@ -1,0 +1,257 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>Trident Parser Package &mdash; Trident 0.1-DEV documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Trident Library Runner Package" href="trident.lib.runner.html" />
+    <link rel="prev" title="Trident Daemon Package" href="trident.lib.daemon.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: grey" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Trident
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="trident.lib.html">Trident Library Package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="trident.lib.daemon.html">Trident Daemon Package</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Trident Parser Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trident.lib.runner.html">Trident Library Runner Package</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Usage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Trident Usage</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Trident</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="trident.lib.html">Trident Library Package</a> &raquo;</li>
+        
+      <li>Trident Parser Package</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+          
+            <a href="_sources/trident.lib.parser.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="trident-parser-package">
+<h1>Trident Parser Package<a class="headerlink" href="#trident-parser-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-trident.lib.parser.arguments">
+<span id="trident-library-argument-module"></span><h2>Trident Library Argument Module<a class="headerlink" href="#module-trident.lib.parser.arguments" title="Permalink to this headline">¶</a></h2>
+<p>Trident: Argument Parser</p>
+<p>Parses and validate arguments passed to the program.
+&#64;author: Jacob Wahlman</p>
+<dl class="py class">
+<dt id="trident.lib.parser.arguments.TridentArgumentParser">
+<em class="property">class </em><code class="sig-prename descclassname">trident.lib.parser.arguments.</code><code class="sig-name descname">TridentArgumentParser</code><a class="reference internal" href="_modules/trident/lib/parser/arguments.html#TridentArgumentParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trident.lib.parser.arguments.TridentArgumentParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Argument parser for the Trident program. Collects the required/optional arguments and ensures validity of each argument.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-trident.lib.parser.config">
+<span id="trident-library-config-module"></span><h2>Trident Library Config Module<a class="headerlink" href="#module-trident.lib.parser.config" title="Permalink to this headline">¶</a></h2>
+<p>Trident: Config Parser</p>
+<p>Parses and validates the required config file passed to the program.
+&#64;author: Jacob Wahlman</p>
+<dl class="py class">
+<dt id="trident.lib.parser.config.TridentConfigParser">
+<em class="property">class </em><code class="sig-prename descclassname">trident.lib.parser.config.</code><code class="sig-name descname">TridentConfigParser</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">config_file_path</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">config_file_section</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/trident/lib/parser/config.html#TridentConfigParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trident.lib.parser.config.TridentConfigParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Parses the configuration file used by Trident to define plugins and arguments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config_file_path</strong> (<em>str</em>) – The path to the config file on the host.</p></li>
+<li><p><strong>config_file_section</strong> (<em>str</em>) – The section in the config file that should be used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+        <a href="trident.lib.runner.html" class="btn btn-neutral float-right" title="Trident Library Runner Package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="trident.lib.daemon.html" class="btn btn-neutral float-left" title="Trident Daemon Package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Jacob Wahlman.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

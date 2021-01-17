@@ -1,0 +1,364 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>trident.lib.daemon.trident &mdash; Trident 0.1-DEV documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: grey" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Trident
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../trident.lib.html">Trident Library Package</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Usage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Trident Usage</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Trident</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>trident.lib.daemon.trident</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for trident.lib.daemon.trident</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot; Trident: Runner Daemon</span>
+
+<span class="sd">Trident daemon that controls all runners and couples itself to it&#39;s data storage.</span>
+<span class="sd">The runners are run in a asynchronous environment controlled by the daemon to allow them to run concurrently.</span>
+<span class="sd">@author: Jacob Wahlman</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span> <span class="nn">concurrent.futures</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">NoReturn</span><span class="p">,</span> <span class="n">NewType</span>
+<span class="n">TridentDataDaemonConfig</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s2">&quot;TridentDataDaemonConfig&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;__main__&quot;</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">trident.lib.runner.trident</span> <span class="kn">import</span> <span class="n">TridentRunnerConfig</span><span class="p">,</span> <span class="n">TridentRunner</span>
+
+
+<div class="viewcode-block" id="TridentDaemonConfig"><a class="viewcode-back" href="../../../../trident.lib.daemon.html#trident.lib.daemon.trident.TridentDaemonConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">TridentDaemonConfig</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Config class for the :class:`TridentDaemon` controlling each :class:`TridentRunner`.</span>
+
+<span class="sd">    :param workers: The amount of workers that the daemon should use at most.</span>
+<span class="sd">    :type workers: int</span>
+<span class="sd">    :param plugins: Dictionary containing the path, optional arguments and descriptors for the plugins.</span>
+<span class="sd">    :type plugins: dict</span>
+<span class="sd">    :param data_config: Configuration dictionary for the :class:`TridentDataDaemon`</span>
+<span class="sd">    :type data_config: dict</span>
+<span class="sd">    :param dont_store_on_error: Store results if errors occur in runners.</span>
+<span class="sd">    :type dont_store_on_error: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">workers</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">plugins</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+    <span class="n">data_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span>
+    <span class="n">dont_store_on_error</span><span class="p">:</span> <span class="nb">bool</span></div>
+
+
+<div class="viewcode-block" id="TridentDaemon"><a class="viewcode-back" href="../../../../trident.lib.daemon.html#trident.lib.daemon.trident.TridentDaemon">[docs]</a><span class="k">class</span> <span class="nc">TridentDaemon</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Main daemon controlling each :class:`TridentRunner` for the program.</span>
+<span class="sd">    Starts execution of the runners, waits for completion and handles any interrupts to the runners.</span>
+
+<span class="sd">    :param daemon_config: The configuration class for the :class:`TridentDaemon`.</span>
+<span class="sd">    :type daemon_config: :class:`TridentDaemonConfig`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">daemon_config</span><span class="p">:</span> <span class="n">TridentDaemonConfig</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span> <span class="o">=</span> <span class="n">daemon_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_runner_resource_queues</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_future_runners</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runners</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_runners</span><span class="p">()</span>
+
+<div class="viewcode-block" id="TridentDaemon.start_all_runners"><a class="viewcode-back" href="../../../../trident.lib.daemon.html#trident.lib.daemon.trident.TridentDaemon.start_all_runners">[docs]</a>    <span class="k">def</span> <span class="nf">start_all_runners</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Creates a :class:`concurrent.futures.Future` for each :class:`TridentRunner` and start each runner asynchronously. &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_executor</span> <span class="o">=</span> <span class="n">executor</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_future_runners</span> <span class="o">=</span> <span class="p">{</span><span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">runner</span><span class="o">.</span><span class="n">start_runner</span><span class="p">):</span> <span class="n">runner</span> <span class="k">for</span> <span class="n">runner</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">runners</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="TridentDaemon.wait_for_runners"><a class="viewcode-back" href="../../../../trident.lib.daemon.html#trident.lib.daemon.trident.TridentDaemon.wait_for_runners">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_runners</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Wait for each runner future to report as completed meaning that each :class:`TridentRunner` has finished.</span>
+<span class="sd">        Raises exception for each future that encountered an exception while running.</span>
+
+<span class="sd">        :raises Exception: The exception raised while the plugin ran in the :class:`TridentRunner`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">future</span> <span class="ow">in</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">as_completed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_future_runners</span><span class="p">):</span>
+            <span class="n">runner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_future_runners</span><span class="p">[</span><span class="n">future</span><span class="p">]</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">future</span><span class="o">.</span><span class="n">result</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">e</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_runner_resource_queues</span><span class="p">[</span><span class="n">runner</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="p">]:</span>
+                    <span class="k">continue</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">):</span>
+                <span class="c1"># Data Daemon not initialized or no store specified</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">Path</span><span class="p">(</span><span class="n">runner</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">Path</span><span class="p">(</span><span class="n">runner</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="p">)</span><span class="o">.</span><span class="n">touch</span><span class="p">()</span>
+
+            <span class="n">runner</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">merge_store_data</span><span class="p">()</span>
+            <span class="n">runner</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">write_to_store</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_runner_resource_queues</span><span class="p">[</span><span class="n">runner</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="TridentDaemon.stop_all_runners"><a class="viewcode-back" href="../../../../trident.lib.daemon.html#trident.lib.daemon.trident.TridentDaemon.stop_all_runners">[docs]</a>    <span class="k">def</span> <span class="nf">stop_all_runners</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Stop execution for all :class:`TridentRunner`, if it has already started it&#39;s execution then it can&#39;t be halted</span>
+<span class="sd">        so a :class:`threading.Event` will be set to signal for the plugin to halt when seen during execution.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">future</span><span class="p">,</span> <span class="n">runner</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_future_runners</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Sending stop signal to runner: &#39;</span><span class="si">{</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="n">runner</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">thread_event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">future</span><span class="o">.</span><span class="n">cancel</span><span class="p">():</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Runner: &#39;</span><span class="si">{</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39; is in a running state and couldn&#39;t be halted immediately&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_executor</span><span class="o">.</span><span class="n">shutdown</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_initialize_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runner_config</span><span class="p">:</span> <span class="n">TridentRunnerConfig</span><span class="p">,</span> <span class="n">runner_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data_daemon_config</span><span class="p">:</span> <span class="n">TridentDataDaemonConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TridentRunner</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Initialize a runner given the config :class:`TridentRunnerConfig`, runner identifier and the data config :class:`TridentDataDaemonConfig`.</span>
+<span class="sd">        The runner :class:`TridentRunner` controls the execution and handling for each plugin.</span>
+
+<span class="sd">        :param runner_config: The config for :class:`TridentRunnerConfig` used to initialize the class.</span>
+<span class="sd">        :type runner_config: TridentRunnerConfig</span>
+<span class="sd">        :param runner_id: The unique indentifier for each :class:`TridentRunner`.</span>
+<span class="sd">        :type runner_id: str</span>
+<span class="sd">        :param data_daemon_config: The data daemon config used by each :class:`TridentRunner` to control it&#39;s data daemon :class:`TridentDataDaemon`.</span>
+<span class="sd">        :type data_daemon_config: TridentDataDaemonConfig</span>
+<span class="sd">        :raises Exception: If any issues occurs whilst initializing the :class:`TridentRunner`.</span>
+<span class="sd">        :return: The :class:`TridentRunner` instance created from the config :class:`TridentRunnerConfig`.</span>
+<span class="sd">        :rtype: TridentRunner</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Initializing plugin: &#39;</span><span class="si">{</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_path</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">TridentRunner</span><span class="p">(</span><span class="n">runner_config</span><span class="p">,</span> <span class="n">runner_id</span><span class="p">,</span> <span class="n">data_daemon_config</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">e</span>
+
+    <span class="k">def</span> <span class="nf">_initialize_runners</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">TridentRunner</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot; Initialize the :class:`TridentRunner` for each plugin given by the :class:`TridentDaemonConfig`.</span>
+
+<span class="sd">        :raises ValueError: If the plugin does not exist from the path provided.</span>
+<span class="sd">        :raises Exception: If any other issue initializing the :class:`TridentRunner` occurs.</span>
+<span class="sd">        :return: A list of the :class:`TridentRunner` objects representing each plugin.</span>
+<span class="sd">        :rtype: list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_initialized_runners</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">plugin_id</span><span class="p">,</span> <span class="n">plugin_config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">&quot;path&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">plugin_config</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Missing path to plugin for plugin: &#39;</span><span class="si">{</span><span class="n">plugin_id</span><span class="si">}</span><span class="s2">&#39; in config.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">plugin_path</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="s2">&quot;args&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">plugin_config</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No arguments specified for plugin: &#39;</span><span class="si">{</span><span class="n">plugin_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                <span class="n">plugin_args</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">plugin_args</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">]</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">runner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_runner</span><span class="p">(</span>
+                    <span class="n">runner_config</span><span class="o">=</span><span class="n">TridentRunnerConfig</span><span class="p">(</span>
+                        <span class="n">plugin_path</span><span class="o">=</span><span class="n">plugin_path</span><span class="p">,</span>
+                        <span class="n">plugin_args</span><span class="o">=</span><span class="n">plugin_args</span><span class="p">,</span>
+                        <span class="n">resource_queues</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_runner_resource_queues</span><span class="p">,</span>
+                        <span class="n">dont_store_on_error</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">dont_store_on_error</span>
+                    <span class="p">),</span>
+                    <span class="n">runner_id</span><span class="o">=</span><span class="n">plugin_id</span><span class="p">,</span>
+                    <span class="n">data_daemon_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">data_config</span>
+                <span class="p">)</span>
+                
+                <span class="n">_initialized_runners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">runner</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to initialize a trident runner for plugin: &#39;</span><span class="si">{</span><span class="n">plugin</span><span class="si">}</span><span class="s2">&#39; due to previous error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">e</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Initialized (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">_initialized_runners</span><span class="p">)</span><span class="si">}</span><span class="s2">) out of (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">plugins</span><span class="p">)</span><span class="si">}</span><span class="s2">) plugins&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_initialized_runners</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Jacob Wahlman.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
