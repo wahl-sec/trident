@@ -1,8 +1,3 @@
-.. Trident documentation master file, created by
-   sphinx-quickstart on Wed Jan 13 20:02:21 2021.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 Trident Asynchronous Intrusion Detection
 ==========================================
 
@@ -40,6 +35,7 @@ Trident Source
 ==============
 
 .. toctree::
+   :maxdepth: 4
    :caption: Trident Source
 
    github
