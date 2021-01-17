@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """ Trident: Main Module Runner
+
 Called when the program is run from the command line.
 @author: Jacob Wahlman
 """
@@ -15,7 +16,6 @@ from datetime import datetime
 
 from trident.lib.parser.arguments import TridentArgumentParser
 from trident.lib.parser.config import TridentConfigParser
-from trident.lib.daemon.trident import TridentDaemon, TridentDaemonConfig
 from trident import TridentConfig, Trident
 from trident import LOGGER_CONFIG
 

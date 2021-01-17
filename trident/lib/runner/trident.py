@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """ Trident: Runner
+
 Runs and controls the execution of a valid plugin.
 @author: Jacob Wahlman
 """
@@ -24,6 +25,26 @@ from trident.lib.daemon.data_storage import TridentDataDaemonConfig, TridentData
 
 @dataclass
 class TridentRunnerConfig:
+    """ The configuration for the :class:`TridentRunner`.
+    Defines the attributes that the runner runs, like plugin instance, module and other info required by the runner.
+
+    :param plugin_path: The path to the plugin used.
+    :type plugin_path: str
+    :param plugin_name: The name of the plugin used.
+    :type plugin_name: str
+    :param plugin_args: The arguments that should be passed to the plugin when executing.
+    :type plugin_args: dict
+    :param plugin_module: The module object given by `import_module` from the `importlib` library.
+    :type plugin_module: object
+    :param plugin_instance: An instance of the plugin class found in the module.
+    :type plugin_instance: object
+    :param resource_queues: Queue used to register access to a resource shared between runners to avoid conflicts.
+    :type resource_queues: dict
+    :param dont_store_on_error: If the runner should store the results accumulated before exiting if an error occured.
+    :type dont_store_on_error: bool
+    :param thread_event: The event flag used to signal to the plugin that it should exit.
+    :type thread_event: :class:`threading.Event`
+    """
     plugin_path: str
     plugin_name: str
     plugin_args: Dict[str, Any]
@@ -40,9 +61,15 @@ class TridentRunnerConfig:
         self.dont_store_on_error = dont_store_on_error
         self.thread_event = Event()
         self.plugin_name = self._resolve_plugin_name()
-        self.plugin_instance, self.plugin_module = self._initialize_runner_config()
+        self.plugin_instance, self.plugin_module = self._initialize_runner_plugin()
 
     def _resolve_plugin_name(self) -> str:
+        """ Construct the name of the plugin from the plugin path.
+        Converts the path to the plugin to the expected name of the class in the plugin module.
+
+        :return: The plugin name.
+        :rtype: str
+        """
         components = self.plugin_path.split(".")
         component_name = components[0].title() if len(components) == 1 else components[-1].title()
         if "_" in component_name:
@@ -50,7 +77,15 @@ class TridentRunnerConfig:
 
         return component_name
 
-    def _initialize_runner_config(self) -> Union[Tuple[PluginClass, Module], None]:
+    def _initialize_runner_plugin(self) -> Union[Tuple[PluginClass, Module], None]:
+        """ Initialize the plugin to be used by the :class:`TridentRunner`.
+        Tries to import the module given the path provided and tries to initialize an instance given the plugin name.
+
+        :raises ValueError: If the plugin name is not found in the plugin module.
+        :raises Exception: If any unexpected error occured when initializing the plugin. 
+        :return: The plugin instance and the plugin module if successful otherwise None
+        :rtype: (PluginClass, Module)
+        """
         try:
             plugin_module, plugin_instance = None, None
             plugin_module = import_module(self.plugin_path, package=__package__)
@@ -65,6 +100,16 @@ class TridentRunnerConfig:
 
 
 class TridentRunner:
+    """ The :class:`TridentRunner` used to control the execution of each plugin.
+    Starts initialized plugins, evaluates results and calls for storage by the :class:`TridentDataDaemon` attached to this runner.
+
+    :param runner_config: The configuration used to define the behavior of this runner.
+    :type runner_config: :class:`TridentRunnerConfig`
+    :param runner_id: The unique identifier for this runner.
+    :type runner_id: str
+    :param data_daemon_config: The configuration for this runners data daemon.
+    :type data_daemon_config: :class:`TridentDataDaemonConfig`
+    """
     def __init__(self, runner_config: TridentRunnerConfig, runner_id: str, data_daemon_config: TridentDataDaemonConfig):
         self.runner_config = runner_config
         self.runner_id = runner_id
@@ -73,6 +118,10 @@ class TridentRunner:
         self.data_daemon = self._initialize_data_daemon()
 
     def start_runner(self) -> NoReturn:
+        """ Start the initialized :class:`TridentRunner` by calling the plugin method `execute_plugin` with the provided arguments.
+
+        :raises Exception: Re-raised exceptions that occurs in the plugin.
+        """
         logger.info(f"Starting runner: '{self.runner_id}' ...")
         try:
             # The thread event is used to allow the daemon to stop already started plugins.
@@ -95,6 +144,12 @@ class TridentRunner:
             logger.warning(f"No results were returned from the plugin: '{self.runner_id}'")
 
     def _initialize_data_daemon(self) -> TridentDataDaemon:
+        """ Initialize the :class:`TridentDataDaemon` connected to this runner from the :class:`TridentDataDaemonConfig`.
+
+        :raises Exception: If any exceptions occur when initializing the :class:`TridentDataDaemon`
+        :return: The initialized :class:`TridentDataDaemon`.
+        :rtype: :class:`TridentDataDaemon`
+        """
         if self.data_daemon_config["no_store"]:
             return None
 
@@ -115,6 +170,14 @@ class TridentRunner:
             raise e
 
     def _evaluate_result(self, result: Any, result_index: int) -> NoReturn:
+        """ Evaluate the result yielded/returned from the plugin for each iteration.
+
+        :param result: The result returned from the plugin.
+        :type result: Any
+        :param result_index: The iteration index that the result was returned.
+        :type result_index: int
+        :raises Exception: If any error occur when storing the result.
+        """
         if self.data_daemon is None or self.runner_config.thread_event.is_set():
             return
 
@@ -124,6 +187,13 @@ class TridentRunner:
             raise e
 
     def _evaluate_plugin(self, generator: Generator[Any, Any, Any]) -> NoReturn:
+        """ Evaluate the initialized plugin generator for each returned value.
+        
+        :param generator: The generator yielded from `start_runner`.
+        :type generator: Generator
+        :raises StopIteration: If generator did not return any more values from the plugin.
+        :raises Exception: If any errors occured when trying to access the next value. 
+        """
         results_index = 0
         while not self.runner_config.thread_event.is_set():
             try:
