@@ -84,11 +84,15 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../trident.lib.html">Trident Library Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../trident/lib.html">Trident Library Package</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Usage:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Trident Usage</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Trident Source</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../github.html">Trident GitHub</a></li>
 </ul>
 
             
@@ -177,7 +181,7 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;__main__&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="TridentDataDaemonConfig"><a class="viewcode-back" href="../../../../trident.lib.daemon.html#trident.lib.daemon.data_storage.TridentDataDaemonConfig">[docs]</a><span class="nd">@dataclass</span>
+<div class="viewcode-block" id="TridentDataDaemonConfig"><a class="viewcode-back" href="../../../../trident/lib/daemon.html#trident.lib.daemon.data_storage.TridentDataDaemonConfig">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">TridentDataDaemonConfig</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Config class for :class:`TridentDataDaemon` controlling the data handling for each :class:`TridentRunner`.</span>
 
@@ -237,7 +241,7 @@
         <span class="k">return</span> <span class="n">store_path_n</span></div>
 
 
-<div class="viewcode-block" id="TridentDataDaemon"><a class="viewcode-back" href="../../../../trident.lib.daemon.html#trident.lib.daemon.data_storage.TridentDataDaemon">[docs]</a><span class="k">class</span> <span class="nc">TridentDataDaemon</span><span class="p">:</span>
+<div class="viewcode-block" id="TridentDataDaemon"><a class="viewcode-back" href="../../../../trident/lib/daemon.html#trident.lib.daemon.data_storage.TridentDataDaemon">[docs]</a><span class="k">class</span> <span class="nc">TridentDataDaemon</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Daemon handling all the reading/writing to the stores used by each :class:`TridentRunner`.</span>
 <span class="sd">    All access goes through this daemon in order to verify that no conflicts occur when writing to the store</span>
 <span class="sd">    and that all file handlers are properly opened/closed.</span>
@@ -251,7 +255,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">run_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_run_index</span><span class="p">()</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Trident data daemon initialized for runner: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="TridentDataDaemon.store_runner_result"><a class="viewcode-back" href="../../../../trident.lib.daemon.html#trident.lib.daemon.data_storage.TridentDataDaemon.store_runner_result">[docs]</a>    <span class="k">def</span> <span class="nf">store_runner_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<div class="viewcode-block" id="TridentDataDaemon.store_runner_result"><a class="viewcode-back" href="../../../../trident/lib/daemon.html#trident.lib.daemon.data_storage.TridentDataDaemon.store_runner_result">[docs]</a>    <span class="k">def</span> <span class="nf">store_runner_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Store the results given in the initialized store. This updates the store in the program and does not</span>
 <span class="sd">        write the store to the disk.</span>
 
@@ -264,7 +268,7 @@
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">e</span></div>
 
-<div class="viewcode-block" id="TridentDataDaemon.write_to_store"><a class="viewcode-back" href="../../../../trident.lib.daemon.html#trident.lib.daemon.data_storage.TridentDataDaemon.write_to_store">[docs]</a>    <span class="k">def</span> <span class="nf">write_to_store</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<div class="viewcode-block" id="TridentDataDaemon.write_to_store"><a class="viewcode-back" href="../../../../trident/lib/daemon.html#trident.lib.daemon.data_storage.TridentDataDaemon.write_to_store">[docs]</a>    <span class="k">def</span> <span class="nf">write_to_store</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Writes the current initialized store to the disk on the system for the given store path. &quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing to store at path: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
@@ -275,7 +279,7 @@
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to write to store: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TridentDataDaemon.merge_store_data"><a class="viewcode-back" href="../../../../trident.lib.daemon.html#trident.lib.daemon.data_storage.TridentDataDaemon.merge_store_data">[docs]</a>    <span class="k">def</span> <span class="nf">merge_store_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<div class="viewcode-block" id="TridentDataDaemon.merge_store_data"><a class="viewcode-back" href="../../../../trident/lib/daemon.html#trident.lib.daemon.data_storage.TridentDataDaemon.merge_store_data">[docs]</a>    <span class="k">def</span> <span class="nf">merge_store_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Merges the store data with the existing store data available in the written store.</span>
 <span class="sd">        This is used when the store has results written to it from previous iterations.</span>
 

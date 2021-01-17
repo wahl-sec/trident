@@ -84,11 +84,15 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../trident.lib.html">Trident Library Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../trident/lib.html">Trident Library Package</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Usage:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Trident Usage</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Trident Source</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../github.html">Trident GitHub</a></li>
 </ul>
 
             
@@ -179,7 +183,7 @@
 <span class="kn">from</span> <span class="nn">trident.lib.runner.trident</span> <span class="kn">import</span> <span class="n">TridentRunnerConfig</span><span class="p">,</span> <span class="n">TridentRunner</span>
 
 
-<div class="viewcode-block" id="TridentDaemonConfig"><a class="viewcode-back" href="../../../../trident.lib.daemon.html#trident.lib.daemon.trident.TridentDaemonConfig">[docs]</a><span class="nd">@dataclass</span>
+<div class="viewcode-block" id="TridentDaemonConfig"><a class="viewcode-back" href="../../../../trident/lib/daemon.html#trident.lib.daemon.trident.TridentDaemonConfig">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">TridentDaemonConfig</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Config class for the :class:`TridentDaemon` controlling each :class:`TridentRunner`.</span>
 
@@ -198,7 +202,7 @@
     <span class="n">dont_store_on_error</span><span class="p">:</span> <span class="nb">bool</span></div>
 
 
-<div class="viewcode-block" id="TridentDaemon"><a class="viewcode-back" href="../../../../trident.lib.daemon.html#trident.lib.daemon.trident.TridentDaemon">[docs]</a><span class="k">class</span> <span class="nc">TridentDaemon</span><span class="p">:</span>
+<div class="viewcode-block" id="TridentDaemon"><a class="viewcode-back" href="../../../../trident/lib/daemon.html#trident.lib.daemon.trident.TridentDaemon">[docs]</a><span class="k">class</span> <span class="nc">TridentDaemon</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; Main daemon controlling each :class:`TridentRunner` for the program.</span>
 <span class="sd">    Starts execution of the runners, waits for completion and handles any interrupts to the runners.</span>
 
@@ -211,13 +215,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_future_runners</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">runners</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_runners</span><span class="p">()</span>
 
-<div class="viewcode-block" id="TridentDaemon.start_all_runners"><a class="viewcode-back" href="../../../../trident.lib.daemon.html#trident.lib.daemon.trident.TridentDaemon.start_all_runners">[docs]</a>    <span class="k">def</span> <span class="nf">start_all_runners</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<div class="viewcode-block" id="TridentDaemon.start_all_runners"><a class="viewcode-back" href="../../../../trident/lib/daemon.html#trident.lib.daemon.trident.TridentDaemon.start_all_runners">[docs]</a>    <span class="k">def</span> <span class="nf">start_all_runners</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Creates a :class:`concurrent.futures.Future` for each :class:`TridentRunner` and start each runner asynchronously. &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="n">concurrent</span><span class="o">.</span><span class="n">futures</span><span class="o">.</span><span class="n">ThreadPoolExecutor</span><span class="p">(</span><span class="n">max_workers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">workers</span><span class="p">)</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_executor</span> <span class="o">=</span> <span class="n">executor</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_future_runners</span> <span class="o">=</span> <span class="p">{</span><span class="n">executor</span><span class="o">.</span><span class="n">submit</span><span class="p">(</span><span class="n">runner</span><span class="o">.</span><span class="n">start_runner</span><span class="p">):</span> <span class="n">runner</span> <span class="k">for</span> <span class="n">runner</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">runners</span><span class="p">}</span></div>
 
-<div class="viewcode-block" id="TridentDaemon.wait_for_runners"><a class="viewcode-back" href="../../../../trident.lib.daemon.html#trident.lib.daemon.trident.TridentDaemon.wait_for_runners">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_runners</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<div class="viewcode-block" id="TridentDaemon.wait_for_runners"><a class="viewcode-back" href="../../../../trident/lib/daemon.html#trident.lib.daemon.trident.TridentDaemon.wait_for_runners">[docs]</a>    <span class="k">def</span> <span class="nf">wait_for_runners</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Wait for each runner future to report as completed meaning that each :class:`TridentRunner` has finished.</span>
 <span class="sd">        Raises exception for each future that encountered an exception while running.</span>
 
@@ -244,7 +248,7 @@
             <span class="n">runner</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">write_to_store</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_runner_resource_queues</span><span class="p">[</span><span class="n">runner</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="p">]</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="TridentDaemon.stop_all_runners"><a class="viewcode-back" href="../../../../trident.lib.daemon.html#trident.lib.daemon.trident.TridentDaemon.stop_all_runners">[docs]</a>    <span class="k">def</span> <span class="nf">stop_all_runners</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<div class="viewcode-block" id="TridentDaemon.stop_all_runners"><a class="viewcode-back" href="../../../../trident/lib/daemon.html#trident.lib.daemon.trident.TridentDaemon.stop_all_runners">[docs]</a>    <span class="k">def</span> <span class="nf">stop_all_runners</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Stop execution for all :class:`TridentRunner`, if it has already started it&#39;s execution then it can&#39;t be halted</span>
 <span class="sd">        so a :class:`threading.Event` will be set to signal for the plugin to halt when seen during execution.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

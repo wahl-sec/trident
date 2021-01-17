@@ -1,4 +1,4 @@
-Trident Library Runner Package
+Trident Runner Package
 ==============================
 
 Submodules

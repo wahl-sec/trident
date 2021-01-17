@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>Trident - Asynchronous Intrusion Detection &mdash; Trident 0.1-DEV documentation</title>
+  <title>Trident Asynchronous Intrusion Detection &mdash; Trident 0.1-DEV documentation</title>
   
 
   
@@ -38,7 +38,7 @@
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Trident Library Package" href="trident.lib.html" /> 
+    <link rel="next" title="Trident Library Package" href="trident/lib.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -85,11 +85,15 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="trident.lib.html">Trident Library Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trident/lib.html">Trident Library Package</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Usage:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Trident Usage</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Trident Source</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="github.html">Trident GitHub</a></li>
 </ul>
 
             
@@ -138,15 +142,13 @@
     
       <li><a href="#" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Trident - Asynchronous Intrusion Detection</li>
+      <li>Trident Asynchronous Intrusion Detection</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            
-              <a href="https://github.com/wahl-sec/trident/blob/main/docs/index.rst" class="fa fa-github"> Edit on GitHub</a>
-            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -160,7 +162,7 @@
            <div itemprop="articleBody">
             
   <div class="section" id="trident-asynchronous-intrusion-detection">
-<h1>Trident - Asynchronous Intrusion Detection<a class="headerlink" href="#trident-asynchronous-intrusion-detection" title="Permalink to this headline">¶</a></h1>
+<h1>Trident Asynchronous Intrusion Detection<a class="headerlink" href="#trident-asynchronous-intrusion-detection" title="Permalink to this headline">¶</a></h1>
 <p><strong>Trident</strong> is a asynchronous intrustion detection environment that allows for defining and running plugins to scan/modify/store resources on the system. Trident comes pre-packaged with some plugins to function as a intrusion detection system both for a host (HIDS) and the network available to the host as a network intrusion detection system (NIDS).</p>
 <p>Trident currently allows for modules written in <cite>Python</cite> to act as plugins using the Trident library to allow for some basic instructions.</p>
 <p>Trident tries to use as little external modules as possible and allows the user to run Trident using only the standard library. This is done to ensure maximum compatability with hosts and to allow to focus on developing asynchronous libraries to use in the plugins. Trident also has the ability to use methods that rely on external libraries as well, like <a class="reference external" href="https://requests.readthedocs.io/en/master/">requests</a> if preferred, for example, if the user lacks required functionality in the Trident plugin library functions.</p>
@@ -175,29 +177,29 @@
 <div class="toctree-wrapper compound">
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="trident.lib.html">Trident Library Package</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="trident.lib.html#trident-daemons">Trident Daemons</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="trident.lib.daemon.html">Trident Daemon Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="trident.lib.daemon.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="trident.lib.daemon.html#module-trident.lib.daemon.data_storage">Trident Library Data Storage Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="trident.lib.daemon.html#module-trident.lib.daemon.trident">Trident Library Trident Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="trident/lib.html">Trident Library Package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="trident/lib.html#trident-daemons">Trident Daemons</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="trident/lib/daemon.html">Trident Daemon Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="trident/lib/daemon.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="trident/lib/daemon.html#module-trident.lib.daemon.data_storage">Trident Library Data Storage Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="trident/lib/daemon.html#module-trident.lib.daemon.trident">Trident Library Trident Module</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="trident.lib.html#trident-parsers">Trident Parsers</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="trident.lib.parser.html">Trident Parser Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="trident.lib.parser.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="trident.lib.parser.html#module-trident.lib.parser.arguments">Trident Library Argument Module</a></li>
-<li class="toctree-l4"><a class="reference internal" href="trident.lib.parser.html#module-trident.lib.parser.config">Trident Library Config Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trident/lib.html#trident-parsers">Trident Parsers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="trident/lib/parser.html">Trident Parser Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="trident/lib/parser.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="trident/lib/parser.html#module-trident.lib.parser.arguments">Trident Library Argument Module</a></li>
+<li class="toctree-l4"><a class="reference internal" href="trident/lib/parser.html#module-trident.lib.parser.config">Trident Library Config Module</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="trident.lib.html#trident-runner">Trident Runner</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="trident.lib.runner.html">Trident Library Runner Package</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="trident.lib.runner.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="trident.lib.runner.html#module-trident.lib.runner.trident">Trident Library Runner Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="trident/lib.html#trident-runner">Trident Runner</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="trident/lib/runner.html">Trident Runner Package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="trident/lib/runner.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="trident/lib/runner.html#module-trident.lib.runner.trident">Trident Library Runner Module</a></li>
 </ul>
 </li>
 </ul>
@@ -223,6 +225,17 @@
 </ul>
 </div>
 </div>
+<div class="section" id="trident-source">
+<h1>Trident Source<a class="headerlink" href="#trident-source" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">Trident Source</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="github.html">Trident GitHub</a><ul class="simple">
+</ul>
+</li>
+</ul>
+</div>
+</div>
 
 
            </div>
@@ -230,7 +243,7 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="trident.lib.html" class="btn btn-neutral float-right" title="Trident Library Package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="trident/lib.html" class="btn btn-neutral float-right" title="Trident Library Package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

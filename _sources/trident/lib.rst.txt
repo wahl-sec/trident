@@ -7,7 +7,7 @@ Trident Daemons
 .. toctree::
    :maxdepth: 4
 
-   trident.lib.daemon
+   lib/daemon
 
 Trident Parsers
 ---------------
@@ -15,7 +15,7 @@ Trident Parsers
 .. toctree::
    :maxdepth: 4
 
-   trident.lib.parser
+   lib/parser
 
 Trident Runner
 ---------------
@@ -23,4 +23,4 @@ Trident Runner
 .. toctree::
    :maxdepth: 4
 
-   trident.lib.runner
+   lib/runner

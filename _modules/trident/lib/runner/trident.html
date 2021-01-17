@@ -84,11 +84,15 @@
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../trident.lib.html">Trident Library Package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../trident/lib.html">Trident Library Package</a></li>
 </ul>
 <p class="caption"><span class="caption-text">Usage:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Trident Usage</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Trident Source</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../github.html">Trident GitHub</a></li>
 </ul>
 
             
@@ -180,7 +184,7 @@
 <span class="kn">from</span> <span class="nn">trident.lib.daemon.data_storage</span> <span class="kn">import</span> <span class="n">TridentDataDaemonConfig</span><span class="p">,</span> <span class="n">TridentDataDaemon</span>
 
 
-<div class="viewcode-block" id="TridentRunnerConfig"><a class="viewcode-back" href="../../../../trident.lib.runner.html#trident.lib.runner.trident.TridentRunnerConfig">[docs]</a><span class="nd">@dataclass</span>
+<div class="viewcode-block" id="TridentRunnerConfig"><a class="viewcode-back" href="../../../../trident/lib/runner.html#trident.lib.runner.trident.TridentRunnerConfig">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">TridentRunnerConfig</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; The configuration for the :class:`TridentRunner`.</span>
 <span class="sd">    Defines the attributes that the runner runs, like plugin instance, module and other info required by the runner.</span>
@@ -256,7 +260,7 @@
             <span class="k">raise</span> <span class="n">e</span></div>
 
 
-<div class="viewcode-block" id="TridentRunner"><a class="viewcode-back" href="../../../../trident.lib.runner.html#trident.lib.runner.trident.TridentRunner">[docs]</a><span class="k">class</span> <span class="nc">TridentRunner</span><span class="p">:</span>
+<div class="viewcode-block" id="TridentRunner"><a class="viewcode-back" href="../../../../trident/lib/runner.html#trident.lib.runner.trident.TridentRunner">[docs]</a><span class="k">class</span> <span class="nc">TridentRunner</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot; The :class:`TridentRunner` used to control the execution of each plugin.</span>
 <span class="sd">    Starts initialized plugins, evaluates results and calls for storage by the :class:`TridentDataDaemon` attached to this runner.</span>
 
@@ -274,7 +278,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon_config</span> <span class="o">=</span> <span class="n">data_daemon_config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_data_daemon</span><span class="p">()</span>
 
-<div class="viewcode-block" id="TridentRunner.start_runner"><a class="viewcode-back" href="../../../../trident.lib.runner.html#trident.lib.runner.trident.TridentRunner.start_runner">[docs]</a>    <span class="k">def</span> <span class="nf">start_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<div class="viewcode-block" id="TridentRunner.start_runner"><a class="viewcode-back" href="../../../../trident/lib/runner.html#trident.lib.runner.trident.TridentRunner.start_runner">[docs]</a>    <span class="k">def</span> <span class="nf">start_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Start the initialized :class:`TridentRunner` by calling the plugin method `execute_plugin` with the provided arguments.</span>
 
 <span class="sd">        :raises Exception: Re-raised exceptions that occurs in the plugin.</span>

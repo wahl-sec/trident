@@ -3,7 +3,7 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Trident - Asynchronous Intrusion Detection
+Trident Asynchronous Intrusion Detection
 ==========================================
 
 **Trident** is a asynchronous intrustion detection environment that allows for defining and running plugins to scan/modify/store resources on the system. Trident comes pre-packaged with some plugins to function as a intrusion detection system both for a host (HIDS) and the network available to the host as a network intrusion detection system (NIDS).
@@ -24,7 +24,7 @@ Indices and tables
    :maxdepth: 4
    :caption: Contents:
 
-   trident.lib
+   trident/lib
 
 Trident Usage
 =============
@@ -34,3 +34,12 @@ Trident Usage
    :caption: Usage:
 
    usage
+
+
+Trident Source
+==============
+
+.. toctree::
+   :caption: Trident Source
+
+   github
