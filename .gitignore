@@ -13,3 +13,6 @@ dist/*
 
 # Data Storage
 data/*
+
+# Documentation
+docs/build/*

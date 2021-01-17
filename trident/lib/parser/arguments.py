@@ -2,7 +2,9 @@
 # -*- coding: utf-8 -*-
 
 """ Trident: Argument Parser
+
 Parses and validate arguments passed to the program.
+
 @author: Jacob Wahlman
 """
 
@@ -15,14 +17,19 @@ import logging
 logger = logging.getLogger("__main__")
 
 
-
 class TridentArgumentParser:
+    """ Argument parser for the Trident program. Collects the required/optional arguments and ensures validity of each argument. """
     def __init__(self):
         self.parser = self._setup_parser()
         self._collect_arguments()
         self.args = self.parser.parse_args()
 
     def _setup_parser(self) -> ArgumentParser:
+        """ Setup the :class:`ArgumentParser` used to parse the program arguments.
+
+        :return: The parser used by Trident.
+        :rtype: :class:`ArgumentParser`
+        """
         parser = ArgumentParser(
             prog="Trident",
             description="Trident: Asynchronous Intrustion Detection Environment"
@@ -30,12 +37,14 @@ class TridentArgumentParser:
         return parser
 
     def _collect_arguments(self) -> NoReturn:
+        """ Collect all argument definitions from optional, plugin, storage and required arguments. """
         self._collect_optional_arguments()
         self._collect_plugin_arguments()
         self._collect_storage_arguments()
         self._collect_required_arguments()
 
     def _collect_optional_arguments(self) -> NoReturn:
+        """ Define the optional arguments for Trident, like logging level and the amount of workers to use. """
         group = self.parser.add_argument_group(title="Trident Logging")
         logging_group = group.add_mutually_exclusive_group()
         logging_group.add_argument("-v", "--verbose", action="store_true", help="Enable verbose logging for Trident.")
@@ -48,10 +57,12 @@ class TridentArgumentParser:
             default=1)
 
     def _collect_plugin_arguments(self) -> NoReturn:
+        """ Define the arguments applied on all the plugins in Trident. """
         group = self.parser.add_argument_group(title="Trident Plugin(s)")
         group.add_argument("-p:n", "--dont-store-on-error", action="store_true")
 
     def _collect_storage_arguments(self) -> NoReturn:
+        """ Define the arguments used to define the storage behaviour. """
         arg_group = self.parser.add_argument_group(title="Trident Storage")
         arg_group.add_argument("-s:p", "--path-store", type=str, metavar="PATH",
             help="Path to where on the filesystem to store the Trident store.",
@@ -62,11 +73,17 @@ class TridentArgumentParser:
         group.add_argument("-s:g" ,"--global-store", type=str, help="Use a global store for all runners.")
 
     def _collect_required_arguments(self) -> NoReturn:
+        """ Define the required arguments used for the Trident program. """
         group = self.parser.add_argument_group(title="Trident Required Arguments")
         group.add_argument("-c", "--config", help="Trident Config File. Defaults to './config/trident.cfg'", default="config/trident.cfg")
         group.add_argument("-c:s", "--section", help="Trident Config File Section. Defaults to 'TRIDENT'", default="TRIDENT")
 
     def _valid_positive_integer(self, value: Any) -> int:
+        """ Ensures that the provided value can be intrepreted as an integer and is positive.
+        :param value: The value to check.
+        :return: The integer passed if valid.
+        :rtype: int
+        """
         try:
             value = int(value)
             if not (0 < value <= maxsize):

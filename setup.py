@@ -25,6 +25,6 @@ setuptools.setup(
         "requests>=2.25.1"
     ],
     extras_require= {
-        "dev": ["setuptools", "wheel"]
+        "dev": ["setuptools", "wheel", "sphinx", "sphinx-rtd-theme"]
     }
 )
