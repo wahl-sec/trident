@@ -82,8 +82,9 @@ class TridentDaemon:
 
             if not Path(runner.data_daemon.daemon_config.store_path).exists():
                 Path(runner.data_daemon.daemon_config.store_path).touch()
-
-            runner.data_daemon.merge_store_data()
+            else:
+                runner.data_daemon.merge_store_data()
+                
             runner.data_daemon.write_to_store()
             self._runner_resource_queues[runner.data_daemon.daemon_config.store_path].remove(runner.runner_id)
 
@@ -154,7 +155,7 @@ class TridentDaemon:
                 
                 _initialized_runners.append(runner)
             except Exception as e:
-                logger.error(f"Failed to initialize a trident runner for plugin: '{plugin}' due to previous error: {e}")
+                logger.error(f"Failed to initialize a trident runner for plugin: '{plugin_id}' due to previous error: {e}")
                 raise e
 
         logger.info(f"Initialized ({len(_initialized_runners)}) out of ({len(self.daemon_config.plugins)}) plugins")
