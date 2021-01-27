@@ -13,7 +13,7 @@ from dataclasses import dataclass
 from pathlib import Path
 import concurrent.futures
 
-from typing import List, Dict, Union, NoReturn, NewType
+from typing import List, Dict, Union, NoReturn, NewType, AnyStr
 TridentDataDaemonConfig = NewType("TridentDataDaemonConfig", None)
 
 import logging
@@ -36,9 +36,7 @@ class TridentDaemonConfig:
     :type dont_store_on_error: bool
     """
     workers: int
-    plugins: Dict[str, str]
-    data_config: Dict[str, Union[str, bool]]
-    dont_store_on_error: bool
+    plugins: Dict[AnyStr, AnyStr]
 
 
 class TridentDaemon:
@@ -100,7 +98,7 @@ class TridentDaemon:
         
         self._executor.shutdown(wait=False)
 
-    def _initialize_runner(self, runner_config: TridentRunnerConfig, runner_id: str, data_daemon_config: TridentDataDaemonConfig) -> TridentRunner:
+    def _initialize_runner(self, runner_config: TridentRunnerConfig, runner_id: AnyStr) -> TridentRunner:
         """ Initialize a runner given the config :class:`TridentRunnerConfig`, runner identifier and the data config :class:`TridentDataDaemonConfig`.
         The runner :class:`TridentRunner` controls the execution and handling for each plugin.
 
@@ -108,15 +106,13 @@ class TridentDaemon:
         :type runner_config: TridentRunnerConfig
         :param runner_id: The unique indentifier for each :class:`TridentRunner`.
         :type runner_id: str
-        :param data_daemon_config: The data daemon config used by each :class:`TridentRunner` to control it's data daemon :class:`TridentDataDaemon`.
-        :type data_daemon_config: TridentDataDaemonConfig
         :raises Exception: If any issues occurs whilst initializing the :class:`TridentRunner`.
         :return: The :class:`TridentRunner` instance created from the config :class:`TridentRunnerConfig`.
         :rtype: TridentRunner
         """
         logger.info(f"Initializing plugin: '{runner_config.plugin_path}'")
         try:
-            return TridentRunner(runner_config, runner_id, data_daemon_config)
+            return TridentRunner(runner_config, runner_id)
         except Exception as e:
             raise e
 
@@ -135,22 +131,22 @@ class TridentDaemon:
             else:
                 plugin_path = plugin_config["path"]
 
-            if "args" not in plugin_config:
+            if "plugin_args" not in plugin_config:
                 logger.debug(f"No arguments specified for plugin: '{plugin_id}'")
                 plugin_args = {}
             else:
-                plugin_args = plugin_config["args"]
+                plugin_args = plugin_config["plugin_args"]
 
             try:
                 runner = self._initialize_runner(
                     runner_config=TridentRunnerConfig(
                         plugin_path=plugin_path,
                         plugin_args=plugin_args,
+                        store_config=plugin_config["args"]["store"],
+                        runner_config=plugin_config["args"]["runner"],
                         resource_queues=self._runner_resource_queues,
-                        dont_store_on_error=self.daemon_config.dont_store_on_error
                     ),
                     runner_id=plugin_id,
-                    data_daemon_config=self.daemon_config.data_config
                 )
                 
                 _initialized_runners.append(runner)
