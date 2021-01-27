@@ -7,7 +7,6 @@
 """
 
 from dataclasses import dataclass
-from json import loads
 
 from typing import Dict, Union, NoReturn
 
@@ -26,30 +25,21 @@ class TridentConfig:
     """
     trident_config: Dict[str, str]
     trident_daemon_config: Dict[str, Union[str, int]]
-    trident_data_daemon_config: Dict[str, Union[str, bool]]
 
     def __init__(self, kwargs: Dict[str, str]):
         self.trident_config = {
-            "logging_level": kwargs.get("logging_level"),
-            "verbose": kwargs.get("verbose"),
-            "quiet": kwargs.get("quiet"),
+            "logging_level": kwargs["args"]["daemon"].get("logging_level"),
+            "verbose": kwargs["args"]["daemon"].get("verbose"),
+            "quiet": kwargs["args"]["daemon"].get("quiet")
         }
 
         self.trident_daemon_config = {
-            "plugins": loads(kwargs.get("plugins")),
-            "workers": kwargs.get("workers"),
-            "dont_store_on_error": kwargs.get("dont_store_on_error")
-        }
-
-        self.trident_data_daemon_config = {
-            "path_store": kwargs.get("path_store"),
-            "no_store": kwargs.get("no_store"),
-            "global_store": kwargs.get("global_store"),
+            "plugins": kwargs.get("plugins"),
+            "workers": kwargs["args"]["daemon"].get("workers")
         }
 
         self._verify_trident_config()
         self._verify_trident_daemon_config()
-        self._verify_trident_data_daemon_config()
 
     def _verify_trident_config(self) -> NoReturn:
         """ Verify the validity of the configuration for logging and other optional argument.
@@ -81,17 +71,6 @@ class TridentConfig:
         if not self.trident_daemon_config["plugins"]:
             logger.warning("No plugins was specified")
 
-    def _verify_trident_data_daemon_config(self) -> NoReturn:
-        """ Verify the validity of the :class:`TridentDataDaemonConfig`.
-
-        :raises ValueError: If the configuration is not valid.
-        """
-        if not self.trident_data_daemon_config["path_store"]:
-            logger.warning("No path was given for stores, will use the working directory")
-
-        if self.trident_data_daemon_config["no_store"] and self.trident_data_daemon_config["global_store"]:
-            raise ValueError(f"Can't both use global store and no store options")
-
 
 class Trident:
     """ The main Trident controller handling the :class:`TridentDaemon`.
@@ -112,8 +91,7 @@ class Trident:
         """
         try:
             trident_daemon_config = TridentDaemonConfig(
-                **self.trident_config.trident_daemon_config,
-                data_config=self.trident_config.trident_data_daemon_config,
+                **self.trident_config.trident_daemon_config
             )
             return TridentDaemon(trident_daemon_config)
         except Exception as e:

@@ -3,14 +3,14 @@
 
 """ Trident: Config Parser
 
-Parses and validates the required config file passed to the program.
+Parses and validates the required config file (JSON) passed to the program.
 @author: Jacob Wahlman
 """
 
+import json
 from pathlib import Path
-from configparser import ConfigParser
 
-from typing import Dict
+from typing import Dict, Union, Any, AnyStr
 
 import logging
 logger = logging.getLogger("__main__")
@@ -24,10 +24,10 @@ class TridentConfigParser:
     :param config_file_section: The section in the config file that should be used.
     :type config_file_section: str
     """
-    def __init__(self, config_file_path: str, config_file_section: str):
+    def __init__(self, config_file_path: AnyStr, config_file_section: AnyStr):
         self.args = self._setup_parser(config_file_path, config_file_section)
 
-    def _setup_parser(self, config_file_path: str, config_file_section: str) -> Dict[str, str]:
+    def _setup_parser(self, config_file_path: AnyStr, config_file_section: AnyStr) -> Dict[AnyStr, AnyStr]:
         """ Setup the config file parser from the given path and section.
 
         :param config_file_path: The path to the config file on the host.
@@ -38,20 +38,24 @@ class TridentConfigParser:
         :rtype: dict
         """
         config_file_path_n = self._normalize_config_file_path(config_file_path)
-        parser = ConfigParser()
 
-        if not parser.read(config_file_path):
-            raise FileNotFoundError(f"Failed to find a config file at: '{config_file_path}'")
+        try:
+            with open(config_file_path_n, "r") as config:
+                data = json.load(config)
+        except Exception as e:
+            logger.error(f"Failed to read config file at: '{config_file_path_n}'.")
+            raise e
 
-        if not parser.has_section(config_file_section):
+        if not config_file_section in data:
             raise ValueError(f"Section: '{config_file_section}' does not exist for config file: '{config_file_path}'")
 
-        if not self._verify_config_file_section(parser[config_file_section]):
+        data[config_file_section] = self._convert_data_section(data[config_file_section])
+        if not self._verify_config_file_section(data[config_file_section]):
             raise ValueError(f"Config file is not valid due to previous error.")
 
-        return dict(parser[config_file_section])
+        return data[config_file_section]
 
-    def _normalize_config_file_path(self, config_file_path) -> Path:
+    def _normalize_config_file_path(self, config_file_path: AnyStr) -> Path:
         """ Normalize the path to the config file using the convention of the platform that Trident is run on.
 
         :param config_file_path: The path to the config file path to normalize.
@@ -66,8 +70,30 @@ class TridentConfigParser:
             raise e
 
         return normalized_path
+    
+    def _convert_data_section(self, config_data_section: Dict[AnyStr, Union[Dict[AnyStr, Any], AnyStr]]) -> Dict[AnyStr, Union[Dict[AnyStr, Any], AnyStr]]:
+        """ Convert all the argument keys in the config dictionary to lowercase.
+        Ignores the plugin arguments keys since the arguments might be meant to be in any other case.
 
-    def _verify_config_file_section(self, config_section_args: Dict[str, str]) -> bool:
+        :param config_data_section: The section of the config file to convert.
+        :type config_data_section: dict
+        :return: The converted config dictionary.
+        :rtype: dict
+        """
+        def _convert(data, converted):
+            for k in data.keys():
+                if k in ["plugin_args"]:
+                    converted[k] = data[k]
+                elif isinstance(data[k], dict):
+                    converted[k.lower()] = _convert(data[k], {})
+                else:
+                    converted[k.lower()] = data[k]
+
+            return converted
+        
+        return _convert(config_data_section, {})
+
+    def _verify_config_file_section(self, config_section_args: Dict[AnyStr, AnyStr]) -> bool:
         """ Verify the validity of the keys given in the config file section.
         Ensures that the required arguments are provided in the section.
 

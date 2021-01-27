@@ -13,7 +13,7 @@ from inspect import signature
 from dataclasses import dataclass
 from importlib import import_module
 
-from typing import NewType, Dict, Union, List, Any, NoReturn, Generator, Tuple
+from typing import NewType, Dict, Union, List, Any, NoReturn, Generator, Tuple, AnyStr
 Module = NewType("Module", object)
 PluginClass = NewType("PluginClass", object)
 
@@ -45,25 +45,35 @@ class TridentRunnerConfig:
     :param thread_event: The event flag used to signal to the plugin that it should exit.
     :type thread_event: :class:`threading.Event`
     """
-    plugin_path: str
-    plugin_name: str
-    plugin_args: Dict[str, Any]
+    plugin_path: AnyStr
+    plugin_name: AnyStr
+    plugin_args: Dict[AnyStr, Any]
     plugin_module: object
     plugin_instance: object
-    resource_queues: Dict[str, List[str]]
-    dont_store_on_error: bool
+    resource_queues: Dict[AnyStr, List[AnyStr]]
     thread_event: Event
 
-    def __init__(self, plugin_path: str, plugin_args: Dict[str, Any], resource_queues: Dict[str, List[str]], dont_store_on_error: bool):
+    def __init__(self, plugin_path: AnyStr, plugin_args: Dict[AnyStr, Any], store_config: Dict[AnyStr, Any], runner_config: Dict[AnyStr, Any], resource_queues: Dict[AnyStr, List[AnyStr]]):
         self.plugin_path = plugin_path
         self.plugin_args = plugin_args
+        self.store_config = store_config
         self.resource_queues = resource_queues
-        self.dont_store_on_error = dont_store_on_error
+
         self.thread_event = Event()
+        self._apply_runner_config(runner_config)
         self.plugin_name = self._resolve_plugin_name()
         self.plugin_instance, self.plugin_module = self._initialize_runner_plugin()
 
-    def _resolve_plugin_name(self) -> str:
+    def _apply_runner_config(self, runner_config: Dict[AnyStr, Any]) -> None:
+        """ Apply any config parameter passed to this runner config.
+
+        :param runner_config: Config containing the parameters to apply.
+        :type runner_config: dict
+        """
+        for arg, value in runner_config.items():
+            setattr(self, arg, value)
+
+    def _resolve_plugin_name(self) -> AnyStr:
         """ Construct the name of the plugin from the plugin path.
         Converts the path to the plugin to the expected name of the class in the plugin module.
 
@@ -107,14 +117,11 @@ class TridentRunner:
     :type runner_config: :class:`TridentRunnerConfig`
     :param runner_id: The unique identifier for this runner.
     :type runner_id: str
-    :param data_daemon_config: The configuration for this runners data daemon.
-    :type data_daemon_config: :class:`TridentDataDaemonConfig`
     """
-    def __init__(self, runner_config: TridentRunnerConfig, runner_id: str, data_daemon_config: TridentDataDaemonConfig):
+    def __init__(self, runner_config: TridentRunnerConfig, runner_id: AnyStr):
         self.runner_config = runner_config
         self.runner_id = runner_id
 
-        self.data_daemon_config = data_daemon_config
         self.data_daemon = self._initialize_data_daemon()
 
     def start_runner(self) -> NoReturn:
@@ -150,13 +157,13 @@ class TridentRunner:
         :return: The initialized :class:`TridentDataDaemon`.
         :rtype: :class:`TridentDataDaemon`
         """
-        if self.data_daemon_config["no_store"]:
+        if self.runner_config.store_config.get("no_store"):
             return None
 
-        if self.data_daemon_config["global_store"]:
-            store_path = f"{self.data_daemon_config['path_store']}/{self.data_daemon_config['global_store']}"
+        if self.runner_config.store_config.get("global_store"):
+            store_path = self.runner_config.store_config.get("global_store")
         else:
-            store_path = self.data_daemon_config["path_store"]
+            store_path = self.runner_config.store_config.get("path_store")
 
         try:
             trident_data_config = TridentDataDaemonConfig(
@@ -213,7 +220,7 @@ class TridentRunner:
                 results_index += 1
             except Exception as e:
                 if not isinstance(e, StopIteration):
-                    if self.runner_config.dont_store_on_error:
+                    if self.runner_config.get("dont_store_on_error"):
                         raise e
 
                     if self.data_daemon is not None:

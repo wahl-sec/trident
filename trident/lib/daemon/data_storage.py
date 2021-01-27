@@ -13,7 +13,7 @@ from pathlib import Path
 from dataclasses import dataclass
 from functools import reduce
 
-from typing import Dict, NewType, Any, NoReturn
+from typing import Dict, NewType, Any, NoReturn, AnyStr
 TridentRunner = NewType("TridentRunner", None)
 
 import logging
@@ -33,14 +33,14 @@ class TridentDataDaemonConfig:
     """
     runner: object
     store_path: Path
-    store_name: str
+    store_name: AnyStr
 
-    def __init__(self, runner: TridentRunner, store_path: str, store_name: str):
+    def __init__(self, runner: TridentRunner, store_path: AnyStr, store_name: AnyStr):
         self.runner = runner
         self.store_name = store_name
         self.store_path = self._determine_store_path(store_path)
 
-    def _determine_store_path(self, store_path: str) -> Path:
+    def _determine_store_path(self, store_path: AnyStr) -> Path:
         """ Verifies that the store path is a valid path that exists and is normalizable, returns the normalized path if valid.
         Raises `FileNotFoundError` if the normalized store path does not exist.
 
@@ -63,7 +63,7 @@ class TridentDataDaemonConfig:
         else:
             raise FileNotFoundError(f"Store path: {store_path_n} does not exist for runner: '{self.runner.runner_id}'")
 
-    def _normalize_store_path(self, store_path: str) -> Path:
+    def _normalize_store_path(self, store_path: AnyStr) -> Path:
         """ Normalizes the path to the store by using the :class:`Path` object.
 
         :param store_path: The path to the store to normalize.
@@ -109,7 +109,7 @@ class TridentDataDaemon:
 
     def write_to_store(self) -> NoReturn:
         """ Writes the current initialized store to the disk on the system for the given store path. """
-        logger.debug(f"Writing to store at path: '{self.daemon_config.store_path}'")
+        logger.debug(f"Writing to store at path: '{self.daemon_config.store_path}' for runner: '{self.daemon_config.runner.runner_id}'")
         try:
             with open(self.daemon_config.store_path, "r+") as store_obj:
                 store_obj.seek(0)
@@ -213,7 +213,7 @@ class TridentDataDaemon:
             logger.error(f"Failed to get result for runner: '{self.daemon_config.runner.runner_id}'")
             raise e
 
-    def _get_run_index(self) -> str:
+    def _get_run_index(self) -> AnyStr:
         """ Determine the run index for this run given the latest index in the store.
         If no runs have been made then return 0 as first index.
 
