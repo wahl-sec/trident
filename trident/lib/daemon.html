@@ -225,7 +225,7 @@ write the store to the disk.</p>
 
 <dl class="py class">
 <dt id="trident.lib.daemon.data_storage.TridentDataDaemonConfig">
-<em class="property">class </em><code class="sig-prename descclassname">trident.lib.daemon.data_storage.</code><code class="sig-name descname">TridentDataDaemonConfig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">runner</span><span class="p">:</span> <span class="n">TridentRunner</span></em>, <em class="sig-param"><span class="n">store_path</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">store_name</span><span class="p">:</span> <span class="n">str</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/daemon/data_storage.html#TridentDataDaemonConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemonConfig" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">trident.lib.daemon.data_storage.</code><code class="sig-name descname">TridentDataDaemonConfig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">runner</span><span class="p">:</span> <span class="n">TridentRunner</span></em>, <em class="sig-param"><span class="n">store_path</span><span class="p">:</span> <span class="n">AnyStr</span></em>, <em class="sig-param"><span class="n">store_name</span><span class="p">:</span> <span class="n">AnyStr</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/daemon/data_storage.html#TridentDataDaemonConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemonConfig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Config class for <a class="reference internal" href="#trident.lib.daemon.data_storage.TridentDataDaemon" title="trident.lib.daemon.data_storage.TridentDataDaemon"><code class="xref py py-class docutils literal notranslate"><span class="pre">TridentDataDaemon</span></code></a> controlling the data handling for each <code class="xref py py-class docutils literal notranslate"><span class="pre">TridentRunner</span></code>.</p>
 <dl class="field-list simple">
@@ -244,7 +244,7 @@ write the store to the disk.</p>
 
 <dl class="py attribute">
 <dt id="trident.lib.daemon.data_storage.TridentDataDaemonConfig.store_name">
-<code class="sig-name descname">store_name</code><em class="property">: str</em><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemonConfig.store_name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">store_name</code><em class="property">: AnyStr</em><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemonConfig.store_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -301,7 +301,7 @@ Raises exception for each future that encountered an exception while running.</p
 
 <dl class="py class">
 <dt id="trident.lib.daemon.trident.TridentDaemonConfig">
-<em class="property">class </em><code class="sig-prename descclassname">trident.lib.daemon.trident.</code><code class="sig-name descname">TridentDaemonConfig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">workers</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">plugins</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">data_config</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Union<span class="p">[</span>str<span class="p">, </span>bool<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">dont_store_on_error</span><span class="p">:</span> <span class="n">bool</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/daemon/trident.html#TridentDaemonConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemonConfig" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">trident.lib.daemon.trident.</code><code class="sig-name descname">TridentDaemonConfig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">workers</span><span class="p">:</span> <span class="n">int</span></em>, <em class="sig-param"><span class="n">plugins</span><span class="p">:</span> <span class="n">Dict</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/daemon/trident.html#TridentDaemonConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemonConfig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Config class for the <a class="reference internal" href="#trident.lib.daemon.trident.TridentDaemon" title="trident.lib.daemon.trident.TridentDaemon"><code class="xref py py-class docutils literal notranslate"><span class="pre">TridentDaemon</span></code></a> controlling each <code class="xref py py-class docutils literal notranslate"><span class="pre">TridentRunner</span></code>.</p>
 <dl class="field-list simple">
@@ -315,18 +315,8 @@ Raises exception for each future that encountered an exception while running.</p
 </dd>
 </dl>
 <dl class="py attribute">
-<dt id="trident.lib.daemon.trident.TridentDaemonConfig.data_config">
-<code class="sig-name descname">data_config</code><em class="property">: Dict<span class="p">[</span>str<span class="p">, </span>Union<span class="p">[</span>str<span class="p">, </span>bool<span class="p">]</span><span class="p">]</span></em><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemonConfig.data_config" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt id="trident.lib.daemon.trident.TridentDaemonConfig.dont_store_on_error">
-<code class="sig-name descname">dont_store_on_error</code><em class="property">: bool</em><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemonConfig.dont_store_on_error" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt id="trident.lib.daemon.trident.TridentDaemonConfig.plugins">
-<code class="sig-name descname">plugins</code><em class="property">: Dict<span class="p">[</span>str<span class="p">, </span>str<span class="p">]</span></em><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemonConfig.plugins" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plugins</code><em class="property">: Dict</em><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemonConfig.plugins" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">

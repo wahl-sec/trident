@@ -180,7 +180,7 @@
 <ul class="simple">
 <li><dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">-c</span></code>, <code class="docutils literal notranslate"><span class="pre">--config</span></code></dt><dd><ul>
-<li><p>The path to the Trident configuration file. The config file should be of format <code class="docutils literal notranslate"><span class="pre">.cfg</span></code>. (Default: <code class="docutils literal notranslate"><span class="pre">config/trident.cfg</span></code>)</p></li>
+<li><p>The path to the Trident configuration file. The config file should be of format <code class="docutils literal notranslate"><span class="pre">.json</span></code>. (Default: <code class="docutils literal notranslate"><span class="pre">config/trident.json</span></code>)</p></li>
 </ul>
 </dd>
 </dl>
@@ -254,26 +254,442 @@
 </div>
 <div class="section" id="configuration">
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
-<p>Configuration of Trident is made through the configuration file, by default located at <code class="docutils literal notranslate"><span class="pre">config/trident.cfg</span></code>.</p>
-<p>The configuration file is divided into sections with the default section <code class="docutils literal notranslate"><span class="pre">TRIDENT</span></code> being used and the available parameters are the following:</p>
+<p>Configuration of <cite>Trident</cite> is made through the configuration file, by default located at <cite>config/trident.json</cite>.</p>
+<p>Any argument that also exist as a possible configuration value in the config file will be used over the value in the configuration file for all the plugins, so the arguments exist as a sort of override to any configuration value.</p>
+<p>The configuration file is divided into sections with the default section <cite>TRIDENT</cite> being used and the expected format should be according to the following example for configuring one runner.
+<a href="#id1"><span class="problematic" id="id2">``</span></a><a href="#id3"><span class="problematic" id="id4">`</span></a>json
+{</p>
+<blockquote>
+<div><dl>
+<dt>“TRIDENT”: {</dt><dd><p>“logging_level”: “INFO”,
+“plugins”: {</p>
+<blockquote>
+<div><dl>
+<dt>“[plugin_id]”: {</dt><dd><p>“path”: “[plugin_path]”,
+“plugin_args”: {</p>
+<blockquote>
+<div><p>“[arg_name]”: “[arg_value]”</p>
+</div></blockquote>
+<p>},
+“args”: {</p>
+<blockquote>
+<div><dl class="simple">
+<dt>“[runner_args]”: {</dt><dd><p>…</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<div class="section" id="id5">
+<h3>}<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>The following is a example configuration for two plugins, where the first runner instance don’t store any of the produced results in a <cite>.json</cite> store.
+<a href="#id6"><span class="problematic" id="id7">``</span></a><a href="#id8"><span class="problematic" id="id9">`</span></a>json
+{</p>
+<blockquote>
+<div><dl>
+<dt>“TRIDENT”: {</dt><dd><p>“logging_level”: “INFO”,
+“plugins”: {</p>
+<blockquote>
+<div><dl>
+<dt>“plugin0”: {</dt><dd><p>“path”: “plugins.plugin”,
+“plugin_args”: {</p>
+<blockquote>
+<div><p>“value”: 0</p>
+</div></blockquote>
+<p>},
+“args”: {</p>
+<blockquote>
+<div><dl class="simple">
+<dt>“store”: {</dt><dd><p>“no_store”: true</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+<p>},
+“plugin1”: {</p>
+<blockquote>
+<div><p>“path”: “plugins.plugin”,
+“plugin_args”: {</p>
+<blockquote>
+<div><p>“value”: 10</p>
+</div></blockquote>
+<p>},
+“args”: {</p>
+<blockquote>
+<div><dl class="simple">
+<dt>“store”: {</dt><dd><p>“no_store”: false</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+</div>
+<div class="section" id="id10">
+<h3>}<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<p>The <cite>args</cite> section is optional and contain the following sections: <cite>daemon</cite>, <cite>store</cite>, <cite>runner</cite> and <cite>trident</cite>.</p>
+<p>The <cite>args</cite> section can be placed either inside each plugin definition to define specific behavior for that plugin or it can be placed outside to be defined for all of the plugins. These can also be combined to provide a general template for the plugins and specializations for certain plugins.</p>
+<p>Example: This example shows two plugins were the global <cite>args</cite> is defined to not store any values produced by the plugins in stores on the system and at maximum use <cite>2</cite> concurrent workers. However, we have also defined <cite>plugin0</cite> to store the results produced from the plugin and store them in the folder <cite>data/data</cite>.
+<a href="#id11"><span class="problematic" id="id12">``</span></a><a href="#id13"><span class="problematic" id="id14">`</span></a>json
+{</p>
+<blockquote>
+<div><dl>
+<dt>“TRIDENT”: {</dt><dd><p>“logging_level”: “INFO”,
+“plugins”: {</p>
+<blockquote>
+<div><dl>
+<dt>“plugin0”: {</dt><dd><p>“path”: “plugins.plugin”,
+“plugin_args”: {</p>
+<blockquote>
+<div><p>“value”: 0</p>
+</div></blockquote>
+<p>},
+“args”: {</p>
+<blockquote>
+<div><dl class="simple">
+<dt>“store”: {</dt><dd><p>“no_store”: false,
+“path_store”: “data/data”</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+<p>},
+“plugin1”: {</p>
+<blockquote>
+<div><p>“path”: “plugins.plugin”,
+“plugin_args”: {</p>
+<blockquote>
+<div><p>“value”: 10</p>
+</div></blockquote>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</div></blockquote>
+<p>},
+“args”: {</p>
+<blockquote>
+<div><dl class="simple">
+<dt>“store”: {</dt><dd><p>“no_store”: true</p>
+</dd>
+</dl>
+<p>},
+“daemon”: {</p>
+<blockquote>
+<div><p>“workers”: 2</p>
+</div></blockquote>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+</div>
+<div class="section" id="id15">
+<h3>}<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<p>The <cite>daemon</cite> and <cite>trident</cite> sections are applied as arguments for all of the plugins as they concern the general execution of the program.</p>
+<p>The <cite>daemon</cite> section allows for the following arguments:</p>
 <ul class="simple">
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">LOGGING_LEVEL</span></code> (Levels: DEBUG &gt; INFO &gt; WARNING &gt; ERROR &gt; CRITICAL)</dt><dd><ul>
-<li><p>INFO (Display INFO and everything below it)</p></li>
-<li><p>DEBUG (Displays all logging messages from <cite>Trident</cite>)</p></li>
+<dt><cite>workers</cite></dt><dd><ul>
+<li><p>The amount of workers that should be used at maximum to execute the plugins.</p></li>
+<li><p>Default: <cite>5</cite></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Example:
+<a href="#id16"><span class="problematic" id="id17">``</span></a><a href="#id18"><span class="problematic" id="id19">`</span></a>json
+{</p>
+<blockquote>
+<div><dl>
+<dt>“TRIDENT”: {</dt><dd><p>“logging_level”: “INFO”,
+“plugins”: {</p>
+<blockquote>
+<div><dl>
+<dt>“[plugin_id]”: {</dt><dd><p>“path”: “[plugin_path]”,
+“plugin_args”: {</p>
+<blockquote>
+<div><p>“[arg_name]”: “[arg_value]”</p>
+</div></blockquote>
+<p>},
+“args”: {</p>
+<blockquote>
+<div><dl class="simple">
+<dt>“[runner_args]”: {</dt><dd><p>…</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>},
+“args”: {</p>
+<blockquote>
+<div><dl class="simple">
+<dt>“daemon”: {</dt><dd><p>“workers”: 5</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+</div>
+<div class="section" id="id20">
+<h3>}<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h3>
+<p>The <cite>trident</cite> section allows for the following arguments:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><cite>verbose</cite></dt><dd><ul>
+<li><p>Enable verbose logging.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">PLUGINS</span></code> (Defines the plugins to run in the format described below)</dt><dd><ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">{&quot;[PLUGIN_ID]&quot;:</span> <span class="pre">{&quot;path&quot;:</span> <span class="pre">&quot;[PATH]&quot;,</span> <span class="pre">&quot;args&quot;:</span> <span class="pre">{&quot;[NAME]&quot;:</span> <span class="pre">[VALUE]}}</span></code></p></li>
-<li><p>Where the names in the bracket are substituted for your values. The <cite>args</cite> section can be left out if no arguments are passed to the plugin.</p></li>
+<dt><cite>quiet</cite></dt><dd><ul>
+<li><p>Disable logging.</p></li>
 </ul>
 </dd>
 </dl>
 </li>
 </ul>
+<p>Example: Disables the output for all plugins.
+<a href="#id21"><span class="problematic" id="id22">``</span></a><a href="#id23"><span class="problematic" id="id24">`</span></a>json
+{</p>
+<blockquote>
+<div><dl>
+<dt>“TRIDENT”: {</dt><dd><p>“logging_level”: “INFO”,
+“plugins”: {</p>
+<blockquote>
+<div><dl>
+<dt>“[plugin_id]”: {</dt><dd><p>“path”: “[plugin_path]”,
+“plugin_args”: {</p>
+<blockquote>
+<div><p>“[arg_name]”: “[arg_value]”</p>
+</div></blockquote>
+<p>},
+“args”: {</p>
+<blockquote>
+<div><dl class="simple">
+<dt>“[runner_args]”: {</dt><dd><p>…</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>},
+“args”: {</p>
+<blockquote>
+<div><dl class="simple">
+<dt>“trident”: {</dt><dd><p>“quiet”: true</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+</div>
+<div class="section" id="id25">
+<h3>}<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h3>
+<p>The <cite>store</cite> section allows for the following arguments:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><cite>no_store</cite></dt><dd><ul>
+<li><p>Do not store any of the produced values in a store on the system.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><cite>global_store</cite></dt><dd><ul>
+<li><p>Define the path to a global store to use for all plugins.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><cite>path_store</cite></dt><dd><ul>
+<li><p>Define the path on the system where the store should be placed.</p></li>
+<li><p>Default: <cite>data</cite></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Example: Store values for all plugins in a global store except one runner that does not store any values.
+<a href="#id26"><span class="problematic" id="id27">``</span></a><a href="#id28"><span class="problematic" id="id29">`</span></a>json
+{</p>
+<blockquote>
+<div><dl>
+<dt>“TRIDENT”: {</dt><dd><p>“logging_level”: “INFO”,
+“plugins”: {</p>
+<blockquote>
+<div><dl>
+<dt>“plugin0”: {</dt><dd><p>“path”: “plugins.plugin”,
+“plugin_args”: {</p>
+<blockquote>
+<div><p>“value”: 0</p>
+</div></blockquote>
+<p>},
+“args”: {</p>
+<blockquote>
+<div><dl class="simple">
+<dt>“store”: {</dt><dd><p>“no_store”: true</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+<p>},
+“plugin1”: {</p>
+<blockquote>
+<div><p>“path”: “plugins.plugin”,
+“plugin_args”: {</p>
+<blockquote>
+<div><p>“value”: 10</p>
+</div></blockquote>
+<p>}</p>
+</div></blockquote>
+<p>},
+“plugin2”: {</p>
+<blockquote>
+<div><p>“path”: “plugins.plugin”,
+“plugin_args”: {</p>
+<blockquote>
+<div><p>“value”: 20</p>
+</div></blockquote>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</div></blockquote>
+<p>},
+“args”: {</p>
+<blockquote>
+<div><dl class="simple">
+<dt>“store”: {</dt><dd><p>“global_store”: “data/global.json”</p>
+</dd>
+</dl>
+<p>},
+“daemon”: {</p>
+<blockquote>
+<div><p>“workers”: 3</p>
+</div></blockquote>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+</div>
+<div class="section" id="id30">
+<h3>}<a class="headerlink" href="#id30" title="Permalink to this headline">¶</a></h3>
+<p>The <cite>runner</cite> section allows for the following arguments:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><cite>dont_store_on_error</cite></dt><dd><ul>
+<li><p>If this is set to <cite>true</cite> then if any exceptions occur when running the plugin the runner will quit immediatly and not store the values accumulated up until that crash.</p></li>
+<li><p>Default: <cite>false</cite></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Example: Two plugins were the values of one of the plugins are stored if the runner encounters an exception.
+<a href="#id31"><span class="problematic" id="id32">``</span></a><a href="#id33"><span class="problematic" id="id34">`</span></a>json
+{</p>
+<blockquote>
+<div><dl>
+<dt>“TRIDENT”: {</dt><dd><p>“logging_level”: “INFO”,
+“plugins”: {</p>
+<blockquote>
+<div><dl>
+<dt>“plugin0”: {</dt><dd><p>“path”: “plugins.plugin”,
+“plugin_args”: {</p>
+<blockquote>
+<div><p>“value”: 0</p>
+</div></blockquote>
+<p>},
+“args”: {</p>
+<blockquote>
+<div><dl class="simple">
+<dt>“runner”: {</dt><dd><p>“dont_store_on_error”: true</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+<p>},
+“plugin1”: {</p>
+<blockquote>
+<div><p>“path”: “plugins.plugin”,
+“plugin_args”: {</p>
+<blockquote>
+<div><p>“value”: 10</p>
+</div></blockquote>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</div></blockquote>
+<p>},
+“args”: {</p>
+<blockquote>
+<div><dl class="simple">
+<dt>“daemon”: {</dt><dd><p>“workers”: 2</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<p>}</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+</div>
+<div class="section" id="id35">
+<h3>}<a class="headerlink" href="#id35" title="Permalink to this headline">¶</a></h3>
+</div>
 </div>
 <div class="section" id="developing-plugins">
 <h2>Developing Plugins<a class="headerlink" href="#developing-plugins" title="Permalink to this headline">¶</a></h2>

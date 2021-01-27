@@ -181,7 +181,7 @@
 &#64;author: Jacob Wahlman</p>
 <dl class="py class">
 <dt id="trident.lib.runner.trident.TridentRunner">
-<em class="property">class </em><code class="sig-prename descclassname">trident.lib.runner.trident.</code><code class="sig-name descname">TridentRunner</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">runner_config</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#trident.lib.runner.trident.TridentRunnerConfig" title="trident.lib.runner.trident.TridentRunnerConfig">trident.lib.runner.trident.TridentRunnerConfig</a></span></em>, <em class="sig-param"><span class="n">runner_id</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">data_daemon_config</span><span class="p">:</span> <span class="n"><a class="reference internal" href="daemon.html#trident.lib.daemon.data_storage.TridentDataDaemonConfig" title="trident.lib.daemon.data_storage.TridentDataDaemonConfig">trident.lib.daemon.data_storage.TridentDataDaemonConfig</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/runner/trident.html#TridentRunner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trident.lib.runner.trident.TridentRunner" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">trident.lib.runner.trident.</code><code class="sig-name descname">TridentRunner</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">runner_config</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#trident.lib.runner.trident.TridentRunnerConfig" title="trident.lib.runner.trident.TridentRunnerConfig">trident.lib.runner.trident.TridentRunnerConfig</a></span></em>, <em class="sig-param"><span class="n">runner_id</span><span class="p">:</span> <span class="n">AnyStr</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/runner/trident.html#TridentRunner"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trident.lib.runner.trident.TridentRunner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The <a class="reference internal" href="#trident.lib.runner.trident.TridentRunner" title="trident.lib.runner.trident.TridentRunner"><code class="xref py py-class docutils literal notranslate"><span class="pre">TridentRunner</span></code></a> used to control the execution of each plugin.
 Starts initialized plugins, evaluates results and calls for storage by the <code class="xref py py-class docutils literal notranslate"><span class="pre">TridentDataDaemon</span></code> attached to this runner.</p>
@@ -190,7 +190,6 @@ Starts initialized plugins, evaluates results and calls for storage by the <code
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>runner_config</strong> (<a class="reference internal" href="#trident.lib.runner.trident.TridentRunnerConfig" title="trident.lib.runner.trident.TridentRunnerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">TridentRunnerConfig</span></code></a>) – The configuration used to define the behavior of this runner.</p></li>
 <li><p><strong>runner_id</strong> (<em>str</em>) – The unique identifier for this runner.</p></li>
-<li><p><strong>data_daemon_config</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">TridentDataDaemonConfig</span></code>) – The configuration for this runners data daemon.</p></li>
 </ul>
 </dd>
 </dl>
@@ -209,7 +208,7 @@ Starts initialized plugins, evaluates results and calls for storage by the <code
 
 <dl class="py class">
 <dt id="trident.lib.runner.trident.TridentRunnerConfig">
-<em class="property">class </em><code class="sig-prename descclassname">trident.lib.runner.trident.</code><code class="sig-name descname">TridentRunnerConfig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">plugin_path</span><span class="p">:</span> <span class="n">str</span></em>, <em class="sig-param"><span class="n">plugin_args</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">resource_queues</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></span></em>, <em class="sig-param"><span class="n">dont_store_on_error</span><span class="p">:</span> <span class="n">bool</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/runner/trident.html#TridentRunnerConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">trident.lib.runner.trident.</code><code class="sig-name descname">TridentRunnerConfig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">plugin_path</span><span class="p">:</span> <span class="n">AnyStr</span></em>, <em class="sig-param"><span class="n">plugin_args</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>AnyStr<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">store_config</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>AnyStr<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">runner_config</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>AnyStr<span class="p">, </span>Any<span class="p">]</span></span></em>, <em class="sig-param"><span class="n">resource_queues</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>AnyStr<span class="p">, </span>List<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/runner/trident.html#TridentRunnerConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The configuration for the <a class="reference internal" href="#trident.lib.runner.trident.TridentRunner" title="trident.lib.runner.trident.TridentRunner"><code class="xref py py-class docutils literal notranslate"><span class="pre">TridentRunner</span></code></a>.
 Defines the attributes that the runner runs, like plugin instance, module and other info required by the runner.</p>
@@ -228,13 +227,8 @@ Defines the attributes that the runner runs, like plugin instance, module and ot
 </dd>
 </dl>
 <dl class="py attribute">
-<dt id="trident.lib.runner.trident.TridentRunnerConfig.dont_store_on_error">
-<code class="sig-name descname">dont_store_on_error</code><em class="property">: bool</em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.dont_store_on_error" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
 <dt id="trident.lib.runner.trident.TridentRunnerConfig.plugin_args">
-<code class="sig-name descname">plugin_args</code><em class="property">: Dict<span class="p">[</span>str<span class="p">, </span>Any<span class="p">]</span></em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.plugin_args" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plugin_args</code><em class="property">: Dict<span class="p">[</span>AnyStr<span class="p">, </span>Any<span class="p">]</span></em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.plugin_args" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -249,17 +243,17 @@ Defines the attributes that the runner runs, like plugin instance, module and ot
 
 <dl class="py attribute">
 <dt id="trident.lib.runner.trident.TridentRunnerConfig.plugin_name">
-<code class="sig-name descname">plugin_name</code><em class="property">: str</em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.plugin_name" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plugin_name</code><em class="property">: AnyStr</em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.plugin_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="trident.lib.runner.trident.TridentRunnerConfig.plugin_path">
-<code class="sig-name descname">plugin_path</code><em class="property">: str</em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.plugin_path" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">plugin_path</code><em class="property">: AnyStr</em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.plugin_path" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="trident.lib.runner.trident.TridentRunnerConfig.resource_queues">
-<code class="sig-name descname">resource_queues</code><em class="property">: Dict<span class="p">[</span>str<span class="p">, </span>List<span class="p">[</span>str<span class="p">]</span><span class="p">]</span></em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.resource_queues" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">resource_queues</code><em class="property">: Dict<span class="p">[</span>AnyStr<span class="p">, </span>List<span class="p">]</span></em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.resource_queues" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">

@@ -174,7 +174,7 @@
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">reduce</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">NewType</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">NoReturn</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">NewType</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">NoReturn</span><span class="p">,</span> <span class="n">AnyStr</span>
 <span class="n">TridentRunner</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s2">&quot;TridentRunner&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
@@ -194,14 +194,14 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">runner</span><span class="p">:</span> <span class="nb">object</span>
     <span class="n">store_path</span><span class="p">:</span> <span class="n">Path</span>
-    <span class="n">store_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">store_name</span><span class="p">:</span> <span class="n">AnyStr</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runner</span><span class="p">:</span> <span class="n">TridentRunner</span><span class="p">,</span> <span class="n">store_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">store_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runner</span><span class="p">:</span> <span class="n">TridentRunner</span><span class="p">,</span> <span class="n">store_path</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">store_name</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">runner</span> <span class="o">=</span> <span class="n">runner</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store_name</span> <span class="o">=</span> <span class="n">store_name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_determine_store_path</span><span class="p">(</span><span class="n">store_path</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_determine_store_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_determine_store_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store_path</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Verifies that the store path is a valid path that exists and is normalizable, returns the normalized path if valid.</span>
 <span class="sd">        Raises `FileNotFoundError` if the normalized store path does not exist.</span>
 
@@ -224,7 +224,7 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Store path: </span><span class="si">{</span><span class="n">store_path_n</span><span class="si">}</span><span class="s2"> does not exist for runner: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_normalize_store_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_normalize_store_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store_path</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Normalizes the path to the store by using the :class:`Path` object.</span>
 
 <span class="sd">        :param store_path: The path to the store to normalize.</span>
@@ -270,7 +270,7 @@
 
 <div class="viewcode-block" id="TridentDataDaemon.write_to_store"><a class="viewcode-back" href="../../../../trident/lib/daemon.html#trident.lib.daemon.data_storage.TridentDataDaemon.write_to_store">[docs]</a>    <span class="k">def</span> <span class="nf">write_to_store</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Writes the current initialized store to the disk on the system for the given store path. &quot;&quot;&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing to store at path: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Writing to store at path: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="si">}</span><span class="s2">&#39; for runner: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="p">,</span> <span class="s2">&quot;r+&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">store_obj</span><span class="p">:</span>
                 <span class="n">store_obj</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -374,7 +374,7 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to get result for runner: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span>
 
-    <span class="k">def</span> <span class="nf">_get_run_index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_get_run_index</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnyStr</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Determine the run index for this run given the latest index in the store.</span>
 <span class="sd">        If no runs have been made then return 0 as first index.</span>
 

@@ -174,7 +174,7 @@
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">concurrent.futures</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">NoReturn</span><span class="p">,</span> <span class="n">NewType</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">NoReturn</span><span class="p">,</span> <span class="n">NewType</span><span class="p">,</span> <span class="n">AnyStr</span>
 <span class="n">TridentDataDaemonConfig</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s2">&quot;TridentDataDaemonConfig&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
@@ -197,9 +197,7 @@
 <span class="sd">    :type dont_store_on_error: bool</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">workers</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="n">plugins</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
-    <span class="n">data_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]]</span>
-    <span class="n">dont_store_on_error</span><span class="p">:</span> <span class="nb">bool</span></div>
+    <span class="n">plugins</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">AnyStr</span><span class="p">]</span></div>
 
 
 <div class="viewcode-block" id="TridentDaemon"><a class="viewcode-back" href="../../../../trident/lib/daemon.html#trident.lib.daemon.trident.TridentDaemon">[docs]</a><span class="k">class</span> <span class="nc">TridentDaemon</span><span class="p">:</span>
@@ -261,7 +259,7 @@
         
         <span class="bp">self</span><span class="o">.</span><span class="n">_executor</span><span class="o">.</span><span class="n">shutdown</span><span class="p">(</span><span class="n">wait</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
 
-    <span class="k">def</span> <span class="nf">_initialize_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runner_config</span><span class="p">:</span> <span class="n">TridentRunnerConfig</span><span class="p">,</span> <span class="n">runner_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data_daemon_config</span><span class="p">:</span> <span class="n">TridentDataDaemonConfig</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TridentRunner</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_initialize_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runner_config</span><span class="p">:</span> <span class="n">TridentRunnerConfig</span><span class="p">,</span> <span class="n">runner_id</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TridentRunner</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Initialize a runner given the config :class:`TridentRunnerConfig`, runner identifier and the data config :class:`TridentDataDaemonConfig`.</span>
 <span class="sd">        The runner :class:`TridentRunner` controls the execution and handling for each plugin.</span>
 
@@ -269,15 +267,13 @@
 <span class="sd">        :type runner_config: TridentRunnerConfig</span>
 <span class="sd">        :param runner_id: The unique indentifier for each :class:`TridentRunner`.</span>
 <span class="sd">        :type runner_id: str</span>
-<span class="sd">        :param data_daemon_config: The data daemon config used by each :class:`TridentRunner` to control it&#39;s data daemon :class:`TridentDataDaemon`.</span>
-<span class="sd">        :type data_daemon_config: TridentDataDaemonConfig</span>
 <span class="sd">        :raises Exception: If any issues occurs whilst initializing the :class:`TridentRunner`.</span>
 <span class="sd">        :return: The :class:`TridentRunner` instance created from the config :class:`TridentRunnerConfig`.</span>
 <span class="sd">        :rtype: TridentRunner</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Initializing plugin: &#39;</span><span class="si">{</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_path</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">TridentRunner</span><span class="p">(</span><span class="n">runner_config</span><span class="p">,</span> <span class="n">runner_id</span><span class="p">,</span> <span class="n">data_daemon_config</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">TridentRunner</span><span class="p">(</span><span class="n">runner_config</span><span class="p">,</span> <span class="n">runner_id</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">e</span>
 
@@ -296,22 +292,22 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">plugin_path</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="p">[</span><span class="s2">&quot;path&quot;</span><span class="p">]</span>
 
-            <span class="k">if</span> <span class="s2">&quot;args&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">plugin_config</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;plugin_args&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">plugin_config</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No arguments specified for plugin: &#39;</span><span class="si">{</span><span class="n">plugin_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
                 <span class="n">plugin_args</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">plugin_args</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">]</span>
+                <span class="n">plugin_args</span> <span class="o">=</span> <span class="n">plugin_config</span><span class="p">[</span><span class="s2">&quot;plugin_args&quot;</span><span class="p">]</span>
 
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">runner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_runner</span><span class="p">(</span>
                     <span class="n">runner_config</span><span class="o">=</span><span class="n">TridentRunnerConfig</span><span class="p">(</span>
                         <span class="n">plugin_path</span><span class="o">=</span><span class="n">plugin_path</span><span class="p">,</span>
                         <span class="n">plugin_args</span><span class="o">=</span><span class="n">plugin_args</span><span class="p">,</span>
+                        <span class="n">store_config</span><span class="o">=</span><span class="n">plugin_config</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">][</span><span class="s2">&quot;store&quot;</span><span class="p">],</span>
+                        <span class="n">runner_config</span><span class="o">=</span><span class="n">plugin_config</span><span class="p">[</span><span class="s2">&quot;args&quot;</span><span class="p">][</span><span class="s2">&quot;runner&quot;</span><span class="p">],</span>
                         <span class="n">resource_queues</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_runner_resource_queues</span><span class="p">,</span>
-                        <span class="n">dont_store_on_error</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">dont_store_on_error</span>
                     <span class="p">),</span>
                     <span class="n">runner_id</span><span class="o">=</span><span class="n">plugin_id</span><span class="p">,</span>
-                    <span class="n">data_daemon_config</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">data_config</span>
                 <span class="p">)</span>
                 
                 <span class="n">_initialized_runners</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">runner</span><span class="p">)</span>
