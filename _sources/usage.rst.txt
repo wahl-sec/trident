@@ -54,100 +54,108 @@ Configuration of `Trident` is made through the configuration file, by default lo
 Any argument that also exist as a possible configuration value in the config file will be used over the value in the configuration file for all the plugins, so the arguments exist as a sort of override to any configuration value.
 
 The configuration file is divided into sections with the default section `TRIDENT` being used and the expected format should be according to the following example for configuring one runner.
-```json
-{
-    "TRIDENT": {
-        "logging_level": "INFO",
-        "plugins": {
-            "[plugin_id]": {
-                "path": "[plugin_path]",
-                "plugin_args": {
-                    "[arg_name]": "[arg_value]"
-                },
-                "args": {
-                    "[runner_args]": {
-                        ...
+
+.. code-block:: JSON
+    :linenos:
+    
+    {
+        "TRIDENT": {
+            "logging_level": "INFO",
+            "plugins": {
+                "[plugin_id]": {
+                    "path": "[plugin_path]",
+                    "plugin_args": {
+                        "[arg_name]": "[arg_value]"
+                    },
+                    "args": {
+                        "[runner_args]": {
+                        }
                     }
                 }
             }
         }
     }
-}
-```
+
 
 The following is a example configuration for two plugins, where the first runner instance don't store any of the produced results in a `.json` store.
-```json
-{
-    "TRIDENT": {
-        "logging_level": "INFO",
-        "plugins": {
-            "plugin0": {
-                "path": "plugins.plugin",
-                "plugin_args": {
-                    "value": 0
-                },
-                "args": {
-                    "store": {
-                        "no_store": true
+
+.. code-block:: JSON
+    :linenos:
+    
+    {
+        "TRIDENT": {
+            "logging_level": "INFO",
+            "plugins": {
+                "plugin0": {
+                    "path": "plugins.plugin",
+                    "plugin_args": {
+                        "value": 0
+                    },
+                    "args": {
+                        "store": {
+                            "no_store": true
+                        }
                     }
-                }
-            },
-            "plugin1": {
-                "path": "plugins.plugin",
-                "plugin_args": {
-                    "value": 10
                 },
-                "args": {
-                    "store": {
-                        "no_store": false
+                "plugin1": {
+                    "path": "plugins.plugin",
+                    "plugin_args": {
+                        "value": 10
+                    },
+                    "args": {
+                        "store": {
+                            "no_store": false
+                        }
                     }
                 }
             }
         }
     }
-}
-```
+
 
 The `args` section is optional and contain the following sections: `daemon`, `store`, `runner` and `trident`.
 
 The `args` section can be placed either inside each plugin definition to define specific behavior for that plugin or it can be placed outside to be defined for all of the plugins. These can also be combined to provide a general template for the plugins and specializations for certain plugins.
 
 Example: This example shows two plugins were the global `args` is defined to not store any values produced by the plugins in stores on the system and at maximum use `2` concurrent workers. However, we have also defined `plugin0` to store the results produced from the plugin and store them in the folder `data/data`.
-```json
-{
-    "TRIDENT": {
-        "logging_level": "INFO",
-        "plugins": {
-            "plugin0": {
-                "path": "plugins.plugin",
-                "plugin_args": {
-                    "value": 0
+
+.. code-block:: JSON
+    :linenos:
+    
+    {
+        "TRIDENT": {
+            "logging_level": "INFO",
+            "plugins": {
+                "plugin0": {
+                    "path": "plugins.plugin",
+                    "plugin_args": {
+                        "value": 0
+                    },
+                    "args": {
+                        "store": {
+                            "no_store": false,
+                            "path_store": "data/data"
+                        }
+                    }
                 },
-                "args": {
-                    "store": {
-                        "no_store": false,
-                        "path_store": "data/data"
+                "plugin1": {
+                    "path": "plugins.plugin",
+                    "plugin_args": {
+                        "value": 10
                     }
                 }
             },
-            "plugin1": {
-                "path": "plugins.plugin",
-                "plugin_args": {
-                    "value": 10
+            "args": {
+                "store": {
+                    "no_store": true
+                },
+                "daemon": {
+                    "workers": 2
                 }
-            }
-        },
-        "args": {
-            "store": {
-                "no_store": true
-            },
-            "daemon": {
-                "workers": 2
             }
         }
     }
-}
-```
+
 
 The `daemon` and `trident` sections are applied as arguments for all of the plugins as they concern the general execution of the program.
 
@@ -158,31 +166,33 @@ The `daemon` section allows for the following arguments:
     * Default: `5`
 
 Example: 
-```json
-{
-    "TRIDENT": {
-        "logging_level": "INFO",
-        "plugins": {
-            "[plugin_id]": {
-                "path": "[plugin_path]",
-                "plugin_args": {
-                    "[arg_name]": "[arg_value]"
-                },
-                "args": {
-                    "[runner_args]": {
-                        ...
+
+.. code-block:: JSON
+    :linenos:
+
+    {
+        "TRIDENT": {
+            "logging_level": "INFO",
+            "plugins": {
+                "[plugin_id]": {
+                    "path": "[plugin_path]",
+                    "plugin_args": {
+                        "[arg_name]": "[arg_value]"
+                    },
+                    "args": {
+                        "[runner_args]": {
+                        }
                     }
                 }
-            }
-        },
-        "args": {
-            "daemon": {
-                "workers": 5
+            },
+            "args": {
+                "daemon": {
+                    "workers": 5
+                }
             }
         }
     }
-}
-```
+
 
 The `trident` section allows for the following arguments:
 
@@ -193,31 +203,33 @@ The `trident` section allows for the following arguments:
     * Disable logging.
 
 Example: Disables the output for all plugins.
-```json
-{
-    "TRIDENT": {
-        "logging_level": "INFO",
-        "plugins": {
-            "[plugin_id]": {
-                "path": "[plugin_path]",
-                "plugin_args": {
-                    "[arg_name]": "[arg_value]"
-                },
-                "args": {
-                    "[runner_args]": {
-                        ...
+
+.. code-block:: JSON
+    :linenos:
+
+    {
+        "TRIDENT": {
+            "logging_level": "INFO",
+            "plugins": {
+                "[plugin_id]": {
+                    "path": "[plugin_path]",
+                    "plugin_args": {
+                        "[arg_name]": "[arg_value]"
+                    },
+                    "args": {
+                        "[runner_args]": {
+                        }
                     }
                 }
-            }
-        },
-        "args": {
-            "trident": {
-                "quiet": true
+            },
+            "args": {
+                "trident": {
+                    "quiet": true
+                }
             }
         }
     }
-}
-```
+
 
 The `store` section allows for the following arguments:
 
@@ -230,46 +242,49 @@ The `store` section allows for the following arguments:
     * Default: `data`
 
 Example: Store values for all plugins in a global store except one runner that does not store any values.
-```json
-{
-    "TRIDENT": {
-        "logging_level": "INFO",
-        "plugins": {
-            "plugin0": {
-                "path": "plugins.plugin",
-                "plugin_args": {
-                    "value": 0
+
+.. code-block:: JSON
+    :linenos:
+
+    {
+        "TRIDENT": {
+            "logging_level": "INFO",
+            "plugins": {
+                "plugin0": {
+                    "path": "plugins.plugin",
+                    "plugin_args": {
+                        "value": 0
+                    },
+                    "args": {
+                        "store": {
+                            "no_store": true
+                        }
+                    }
                 },
-                "args": {
-                    "store": {
-                        "no_store": true
+                "plugin1": {
+                    "path": "plugins.plugin",
+                    "plugin_args": {
+                        "value": 10
+                    }
+                },
+                "plugin2": {
+                    "path": "plugins.plugin",
+                    "plugin_args": {
+                        "value": 20
                     }
                 }
             },
-            "plugin1": {
-                "path": "plugins.plugin",
-                "plugin_args": {
-                    "value": 10
+            "args": {
+                "store": {
+                    "global_store": "data/global.json"
+                },
+                "daemon": {
+                    "workers": 3
                 }
-            },
-            "plugin2": {
-                "path": "plugins.plugin",
-                "plugin_args": {
-                    "value": 20
-                }
-            }
-        },
-        "args": {
-            "store": {
-                "global_store": "data/global.json"
-            },
-            "daemon": {
-                "workers": 3
             }
         }
     }
-}
-```
+
 
 The `runner` section allows for the following arguments:
 
@@ -278,37 +293,40 @@ The `runner` section allows for the following arguments:
     * Default: `false`
 
 Example: Two plugins were the values of one of the plugins are stored if the runner encounters an exception.
-```json
-{
-    "TRIDENT": {
-        "logging_level": "INFO",
-        "plugins": {
-            "plugin0": {
-                "path": "plugins.plugin",
-                "plugin_args": {
-                    "value": 0
+
+.. code-block:: JSON
+    :linenos:
+
+    {
+        "TRIDENT": {
+            "logging_level": "INFO",
+            "plugins": {
+                "plugin0": {
+                    "path": "plugins.plugin",
+                    "plugin_args": {
+                        "value": 0
+                    },
+                    "args": {
+                        "runner": {
+                            "dont_store_on_error": true
+                        }
+                    }
                 },
-                "args": {
-                    "runner": {
-                        "dont_store_on_error": true
+                "plugin1": {
+                    "path": "plugins.plugin",
+                    "plugin_args": {
+                        "value": 10
                     }
                 }
             },
-            "plugin1": {
-                "path": "plugins.plugin",
-                "plugin_args": {
-                    "value": 10
+            "args": {
+                "daemon": {
+                    "workers": 2
                 }
-            }
-        },
-        "args": {
-            "daemon": {
-                "workers": 2
             }
         }
     }
-}
-```
+
 
 Developing Plugins
 ------------------
