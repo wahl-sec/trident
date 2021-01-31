@@ -144,6 +144,7 @@ class TridentDaemon:
                         plugin_args=plugin_args,
                         store_config=plugin_config["args"]["store"],
                         runner_config=plugin_config["args"]["runner"],
+                        notification_config=plugin_config["args"]["notification"],
                         resource_queues=self._runner_resource_queues,
                     ),
                     runner_id=plugin_id,

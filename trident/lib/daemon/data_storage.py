@@ -31,7 +31,7 @@ class TridentDataDaemonConfig:
     :param store_name: Name of the store on the disk if the store path does not include file, default behavior is using the id of the runner :class:`TridentRunner`.
     :type store_name: str
     """
-    runner: object
+    runner: TridentRunner
     store_path: Path
     store_name: AnyStr
 

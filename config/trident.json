@@ -15,6 +15,16 @@
                 "path": "plugins.test_plugin", 
                 "plugin_args": {
                     "value": 15
+                },
+                "args": {
+                    "notification": {
+                        "localhost": {
+                            "HTTP": {
+                                "method": "POST",
+                                "destination": "http://192.168.1.1"
+                            }
+                        }
+                    }
                 }
             }
         }

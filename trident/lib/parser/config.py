@@ -82,7 +82,7 @@ class TridentConfigParser:
         """
         def _convert(data, converted):
             for k in data.keys():
-                if k in ["plugin_args"]:
+                if k in ["plugin_args", "payload"]:
                     converted[k] = data[k]
                 elif isinstance(data[k], dict):
                     converted[k.lower()] = _convert(data[k], {})
