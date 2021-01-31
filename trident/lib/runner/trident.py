@@ -21,6 +21,7 @@ import logging
 logger = logging.getLogger("__main__")
 
 from trident.lib.daemon.data_storage import TridentDataDaemonConfig, TridentDataDaemon
+from trident.lib.daemon.notification import TridentNotificationDaemonConfig, TridentNotificationDaemon
 
 
 @dataclass
@@ -53,10 +54,11 @@ class TridentRunnerConfig:
     resource_queues: Dict[AnyStr, List[AnyStr]]
     thread_event: Event
 
-    def __init__(self, plugin_path: AnyStr, plugin_args: Dict[AnyStr, Any], store_config: Dict[AnyStr, Any], runner_config: Dict[AnyStr, Any], resource_queues: Dict[AnyStr, List[AnyStr]]):
+    def __init__(self, plugin_path: AnyStr, plugin_args: Dict[AnyStr, Any], store_config: Dict[AnyStr, Any], runner_config: Dict[AnyStr, Any], notification_config: Dict[AnyStr, Any], resource_queues: Dict[AnyStr, List[AnyStr]]):
         self.plugin_path = plugin_path
         self.plugin_args = plugin_args
         self.store_config = store_config
+        self.notification_config = notification_config
         self.resource_queues = resource_queues
 
         self.thread_event = Event()
@@ -70,6 +72,9 @@ class TridentRunnerConfig:
         :param runner_config: Config containing the parameters to apply.
         :type runner_config: dict
         """
+        if "dont_store_on_error" not in runner_config:
+            runner_config["dont_store_on_error"] = False
+
         for arg, value in runner_config.items():
             setattr(self, arg, value)
 
@@ -123,6 +128,7 @@ class TridentRunner:
         self.runner_id = runner_id
 
         self.data_daemon = self._initialize_data_daemon()
+        self.notification_daemon = self._initialize_notification_daemon()
 
     def start_runner(self) -> NoReturn:
         """ Start the initialized :class:`TridentRunner` by calling the plugin method `execute_plugin` with the provided arguments.
@@ -176,6 +182,23 @@ class TridentRunner:
             logger.error(f"Failed to initialize data daemon for runner: '{self.runner_id}'")
             raise e
 
+    def _initialize_notification_daemon(self) -> TridentNotificationDaemon:
+        """ Initialize the :class:`TridentNotificationDaemon` connected to this runner from the :class:`TridentNotificationDaemonConfig`
+
+        :raises Exception: If any exceptions occur when initializing the :class:`TridentNotificationDaemonConfig`
+        :return: The initialized :class:`TridentNotificationDaemon`
+        :rtype: :class:`TridentNotificationDaemon`
+        """
+        try:
+            trident_notification_config = TridentNotificationDaemonConfig(
+                runner=self,
+                notifications=self.runner_config.notification_config,
+            )
+            return TridentNotificationDaemon(daemon_config=trident_notification_config)
+        except Exception as e:
+            logger.error(f"Failed to initialize the notification daemon for runner: '{self.runner_id}'")
+            raise e
+
     def _evaluate_result(self, result: Any, result_index: int) -> NoReturn:
         """ Evaluate the result yielded/returned from the plugin for each iteration.
 
@@ -190,6 +213,7 @@ class TridentRunner:
 
         try:
             self.data_daemon.store_runner_result({result_index: result})
+            self.notification_daemon.send_notification(content={result_index: result})
         except Exception as e:
             raise e
 
@@ -220,7 +244,7 @@ class TridentRunner:
                 results_index += 1
             except Exception as e:
                 if not isinstance(e, StopIteration):
-                    if self.runner_config.get("dont_store_on_error"):
+                    if getattr(self.runner_config, "dont_store_on_error"):
                         raise e
 
                     if self.data_daemon is not None:
@@ -231,4 +255,8 @@ class TridentRunner:
                         self.runner_config.resource_queues[self.data_daemon.daemon_config.store_path] = [self.runner_id]
                     else:
                         self.runner_config.resource_queues[self.data_daemon.daemon_config.store_path].append(self.runner_id)
-                break
+
+                if isinstance(e, StopIteration):
+                    break
+
+                raise e

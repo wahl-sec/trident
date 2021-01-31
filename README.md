@@ -161,7 +161,7 @@ The following is a example configuration for two plugins, where the first runner
 }
 ```
 
-The `args` section is optional and contain the following sections: `daemon`, `store`, `runner` and `trident`.
+The `args` section is optional and contain the following sections: `daemon`, `store`, `runner`, `notification` and `trident`.
 
 The `args` section can be placed either inside each plugin definition to define specific behavior for that plugin or it can be placed outside to be defined for all of the plugins. These can also be combined to provide a general template for the plugins and specializations for certain plugins.
 
@@ -318,6 +318,97 @@ Example: Store values for all plugins in a global store except one runner that d
             },
             "daemon": {
                 "workers": 3
+            }
+        }
+    }
+}
+```
+
+The `notification` section allows for the following arguments for `HTTP` notifications.
+
+* `destination`
+    * Destination to send the `HTTP` request to, required.
+* `method`
+    * HTTP method to use for the request, either `GET` or `POST`.
+* `headers`
+    * Define any headers to send with the request.
+* `payload`
+    * Define a payload to send with every request.
+* `include_result`
+    * Include the result from the plugin in the request
+    * Default, `false`
+
+Example: A HTTP notification named `http-notification` including the results from the plugin.
+```json
+{
+    "TRIDENT": {
+        "logging_level": "INFO",
+        "plugins": {
+            "plugin0": {
+                "path": "plugins.plugin",
+                "plugin_args": {
+                    "value": 0
+                },
+                "args": {
+                    "notification": {
+                        "http-notification": {
+                            "HTTP": {
+                                "method": "GET",
+                                "destination": "http://example.com",
+                                "include_results": true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+The `notification` section allows for the following arguments for `E-Mail` notifications.
+
+* `smtp_server`
+    * The SMTP server address to use, on the form of `host:port`, required.
+* `sender`
+    * The sender address, like `name@host.com`, required.
+* `receivers`
+    * The list of receivers, required.
+* `headers`
+    * The headers to include in the SMTP request.
+* `subject`
+    * The subject line to use for the e-mail.
+    * Default: `Trident Notification for: 'NAME'`
+* `message`
+    * The message to include in all e-mails.
+* `include_result`
+    * Include the result from the plugin in the request
+    * Default: `false`
+
+Example: An e-mail notification named `email-notification` including the results from the plugin.
+```json
+{
+    "TRIDENT": {
+        "logging_level": "INFO",
+        "plugins": {
+            "plugin0": {
+                "path": "plugins.plugin",
+                "plugin_args": {
+                    "value": 0
+                },
+                "args": {
+                    "notification": {
+                        "email-notification": {
+                            "EMAIL": {
+                                "smtp_server": "host:port",
+                                "sender": "trident@trident.com",
+                                "receivers": ["receiver@example.com"],
+                                "subject": "Test Subject",
+                                "include_result": true
+                            }
+                        }
+                    }
+                }
             }
         }
     }

@@ -60,11 +60,6 @@ def validate_config(config: Dict[AnyStr, Dict]) -> Dict[AnyStr, Dict]:
     :return: The modified config.
     :rtype: dict
     """
-    if "args" not in config:
-        config["args"] = {
-            "daemon": {}
-        }
-
     for plugin_id, plugin_config in config["plugins"].items():
         if not plugin_config["args"]["store"] and ("no_store" not in plugin_config["args"]["store"] or not plugin_config["args"]["store"]["no_store"]):
             logger.warning(f"No 'store' args were specified for: '{plugin_id}', setting default values")
@@ -96,7 +91,16 @@ def setup_plugin_arguments(args: Dict[AnyStr, AnyStr], config: Dict[AnyStr, Dict
     for plugin_id, plugin_config in config["plugins"].items():
         if "args" in config:
             if "args" not in plugin_config:
-                    plugin_config["args"] = {}
+                    plugin_config["args"] = {
+                        "store": {},
+                        "runner": {},
+                        "notification": {}
+                    }
+            
+            # Store and runner existence are necessary for the validation
+            for category in ["store", "runner", "notification"]:
+                if category not in plugin_config["args"]:
+                    plugin_config["args"][category] = {}
 
             for section in config["args"]:
                 if section not in ["store", "runner"]:
@@ -111,6 +115,10 @@ def setup_plugin_arguments(args: Dict[AnyStr, AnyStr], config: Dict[AnyStr, Dict
                         continue
 
                     plugin_config["args"][section][arg] = value
+        else:
+            config["args"] = {
+               "daemon": {}
+            }
 
         for section, value in args.items():
             if not value:
@@ -222,7 +230,7 @@ if __name__ == "__main__":
 
     config = apply_runtime_arguments(trident_argument_parser.args, trident_config_parser.args)
     logger = logging.getLogger(__name__)
-    print(config)
+
     try:
         trident_config = TridentConfig(config)
     except Exception as e:
