@@ -1,0 +1,398 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>trident.lib.notification.handler &mdash; Trident 0.1-DEV documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+
+  
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search"  style="background: grey" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> Trident
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../trident/lib.html">Trident Library Package</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Usage:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Trident Usage</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Trident Source</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../github.html">Trident GitHub</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Trident</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>trident.lib.notification.handler</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for trident.lib.notification.handler</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot; Trident: Notification Type Handlers</span>
+
+<span class="sd">Implements each type of notification handler.</span>
+<span class="sd">@author: Jacob Wahlman</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">urllib</span> <span class="kn">import</span> <span class="n">request</span>
+<span class="kn">import</span> <span class="nn">smtplib</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Iterable</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;__main__&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="TridentNotificationHTTPHandlerConfig"><a class="viewcode-back" href="../../../../trident/lib/notification.html#trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig">[docs]</a><span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">TridentNotificationHTTPHandlerConfig</span><span class="p">:</span>
+    <span class="n">destination</span><span class="p">:</span> <span class="n">AnyStr</span>
+    <span class="n">method</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">]</span>
+    <span class="n">headers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">AnyStr</span><span class="p">]</span>
+    <span class="n">payload</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">include_result</span><span class="p">:</span> <span class="nb">bool</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">configuration</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">AnyStr</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_apply_notification_config</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_config</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_apply_notification_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">notification_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot; Apply any config parameter passed to this notification config.</span>
+<span class="sd">        If some required values are not set then these are set to their default values.</span>
+
+<span class="sd">        :param notification_config: The configuration that should be used when sending notifications.</span>
+<span class="sd">        :type notification_config: Dict[AnyStr, AnyStr]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;payload&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">notification_config</span><span class="p">:</span>
+            <span class="n">notification_config</span><span class="p">[</span><span class="s2">&quot;payload&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s2">&quot;include_result&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">notification_config</span><span class="p">:</span>
+            <span class="n">notification_config</span><span class="p">[</span><span class="s2">&quot;include_result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="s2">&quot;headers&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">notification_config</span><span class="p">:</span>
+            <span class="n">notification_config</span><span class="p">[</span><span class="s2">&quot;headers&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;Content-Type&quot;</span><span class="p">:</span> <span class="s2">&quot;application/json&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;X-Source-Application&quot;</span><span class="p">:</span> <span class="s2">&quot;Trident&quot;</span>
+            <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">notification_config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_validate_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Validate that the configuration for this notification handler.</span>
+
+<span class="sd">        :raises ValueError: If the configuration is invalid (lacking required arguments, conflicting arguments) then raise ValueError.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;destination&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">destination</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No destination for HTTP notification: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39; was defined&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;method&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No HTTP method was defined for notification: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">]:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported HTTP method: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="si">}</span><span class="s2">&#39; used for notitication: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">method</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;GET&quot;</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">payload</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_result</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Payload/Include result can not be used with GET requests, will not include payload&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">include_result</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">payload</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="n">header</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">header</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">if</span> <span class="s2">&quot;content-type&quot;</span> <span class="ow">in</span> <span class="n">headers</span> <span class="ow">and</span> <span class="s2">&quot;application/json&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">headers</span><span class="p">[</span><span class="s2">&quot;content-type&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_result</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Include result was defined with an Content-Type that is not &#39;application/json&#39;, might produce unexpected results&quot;</span><span class="p">)</span></div>
+        
+
+<div class="viewcode-block" id="TridentNotificationEmailHandlerConfig"><a class="viewcode-back" href="../../../../trident/lib/notification.html#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig">[docs]</a><span class="nd">@dataclass</span> 
+<span class="k">class</span> <span class="nc">TridentNotificationEmailHandlerConfig</span><span class="p">:</span>
+    <span class="n">smtp_server</span><span class="p">:</span> <span class="n">AnyStr</span>
+    <span class="n">sender</span><span class="p">:</span> <span class="n">AnyStr</span>
+    <span class="n">receivers</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">]</span>
+    <span class="n">headers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">AnyStr</span><span class="p">]</span>
+    <span class="n">subject</span><span class="p">:</span> <span class="n">AnyStr</span>
+    <span class="n">message</span><span class="p">:</span> <span class="n">AnyStr</span>
+    <span class="n">include_result</span><span class="p">:</span> <span class="nb">bool</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">configuration</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">AnyStr</span><span class="p">]):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_apply_notification_config</span><span class="p">(</span><span class="n">configuration</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_config</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_apply_notification_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">notification_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot; Apply any config parameter passed to this notification config.</span>
+
+<span class="sd">        :param notification_config: The configuration that should be used when sending notifications.</span>
+<span class="sd">        :type notification_config: Dict[AnyStr, AnyStr]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;subject&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">notification_config</span><span class="p">:</span>
+            <span class="n">notification_config</span><span class="p">[</span><span class="s2">&quot;subject&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Trident Notification for: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+
+        <span class="k">if</span> <span class="s2">&quot;headers&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">notification_config</span><span class="p">:</span>
+            <span class="n">notification_config</span><span class="p">[</span><span class="s2">&quot;headers&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">if</span> <span class="s2">&quot;include_result&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">notification_config</span><span class="p">:</span>
+            <span class="n">notification_config</span><span class="p">[</span><span class="s2">&quot;include_result&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">notification_config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_validate_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Validate that the configuration for this notification handler.</span>
+
+<span class="sd">        :raises ValueError: If the configuration is invalid (lacking required arguments, conflicting arguments) then raise ValueError.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;smtp_server&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">smtp_server</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No SMTP server was defined for notification: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;receivers&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">receivers</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No receiver list was defined for notification: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;sender&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">sender</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No sender was defined for notification: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;message&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">message</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;include_result&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">include_result</span><span class="p">):</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No message body was defined and include results was unset or set to false for notification: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="TridentNotificationHTTPHandler"><a class="viewcode-back" href="../../../../trident/lib/notification.html#trident.lib.notification.handler.TridentNotificationHTTPHandler">[docs]</a><span class="k">class</span> <span class="nc">TridentNotificationHTTPHandler</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">notification_config</span><span class="p">:</span> <span class="n">TridentNotificationHTTPHandlerConfig</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span> <span class="o">=</span> <span class="n">notification_config</span>
+
+<div class="viewcode-block" id="TridentNotificationHTTPHandler.send_notification"><a class="viewcode-back" href="../../../../trident/lib/notification.html#trident.lib.notification.handler.TridentNotificationHTTPHandler.send_notification">[docs]</a>    <span class="k">def</span> <span class="nf">send_notification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot; Send the notification using urllib to send the actual request to the destination.</span>
+<span class="sd">        Uses the configuration provided by :class:`TridentNotificationHTTPHandlerConfig` to fill the request.</span>
+<span class="sd">        If both content is used and payload/include result is used then we combine the two.</span>
+<span class="sd">        The combine operation only supports content that is JSON parseable so if any other Content-Type header is set</span>
+<span class="sd">        then we just send the payload that is defined in the configuration.</span>
+
+<span class="sd">        :param content: JSON parseable content to include in the notification</span>
+<span class="sd">        :type content: Dict[AnyStr, Any]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">payload</span> <span class="ow">and</span> <span class="n">content</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">payload</span><span class="p">[</span><span class="s2">&quot;content&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">content</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">payload</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">payload</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">payload</span> <span class="k">else</span> <span class="n">content</span>
+
+        <span class="n">request</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span>
+            <span class="n">url</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">destination</span><span class="p">,</span>
+            <span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">method</span><span class="p">,</span>
+            <span class="n">headers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">headers</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">payload</span> <span class="k">else</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
+        <span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="TridentNotificationEmailHandler"><a class="viewcode-back" href="../../../../trident/lib/notification.html#trident.lib.notification.handler.TridentNotificationEmailHandler">[docs]</a><span class="k">class</span> <span class="nc">TridentNotificationEmailHandler</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">notification_config</span><span class="p">:</span> <span class="n">TridentNotificationEmailHandlerConfig</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span> <span class="o">=</span> <span class="n">notification_config</span>
+
+<div class="viewcode-block" id="TridentNotificationEmailHandler.send_notification"><a class="viewcode-back" href="../../../../trident/lib/notification.html#trident.lib.notification.handler.TridentNotificationEmailHandler.send_notification">[docs]</a>    <span class="k">def</span> <span class="nf">send_notification</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">]):</span>
+        <span class="sd">&quot;&quot;&quot; Send the notification using smtplib to send the e-mail.</span>
+<span class="sd">        Uses the configuration provided by :class:`TridentNotificationEmailHandlerConfig` to fill the e-mail.</span>
+<span class="sd">        If both content is used and payload/include result is used then these are separated and sent in the same e-mail.</span>
+
+<span class="sd">        :param content: Content to include in the e-mail</span>
+<span class="sd">        :type content: Dict[AnyStr, Any]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">receivers</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">receivers</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">receivers</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">receivers</span><span class="p">]</span>
+
+        <span class="n">message_body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">message</span>
+        <span class="k">if</span> <span class="n">content</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">message_body</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\r\n</span><span class="s2">&quot;</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">content</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">message_body</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="si">{key}</span><span class="s2">: </span><span class="si">{value}</span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">receiver</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">receivers</span><span class="p">:</span>
+            <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;From: &lt;</span><span class="si">{sender}</span><span class="s2">&gt;</span><span class="se">\r\n</span><span class="s2">To: &lt;</span><span class="si">{receiver}</span><span class="s2">&gt;</span><span class="se">\r\n</span><span class="s2">Subject: </span><span class="si">{subject}</span><span class="se">\r\n\r\n</span><span class="si">{content}</span><span class="s2">&quot;&quot;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">sender</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">sender</span><span class="p">,</span>
+                    <span class="n">receiver</span><span class="o">=</span><span class="n">receiver</span><span class="p">,</span>
+                    <span class="n">subject</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">subject</span><span class="p">,</span>
+                    <span class="n">content</span><span class="o">=</span><span class="n">message_body</span>
+                <span class="p">)</span>
+            
+            <span class="n">smtp_obj</span> <span class="o">=</span> <span class="n">smtplib</span><span class="o">.</span><span class="n">SMTP</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">smtp_server</span><span class="p">)</span>
+            <span class="n">smtp_obj</span><span class="o">.</span><span class="n">sendmail</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span><span class="o">.</span><span class="n">sender</span><span class="p">,</span> <span class="p">[</span><span class="n">receiver</span><span class="p">],</span> <span class="n">message</span><span class="p">)</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, Jacob Wahlman.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

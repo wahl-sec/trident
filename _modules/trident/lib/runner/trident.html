@@ -182,6 +182,7 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;__main__&quot;</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">trident.lib.daemon.data_storage</span> <span class="kn">import</span> <span class="n">TridentDataDaemonConfig</span><span class="p">,</span> <span class="n">TridentDataDaemon</span>
+<span class="kn">from</span> <span class="nn">trident.lib.daemon.notification</span> <span class="kn">import</span> <span class="n">TridentNotificationDaemonConfig</span><span class="p">,</span> <span class="n">TridentNotificationDaemon</span>
 
 
 <div class="viewcode-block" id="TridentRunnerConfig"><a class="viewcode-back" href="../../../../trident/lib/runner.html#trident.lib.runner.trident.TridentRunnerConfig">[docs]</a><span class="nd">@dataclass</span>
@@ -214,10 +215,11 @@
     <span class="n">resource_queues</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">]]</span>
     <span class="n">thread_event</span><span class="p">:</span> <span class="n">Event</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plugin_path</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">plugin_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">store_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">runner_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">resource_queues</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">]]):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plugin_path</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">plugin_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">store_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">runner_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">notification_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">resource_queues</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">]]):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plugin_path</span> <span class="o">=</span> <span class="n">plugin_path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plugin_args</span> <span class="o">=</span> <span class="n">plugin_args</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store_config</span> <span class="o">=</span> <span class="n">store_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span> <span class="o">=</span> <span class="n">notification_config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resource_queues</span> <span class="o">=</span> <span class="n">resource_queues</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">thread_event</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>
@@ -231,6 +233,9 @@
 <span class="sd">        :param runner_config: Config containing the parameters to apply.</span>
 <span class="sd">        :type runner_config: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="s2">&quot;dont_store_on_error&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">runner_config</span><span class="p">:</span>
+            <span class="n">runner_config</span><span class="p">[</span><span class="s2">&quot;dont_store_on_error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
         <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">runner_config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
@@ -284,6 +289,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span> <span class="o">=</span> <span class="n">runner_id</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_data_daemon</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">notification_daemon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_notification_daemon</span><span class="p">()</span>
 
 <div class="viewcode-block" id="TridentRunner.start_runner"><a class="viewcode-back" href="../../../../trident/lib/runner.html#trident.lib.runner.trident.TridentRunner.start_runner">[docs]</a>    <span class="k">def</span> <span class="nf">start_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Start the initialized :class:`TridentRunner` by calling the plugin method `execute_plugin` with the provided arguments.</span>
@@ -337,6 +343,23 @@
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to initialize data daemon for runner: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span>
 
+    <span class="k">def</span> <span class="nf">_initialize_notification_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TridentNotificationDaemon</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot; Initialize the :class:`TridentNotificationDaemon` connected to this runner from the :class:`TridentNotificationDaemonConfig`</span>
+
+<span class="sd">        :raises Exception: If any exceptions occur when initializing the :class:`TridentNotificationDaemonConfig`</span>
+<span class="sd">        :return: The initialized :class:`TridentNotificationDaemon`</span>
+<span class="sd">        :rtype: :class:`TridentNotificationDaemon`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">trident_notification_config</span> <span class="o">=</span> <span class="n">TridentNotificationDaemonConfig</span><span class="p">(</span>
+                <span class="n">runner</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">notifications</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">notification_config</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="k">return</span> <span class="n">TridentNotificationDaemon</span><span class="p">(</span><span class="n">daemon_config</span><span class="o">=</span><span class="n">trident_notification_config</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to initialize the notification daemon for runner: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">e</span>
+
     <span class="k">def</span> <span class="nf">_evaluate_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">result_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Evaluate the result yielded/returned from the plugin for each iteration.</span>
 
@@ -351,6 +374,7 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">store_runner_result</span><span class="p">({</span><span class="n">result_index</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">notification_daemon</span><span class="o">.</span><span class="n">send_notification</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="p">{</span><span class="n">result_index</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">e</span>
 
@@ -381,7 +405,7 @@
                 <span class="n">results_index</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="ne">StopIteration</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dont_store_on_error&quot;</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="p">,</span> <span class="s2">&quot;dont_store_on_error&quot;</span><span class="p">):</span>
                         <span class="k">raise</span> <span class="n">e</span>
 
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -392,7 +416,11 @@
                         <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">resource_queues</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="p">]</span>
                     <span class="k">else</span><span class="p">:</span>
                         <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">resource_queues</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="p">)</span>
-                <span class="k">break</span></div>
+
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="ne">StopIteration</span><span class="p">):</span>
+                    <span class="k">break</span>
+
+                <span class="k">raise</span> <span class="n">e</span></div>
 </pre></div>
 
            </div>

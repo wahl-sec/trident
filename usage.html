@@ -352,7 +352,7 @@
 <span class="p">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>The <cite>args</cite> section is optional and contain the following sections: <cite>daemon</cite>, <cite>store</cite>, <cite>runner</cite> and <cite>trident</cite>.</p>
+<p>The <cite>args</cite> section is optional and contain the following sections: <cite>daemon</cite>, <cite>store</cite>, <cite>runner</cite>, <cite>notification</cite> and <cite>trident</cite>.</p>
 <p>The <cite>args</cite> section can be placed either inside each plugin definition to define specific behavior for that plugin or it can be placed outside to be defined for all of the plugins. These can also be combined to provide a general template for the plugins and specializations for certain plugins.</p>
 <p>Example: This example shows two plugins were the global <cite>args</cite> is defined to not store any values produced by the plugins in stores on the system and at maximum use <cite>2</cite> concurrent workers. However, we have also defined <cite>plugin0</cite> to store the results produced from the plugin and store them in the folder <cite>data/data</cite>.</p>
 <div class="highlight-JSON notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
@@ -640,6 +640,203 @@
             <span class="p">},</span>
             <span class="nt">&quot;daemon&quot;</span><span class="p">:</span> <span class="p">{</span>
                 <span class="nt">&quot;workers&quot;</span><span class="p">:</span> <span class="mi">3</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>The <cite>notification</cite> section allows for the following arguments for <cite>HTTP</cite> notifications.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><cite>destination</cite></dt><dd><ul>
+<li><p>Destination to send the <cite>HTTP</cite> request to, required.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><cite>method</cite></dt><dd><ul>
+<li><p>HTTP method to use for the request, either <cite>GET</cite> or <cite>POST</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><cite>headers</cite></dt><dd><ul>
+<li><p>Define any headers to send with the request.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><cite>payload</cite></dt><dd><ul>
+<li><p>Define a payload to send with every request.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><cite>include_result</cite></dt><dd><ul>
+<li><p>Include the result from the plugin in the request</p></li>
+<li><p>Default, <cite>false</cite></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Example: A HTTP notification named <cite>http-notification</cite> including the results from the plugin.</p>
+<div class="highlight-JSON notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;TRIDENT&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;logging_level&quot;</span><span class="p">:</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;plugins&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;plugin0&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;plugins.plugin&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;plugin_args&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="mi">0</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;args&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;notification&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;http-notification&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;HTTP&quot;</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="nt">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;destination&quot;</span><span class="p">:</span> <span class="s2">&quot;http://example.com&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;include_results&quot;</span><span class="p">:</span> <span class="kc">true</span>
+                            <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>The <cite>notification</cite> section allows for the following arguments for <cite>E-Mail</cite> notifications.</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><cite>smtp_server</cite></dt><dd><ul>
+<li><p>The SMTP server address to use, on the form of <cite>host:port</cite>, required.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><cite>sender</cite></dt><dd><ul>
+<li><p>The sender address, like <cite>name&#64;host.com</cite>, required.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><cite>receivers</cite></dt><dd><ul>
+<li><p>The list of receivers, required.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><cite>headers</cite></dt><dd><ul>
+<li><p>The headers to include in the SMTP request.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><cite>subject</cite></dt><dd><ul>
+<li><p>The subject line to use for the e-mail.</p></li>
+<li><p>Default: <cite>Trident Notification for: ‘NAME’</cite></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><cite>message</cite></dt><dd><ul>
+<li><p>The message to include in all e-mails.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><cite>include_result</cite></dt><dd><ul>
+<li><p>Include the result from the plugin in the request</p></li>
+<li><p>Default: <cite>false</cite></p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>Example: An e-mail notification named <cite>email-notification</cite> including the results from the plugin.</p>
+<div class="highlight-JSON notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="nt">&quot;TRIDENT&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;logging_level&quot;</span><span class="p">:</span> <span class="s2">&quot;INFO&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;plugins&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;plugin0&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="nt">&quot;path&quot;</span><span class="p">:</span> <span class="s2">&quot;plugins.plugin&quot;</span><span class="p">,</span>
+                <span class="nt">&quot;plugin_args&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;value&quot;</span><span class="p">:</span> <span class="mi">0</span>
+                <span class="p">},</span>
+                <span class="nt">&quot;args&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="nt">&quot;notification&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="nt">&quot;email-notification&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="nt">&quot;EMAIL&quot;</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="nt">&quot;smtp_server&quot;</span><span class="p">:</span> <span class="s2">&quot;host:port&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;sender&quot;</span><span class="p">:</span> <span class="s2">&quot;trident@trident.com&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;receivers&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;receiver@example.com&quot;</span><span class="p">],</span>
+                                <span class="nt">&quot;subject&quot;</span><span class="p">:</span> <span class="s2">&quot;Test Subject&quot;</span><span class="p">,</span>
+                                <span class="nt">&quot;include_result&quot;</span><span class="p">:</span> <span class="kc">true</span>
+                            <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
