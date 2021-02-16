@@ -182,11 +182,11 @@
 &#64;author: Jacob Wahlman</p>
 <dl class="py class">
 <dt id="trident.lib.notification.handler.TridentNotificationEmailHandler">
-<em class="property">class </em><code class="sig-prename descclassname">trident.lib.notification.handler.</code><code class="sig-name descname">TridentNotificationEmailHandler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">notification_config</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig" title="trident.lib.notification.handler.TridentNotificationEmailHandlerConfig">trident.lib.notification.handler.TridentNotificationEmailHandlerConfig</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/notification/handler.html#TridentNotificationEmailHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">trident.lib.notification.handler.</span></code><code class="sig-name descname"><span class="pre">TridentNotificationEmailHandler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">notification_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig" title="trident.lib.notification.handler.TridentNotificationEmailHandlerConfig"><span class="pre">trident.lib.notification.handler.TridentNotificationEmailHandlerConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/notification/handler.html#TridentNotificationEmailHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt id="trident.lib.notification.handler.TridentNotificationEmailHandler.send_notification">
-<code class="sig-name descname">send_notification</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">content</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>AnyStr<span class="p">, </span>Any<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/notification/handler.html#TridentNotificationEmailHandler.send_notification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandler.send_notification" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">send_notification</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/notification/handler.html#TridentNotificationEmailHandler.send_notification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandler.send_notification" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send the notification using smtplib to send the e-mail.
 Uses the configuration provided by <a class="reference internal" href="#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig" title="trident.lib.notification.handler.TridentNotificationEmailHandlerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">TridentNotificationEmailHandlerConfig</span></code></a> to fill the e-mail.
 If both content is used and payload/include result is used then these are separated and sent in the same e-mail.</p>
@@ -201,52 +201,52 @@ If both content is used and payload/include result is used then these are separa
 
 <dl class="py class">
 <dt id="trident.lib.notification.handler.TridentNotificationEmailHandlerConfig">
-<em class="property">class </em><code class="sig-prename descclassname">trident.lib.notification.handler.</code><code class="sig-name descname">TridentNotificationEmailHandlerConfig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">~ AnyStr</span></em>, <em class="sig-param"><span class="n">configuration</span><span class="p">:</span> <span class="n">Dict[~ AnyStr, ~ AnyStr]</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/notification/handler.html#TridentNotificationEmailHandlerConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">trident.lib.notification.handler.</span></code><code class="sig-name descname"><span class="pre">TridentNotificationEmailHandlerConfig</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">~</span> <span class="pre">AnyStr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict[~</span> <span class="pre">AnyStr,</span> <span class="pre">~</span> <span class="pre">AnyStr]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/notification/handler.html#TridentNotificationEmailHandlerConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt id="trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.headers">
-<code class="sig-name descname">headers</code><em class="property">: Dict</em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.headers" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">headers</span></code><em class="property"><span class="pre">:</span> <span class="pre">Dict</span></em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.headers" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.include_result">
-<code class="sig-name descname">include_result</code><em class="property">: bool</em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.include_result" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">include_result</span></code><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.include_result" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.message">
-<code class="sig-name descname">message</code><em class="property">: AnyStr</em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.message" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">message</span></code><em class="property"><span class="pre">:</span> <span class="pre">AnyStr</span></em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.message" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.receivers">
-<code class="sig-name descname">receivers</code><em class="property">: Iterable</em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.receivers" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">receivers</span></code><em class="property"><span class="pre">:</span> <span class="pre">Iterable</span></em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.receivers" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.sender">
-<code class="sig-name descname">sender</code><em class="property">: AnyStr</em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.sender" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">sender</span></code><em class="property"><span class="pre">:</span> <span class="pre">AnyStr</span></em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.sender" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.smtp_server">
-<code class="sig-name descname">smtp_server</code><em class="property">: AnyStr</em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.smtp_server" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">smtp_server</span></code><em class="property"><span class="pre">:</span> <span class="pre">AnyStr</span></em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.smtp_server" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.subject">
-<code class="sig-name descname">subject</code><em class="property">: AnyStr</em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.subject" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">subject</span></code><em class="property"><span class="pre">:</span> <span class="pre">AnyStr</span></em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationEmailHandlerConfig.subject" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt id="trident.lib.notification.handler.TridentNotificationHTTPHandler">
-<em class="property">class </em><code class="sig-prename descclassname">trident.lib.notification.handler.</code><code class="sig-name descname">TridentNotificationHTTPHandler</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">notification_config</span><span class="p">:</span> <span class="n"><a class="reference internal" href="#trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig" title="trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig">trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig</a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/notification/handler.html#TridentNotificationHTTPHandler"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationHTTPHandler" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">trident.lib.notification.handler.</span></code><code class="sig-name descname"><span class="pre">TridentNotificationHTTPHandler</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">notification_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig" title="trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig"><span class="pre">trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/notification/handler.html#TridentNotificationHTTPHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationHTTPHandler" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt id="trident.lib.notification.handler.TridentNotificationHTTPHandler.send_notification">
-<code class="sig-name descname">send_notification</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">content</span><span class="p">:</span> <span class="n">Dict<span class="p">[</span>AnyStr<span class="p">, </span>Any<span class="p">]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/notification/handler.html#TridentNotificationHTTPHandler.send_notification"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationHTTPHandler.send_notification" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">send_notification</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/notification/handler.html#TridentNotificationHTTPHandler.send_notification"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationHTTPHandler.send_notification" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send the notification using urllib to send the actual request to the destination.
 Uses the configuration provided by <a class="reference internal" href="#trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig" title="trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">TridentNotificationHTTPHandlerConfig</span></code></a> to fill the request.
 If both content is used and payload/include result is used then we combine the two.
@@ -263,31 +263,31 @@ then we just send the payload that is defined in the configuration.</p>
 
 <dl class="py class">
 <dt id="trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig">
-<em class="property">class </em><code class="sig-prename descclassname">trident.lib.notification.handler.</code><code class="sig-name descname">TridentNotificationHTTPHandlerConfig</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span><span class="p">:</span> <span class="n">~ AnyStr</span></em>, <em class="sig-param"><span class="n">configuration</span><span class="p">:</span> <span class="n">Dict[~ AnyStr, ~ AnyStr]</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/notification/handler.html#TridentNotificationHTTPHandlerConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">trident.lib.notification.handler.</span></code><code class="sig-name descname"><span class="pre">TridentNotificationHTTPHandlerConfig</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">~</span> <span class="pre">AnyStr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">configuration</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict[~</span> <span class="pre">AnyStr,</span> <span class="pre">~</span> <span class="pre">AnyStr]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/notification/handler.html#TridentNotificationHTTPHandlerConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt id="trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig.destination">
-<code class="sig-name descname">destination</code><em class="property">: AnyStr</em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig.destination" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">destination</span></code><em class="property"><span class="pre">:</span> <span class="pre">AnyStr</span></em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig.destination" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig.headers">
-<code class="sig-name descname">headers</code><em class="property">: Dict</em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig.headers" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">headers</span></code><em class="property"><span class="pre">:</span> <span class="pre">Dict</span></em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig.headers" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig.include_result">
-<code class="sig-name descname">include_result</code><em class="property">: bool</em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig.include_result" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">include_result</span></code><em class="property"><span class="pre">:</span> <span class="pre">bool</span></em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig.include_result" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig.method">
-<code class="sig-name descname">method</code><em class="property">: Union<span class="p">[</span>GET<span class="p">, </span>POST<span class="p">]</span></em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig.method" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">method</span></code><em class="property"><span class="pre">:</span> <span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">GET</span><span class="p"><span class="pre">,</span> </span><span class="pre">POST</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig.method" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig.payload">
-<code class="sig-name descname">payload</code><em class="property">: Dict<span class="p">[</span>AnyStr<span class="p">, </span>Any<span class="p">]</span></em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig.payload" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname"><span class="pre">payload</span></code><em class="property"><span class="pre">:</span> <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#trident.lib.notification.handler.TridentNotificationHTTPHandlerConfig.payload" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
