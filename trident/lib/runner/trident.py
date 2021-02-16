@@ -12,6 +12,7 @@ from threading import Event
 from inspect import signature
 from dataclasses import dataclass
 from importlib import import_module
+import re
 
 from typing import NewType, Dict, Union, List, Any, NoReturn, Generator, Tuple, AnyStr
 Module = NewType("Module", object)
@@ -74,6 +75,9 @@ class TridentRunnerConfig:
         """
         if "dont_store_on_error" not in runner_config:
             runner_config["dont_store_on_error"] = False
+
+        if "filter_results" not in runner_config:
+            runner_config["filter_results"] = []
 
         for arg, value in runner_config.items():
             setattr(self, arg, value)
@@ -210,6 +214,16 @@ class TridentRunner:
         """
         if self.data_daemon is None or self.runner_config.thread_event.is_set():
             return
+
+        if getattr(self.runner_config, "filter_results"):
+            for pattern in getattr(self.runner_config, "filter_results"):
+                match = re.match(pattern, result)
+                if match is not None and match.group(0):
+                    logger.debug(f"Result: '{result}' matched pattern: '{pattern}' for runner: '{self.runner_id}'")
+                    break
+            else:
+                logger.warning(f"Result: '{result}' did not match any pattern(s) for runner: '{self.runner_id}'")
+                return
 
         try:
             self.data_daemon.store_runner_result({result_index: result})

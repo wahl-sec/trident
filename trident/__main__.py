@@ -199,7 +199,7 @@ def apply_runtime_arguments(args: Namespace, config: Dict[AnyStr, Union[AnyStr, 
     config = setup_plugin_arguments(
         {
             "store": {k: v for k, v in vars(args).items() if k in ["no_store", "global_store", "path_store"] and v is not None},
-            "runner": {k: v for k, v in vars(args).items() if k in ["dont_store_on_error"] and v is not None}
+            "runner": {k: v for k, v in vars(args).items() if k in ["dont_store_on_error", "filter_results"] and v is not None}
         },
         config
     )
