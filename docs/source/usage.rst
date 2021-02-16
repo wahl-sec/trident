@@ -34,6 +34,8 @@ The arguments for Trident can also be displayed using the ``-h``, ``--help`` fla
 
 * ``-p:n``, ``--dont-store-on-error``
     * Do not store the accumulated results if the plugin encounters an error. Default behavior is to store the behavior up until the error occured (assuming that the plugin is using generators). (Default: ``False``)
+- ``-p:f``, ``--filter-results``
+    - Only store the values matching the filter of the form of regular expressions. (Default: ``[]``)
 
 **Storage Configuration**
 
@@ -49,11 +51,11 @@ The arguments for Trident can also be displayed using the ``-h``, ``--help`` fla
 Configuration
 -------------
 
-Configuration of `Trident` is made through the configuration file, by default located at `config/trident.json`.
+Configuration of ``Trident`` is made through the configuration file, by default located at ``config/trident.json``.
 
 Any argument that also exist as a possible configuration value in the config file will be used over the value in the configuration file for all the plugins, so the arguments exist as a sort of override to any configuration value.
 
-The configuration file is divided into sections with the default section `TRIDENT` being used and the expected format should be according to the following example for configuring one runner.
+The configuration file is divided into sections with the default section ``TRIDENT`` being used and the expected format should be according to the following example for configuring one runner.
 
 .. code-block:: JSON
     :linenos:
@@ -113,11 +115,11 @@ The following is a example configuration for two plugins, where the first runner
     }
 
 
-The `args` section is optional and contain the following sections: `daemon`, `store`, `runner`, `notification` and `trident`.
+The ``args`` section is optional and contain the following sections: ``daemon``, ``store``, ``runner``, ``notification`` and ``trident``.
 
-The `args` section can be placed either inside each plugin definition to define specific behavior for that plugin or it can be placed outside to be defined for all of the plugins. These can also be combined to provide a general template for the plugins and specializations for certain plugins.
+The ``args`` section can be placed either inside each plugin definition to define specific behavior for that plugin or it can be placed outside to be defined for all of the plugins. These can also be combined to provide a general template for the plugins and specializations for certain plugins.
 
-Example: This example shows two plugins were the global `args` is defined to not store any values produced by the plugins in stores on the system and at maximum use `2` concurrent workers. However, we have also defined `plugin0` to store the results produced from the plugin and store them in the folder `data/data`.
+Example: This example shows two plugins were the global ``args`` is defined to not store any values produced by the plugins in stores on the system and at maximum use ``2`` concurrent workers. However, we have also defined ``plugin0`` to store the results produced from the plugin and store them in the folder ``data/data``.
 
 .. code-block:: JSON
     :linenos:
@@ -157,13 +159,13 @@ Example: This example shows two plugins were the global `args` is defined to not
     }
 
 
-The `daemon` and `trident` sections are applied as arguments for all of the plugins as they concern the general execution of the program.
+The ``daemon`` and ``trident`` sections are applied as arguments for all of the plugins as they concern the general execution of the program.
 
-The `daemon` section allows for the following arguments:
+The ``daemon`` section allows for the following arguments:
 
-* `workers`
+* ``workers``
     * The amount of workers that should be used at maximum to execute the plugins.
-    * Default: `5`
+    * Default: ``5``
 
 Example: 
 
@@ -194,12 +196,12 @@ Example:
     }
 
 
-The `trident` section allows for the following arguments:
+The ``trident`` section allows for the following arguments:
 
-* `verbose`
+* ``verbose``
     * Enable verbose logging.
 
-* `quiet`
+* ``quiet``
     * Disable logging.
 
 Example: Disables the output for all plugins.
@@ -231,15 +233,15 @@ Example: Disables the output for all plugins.
     }
 
 
-The `store` section allows for the following arguments:
+The ``store`` section allows for the following arguments:
 
-* `no_store`
+* ``no_store``
     * Do not store any of the produced values in a store on the system.
-* `global_store`
+* ``global_store``
     * Define the path to a global store to use for all plugins.
-* `path_store`
+* ``path_store``
     * Define the path on the system where the store should be placed.
-    * Default: `data`
+    * Default: ``data``
 
 Example: Store values for all plugins in a global store except one runner that does not store any values.
 
@@ -285,21 +287,21 @@ Example: Store values for all plugins in a global store except one runner that d
         }
     }
 
-The `notification` section allows for the following arguments for `HTTP` notifications.
+The ``notification`` section allows for the following arguments for ``HTTP`` notifications.
 
-* `destination`
-    * Destination to send the `HTTP` request to, required.
-* `method`
-    * HTTP method to use for the request, either `GET` or `POST`.
-* `headers`
+* ``destination``
+    * Destination to send the ``HTTP`` request to, required.
+* ``method``
+    * HTTP method to use for the request, either ``GET`` or ``POST``.
+* ``headers``
     * Define any headers to send with the request.
-* `payload`
+* ``payload``
     * Define a payload to send with every request.
-* `include_result`
+* ``include_result``
     * Include the result from the plugin in the request
-    * Default, `false`
+    * Default, ``false``
 
-Example: A HTTP notification named `http-notification` including the results from the plugin.
+Example: A HTTP notification named ``http-notification`` including the results from the plugin.
 
 .. code-block:: JSON
     :linenos:
@@ -329,26 +331,26 @@ Example: A HTTP notification named `http-notification` including the results fro
         }
     }
 
-The `notification` section allows for the following arguments for `E-Mail` notifications.
+The ``notification`` section allows for the following arguments for ``E-Mail`` notifications.
 
-* `smtp_server`
-    * The SMTP server address to use, on the form of `host:port`, required.
-* `sender`
-    * The sender address, like `name@host.com`, required.
-* `receivers`
+* ``smtp_server``
+    * The SMTP server address to use, on the form of ``host:port``, required.
+* ``sender``
+    * The sender address, like ``name@host.com``, required.
+* ``receivers``
     * The list of receivers, required.
-* `headers`
+* ``headers``
     * The headers to include in the SMTP request.
-* `subject`
+* ``subject``
     * The subject line to use for the e-mail.
-    * Default: `Trident Notification for: 'NAME'`
-* `message`
+    * Default: ``Trident Notification for: 'NAME'``
+* ``message``
     * The message to include in all e-mails.
-* `include_result`
+* ``include_result``
     * Include the result from the plugin in the request
-    * Default: `false`
+    * Default: ``false``
 
-Example: An e-mail notification named `email-notification` including the results from the plugin.
+Example: An e-mail notification named ``email-notification`` including the results from the plugin.
 
 .. code-block:: JSON
     :linenos:
@@ -380,13 +382,16 @@ Example: An e-mail notification named `email-notification` including the results
         }
     }
 
-The `runner` section allows for the following arguments:
+The ``runner`` section allows for the following arguments:
 
-* `dont_store_on_error`
-    * If this is set to `true` then if any exceptions occur when running the plugin the runner will quit immediatly and not store the values accumulated up until that crash.
-    * Default: `false`
+* ``dont_store_on_error``
+    * If this is set to ``true`` then if any exceptions occur when running the plugin the runner will quit immediatly and not store the values accumulated up until that crash.
+    * Default: ``false``
+* ``filter_results``
+    * If this is set to a list of filters in the form of regex (``re`` in ``Python``) then only the results matching any pattern will be stored.
+    * Default: ``[]``
 
-Example: Two plugins were the values of one of the plugins are stored if the runner encounters an exception.
+Example: Two plugins were the values of one of the plugins are stored if the runner encounters an exception and if the values match any of the filters ``[a-z]`` or ``[A-Z]``.
 
 .. code-block:: JSON
     :linenos:
@@ -402,7 +407,8 @@ Example: Two plugins were the values of one of the plugins are stored if the run
                     },
                     "args": {
                         "runner": {
-                            "dont_store_on_error": true
+                            "dont_store_on_error": true,
+                            "filter_results": ["[a-z]", "[A-Z]"]
                         }
                     }
                 },
@@ -425,7 +431,7 @@ Example: Two plugins were the values of one of the plugins are stored if the run
 Developing Plugins
 ------------------
 
-Trident plugins are normal `Python` modules and the actual plugin is a class that needs to be named just as the name of the `Python` module, so if you have the plugin ``find_file.py`` then the class in the plugin needs to be named ``FindFile``.
+Trident plugins are normal ``Python`` modules and the actual plugin is a class that needs to be named just as the name of the ``Python`` module, so if you have the plugin ``find_file.py`` then the class in the plugin needs to be named ``FindFile``.
 
 The entry point of the plugin is always ``execute_plugin`` so when defining any new plugin this method needs to be present. See example below.
 

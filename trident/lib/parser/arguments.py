@@ -59,6 +59,7 @@ class TridentArgumentParser:
         """ Define the arguments applied on all the plugins in Trident. """
         group = self.parser.add_argument_group(title="Trident Plugin(s)")
         group.add_argument("-p:n", "--dont-store-on-error", action="store_true", default=None)
+        group.add_argument("-p:f", "--filter-results", type=str, nargs="+", help="Filter ")
 
     def _collect_storage_arguments(self) -> NoReturn:
         """ Define the arguments used to define the storage behaviour. """

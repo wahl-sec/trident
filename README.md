@@ -92,6 +92,8 @@ The arguments for `Trident` can also be displayed using the `-h`, `--help` flag.
 *Plugin Configuration*
 - `-p:n`, `--dont-store-on-error`
     - Do not store the accumulated results if the plugin encounters an error. Default behavior is to store the behavior up until the error occured (assuming that the plugin is using generators). (Default: `False`)
+- `-p:f`, `--filter-results`
+    - Only store the values matching the filter of the form of regular expressions. (Default: `[]`)
 
 *Storage Configuration*
 - `-s:p`, `--path-store`
@@ -420,8 +422,11 @@ The `runner` section allows for the following arguments:
 * `dont_store_on_error`
     * If this is set to `true` then if any exceptions occur when running the plugin the runner will quit immediatly and not store the values accumulated up until that crash.
     * Default: `false`
+* `filter_results`
+    * If this is set to a list of filters in the form of regex (`re` in `Python`) then only the results matching any pattern will be stored.
+    * Default: `[]`
 
-Example: Two plugins were the values of one of the plugins are stored if the runner encounters an exception.
+Example: Two plugins were the values of one of the plugins are stored if the runner encounters an exception and if the values match any of the filters `[a-z]` or `[A-Z]`.
 ```json
 {
     "TRIDENT": {
@@ -434,7 +439,8 @@ Example: Two plugins were the values of one of the plugins are stored if the run
                 },
                 "args": {
                     "runner": {
-                        "dont_store_on_error": true
+                        "dont_store_on_error": true,
+                        "filter_results": ["[a-z]", "[A-Z]"]
                     }
                 }
             },
