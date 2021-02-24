@@ -11,8 +11,5 @@ dist/*
 *.egg*
 *.pyc
 
-# Data Storage
-data/*
-
 # Documentation
 docs/build/*

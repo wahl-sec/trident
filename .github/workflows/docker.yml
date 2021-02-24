@@ -1,0 +1,26 @@
+# Docker Workflow
+name: trident-docker
+
+on: push
+
+jobs:
+    publish-docker-image:
+        strategy:
+            matrix:
+                versions: ["", "-external"]
+                python-version: [3.7]
+
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: docker/login-action@v1 
+              with:
+                registry: ghcr.io
+                username: ${{ github.repository_owner }}
+                password: ${{ secrets.TRIDENT_DOCKER_PAT }}
+
+            - name: Push Docker Image
+              uses: docker/build-push-action@v2
+              with:
+                push: true
+                tags: ghcr.io/wahl-sec/trident/trident${{ matrix.versions }}:latest
