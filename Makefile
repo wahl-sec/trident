@@ -3,7 +3,7 @@ SHELL := /usr/bin/env bash
 .TRIDENT: install
 install:
 	pip install setuptools
-	sudo python setup.py install
+	python setup.py install
 
 .TRIDENT: install-win
 install-win:
@@ -20,7 +20,7 @@ install-external-win:
 install-external:
 	pip install -r dev-requirements.txt
 	pip install -r requirements.txt
-	sudo python setup.py install
+	python setup.py install
 
 .TRIDENT: clean
 clean:
