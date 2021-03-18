@@ -32,7 +32,7 @@ class TridentArgumentParser:
         """
         parser = ArgumentParser(
             prog="Trident",
-            description="Trident: Asynchronous Intrustion Detection Environment"
+            description="Trident: Asynchronous Monitor Environment"
         )
         return parser
 

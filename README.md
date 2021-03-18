@@ -1,34 +1,13 @@
 # **Trident**
 
 ## **Description**
-`Trident` is a asynchronous intrustion detection environment that allows for defining and running [plugins](#plugins) to scan/modify/store resources on the system. `Trident` comes pre-packaged with some [plugins](#plugins) to function as a intrusion detection system both for a host (HIDS) and the network available to the host as a network intrusion detection system (NIDS).
+`Trident` is a asynchronous monitor environment that allows for defining and running [plugins](#plugins) to scan/modify/store resources on the system. `Trident` comes pre-packaged with some [plugins](#plugins) to function as a monitor on the system.
 
 Trident currently allows for modules written in `Python` to act as [plugins](#plugins) using the Trident library to allow for some basic instructions.
 
 `Trident` tries to use as little external modules as possible and allows the user to run `Trident` using only the standard library. This is done to ensure maximum compatability with hosts and to allow to focus on developing asynchronous libraries to use in the plugins. `Trident` also has the ability to use methods that rely on external libraries as well, like [`requests`](https://requests.readthedocs.io/en/master/) if preferred, for example, if the user lacks required functionality in the `Trident` plugin library functions.
 
 For usage instructions on `Trident` please refer to the [usage](#usage) section.
-
-## **TODO**
-The `Trident` program is a quite large program considering the amount of functionality that need to be in place for the IDS to actually identify threats, so there is always more functionality that needs to be worked on. Below we have the functionality that is next in line for development, in no particular order.
-
-- Add documentation to the `Trident` plugin library. (Medium)
-- Implement plugin specific arguments allowing for example `--no-store` for a specific set of plugins. (Medium)
-- Add documentation to the `Trident` program. (Medium)
-- Add pytest tests for the functionality that is not yet tested. (Medium)
-- Add a dashboard for `Trident` allowing the user to view the daemon metrics and results live. (Major)
-- Add file system functionality to the `Trident` plugin library. (Major)
-- Add event log parsing to the `Trident` plugin library. (Major)
-- Add `REGEDIT` parsing to the `Trident` plugin library. (Major)
-- Add system device parsing to the `Trident` plugin library. (Major)
-- Add firewall parsing/altering to the `Trident` plugin library. (Major)
-- Add notification system to `Trident` for Ubuntu, Windows 10. (Major)
-- Add `CONTRIBUTING` documentation to the project. (Minor)
-- Refactor code to follow the same pattern everywhere. (Medium)
-    - Variable names should be of same format everywhere.
-    - Parameter passing using keywords or not.
-    - Use `_name` for "private" references.
-    - Use `name_` for shadowed references.
 
 ## **Setup**
 ### **Requirements**
@@ -59,7 +38,7 @@ Installing `Trident` is done using any of the following options:
     1. `python3 setup.py install`
 
 ## **Plugins** <a name="plugins"></a>
-Trident uses plugins written in `Python` to act as an IDS. The plugins need to be written in a specific format that allows Trident to control them from the daemon, this format is specified under section [Developing Plugins](#developing).
+Trident uses plugins written in `Python` to act as a system monitor. The plugins need to be written in a specific format that allows Trident to control them from the daemon, this format is specified under section [Developing Plugins](#developing).
 
 By default the plugins are written to use non-blocking operations and uses `yield` to return a generator for the plugins which allows the plugins to do operation on each result without waiting for full completion of each plugin. It is possible to just use a `return` statement instead of `yield` to wait for full execution of the plugin.
 
