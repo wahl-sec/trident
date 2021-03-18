@@ -1,7 +1,7 @@
-Trident Asynchronous Intrusion Detection
-==========================================
+Trident Asynchronous Monitor
+============================
 
-**Trident** is a asynchronous intrustion detection environment that allows for defining and running plugins to scan/modify/store resources on the system. Trident comes pre-packaged with some plugins to function as a intrusion detection system both for a host (HIDS) and the network available to the host as a network intrusion detection system (NIDS).
+**Trident** is a asynchronous monitor environment that allows for defining and running [plugins](#plugins) to scan/modify/store resources on the system. `Trident` comes pre-packaged with some [plugins](#plugins) to function as a monitor on the system.
 
 Trident currently allows for modules written in `Python` to act as plugins using the Trident library to allow for some basic instructions.
 
