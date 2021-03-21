@@ -36,45 +36,12 @@
             "test0": {
                 "path": "plugins.test_plugin",
                 "plugin_args": {
-                    "value": 60
+                    "path": "/mnt/c/Users/NZXT/Downloads/Test",
+                    "depth": -1,
+                    "exclude": [
+                        "Test2"
+                    ]
                 }
-            },
-            "test1": {
-                "path": "plugins.test_plugin",
-                "plugin_args": {
-                    "value": 70
-                }
-            },
-            "test2": {
-                "path": "plugins.test_plugin",
-                "plugin_args": {
-                    "value": 80
-                },
-                "args": {
-                    "store": {
-                        "no_store": true
-                    }
-                }
-            },
-            "test3": {
-                "path": "plugins.test_plugin",
-                "plugin_args": {
-                    "value": 90
-                }
-            },
-            "test4": {
-                "path": "plugins.test_plugin",
-                "plugin_args": {
-                    "value": 100
-                }
-            }
-        },
-        "args": {
-            "store": {
-                "path_store": "data"
-            },
-            "runner": {
-                "dont_store_on_error": false
             }
         }
     }

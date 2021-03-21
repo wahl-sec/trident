@@ -123,8 +123,8 @@ def setup_plugin_arguments(args: Dict[AnyStr, AnyStr], config: Dict[AnyStr, Dict
         for section, value in args.items():
             if not value:
                 continue
-
-            if arg not in plugin_config["args"]:
+            
+            if section not in plugin_config["args"]:
                 plugin_config["args"][section] = {}
 
             plugin_config["args"][section].update(value)
