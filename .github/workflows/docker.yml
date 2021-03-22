@@ -1,7 +1,10 @@
 # Docker Workflow
 name: trident-docker
 
-on: push
+on:
+	push:
+		branches:
+			- main
 
 jobs:
     publish-docker-image:
