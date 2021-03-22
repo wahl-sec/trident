@@ -5,7 +5,7 @@
 
 Trident currently allows for modules written in `Python` to act as [plugins](#plugins) using the Trident library to allow for some basic instructions.
 
-`Trident` tries to use as little external modules as possible and allows the user to run `Trident` using only the standard library. This is done to ensure maximum compatability with hosts and to allow to focus on developing asynchronous libraries to use in the plugins. `Trident` also has the ability to use methods that rely on external libraries as well, like [`requests`](https://requests.readthedocs.io/en/master/) if preferred, for example, if the user lacks required functionality in the `Trident` plugin library functions.
+`Trident` tries to use as little external modules as possible and allows the user to run `Trident` using only the standard library. This is done to ensure maximum compatability with hosts and to allow to focus on developing asynchronous libraries to use in the plugins.
 
 For usage instructions on `Trident` please refer to the [usage](#usage) section.
 
@@ -13,8 +13,7 @@ For usage instructions on `Trident` please refer to the [usage](#usage) section.
 ### **Requirements**
 *`Trident` is tested using the versions below but might work with earlier versions as well*
 - `make` >= 4.4 (If building using the `Makefile`)
-- `Python` >= 3.6
-    - `requests` >= 2.25.1
+- `Python` >= 3.7
 
 ### **Development Requirements**
 - `Python` >= 3.6
@@ -27,9 +26,6 @@ Installing `Trident` is done using any of the following options:
 
 - Makefile (Use standard libraries only)
     1. `make install`
-
-- Makefile (Allow external libraries)
-    1. `make install external`
 
 - Wheel
     1. `pip install trident-VERSION.whl`

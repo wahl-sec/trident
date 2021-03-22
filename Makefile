@@ -2,25 +2,13 @@ SHELL := /usr/bin/env bash
 
 .TRIDENT: install
 install:
-	pip install setuptools
-	python setup.py install
+	pip install setuptools && pip install pybind11
+	pip install -e .[dev]
 
 .TRIDENT: install-win
 install-win:
-	pip install setuptools
-	python setup.py install
-
-.TRIDENT: install-external-win
-install-external-win:
-	pip install -r dev-requirements.txt
-	pip install -r requirements.txt
-	python setup.py install
-
-.TRIDENT: install-external
-install-external:
-	pip install -r dev-requirements.txt
-	pip install -r requirements.txt
-	python setup.py install
+	pip install setuptools && pip install pybind11
+	pip install -e .[dev]
 
 .TRIDENT: clean
 clean:
@@ -32,5 +20,11 @@ clean:
 
 .TRIDENT: test
 test:
-	pip install pytest
-	pytest
+	pip install setuptools && pip install pybind11
+	pip install -e .[dev]
+	pytest -v
+
+.TRIDENT: build
+build:
+	pip install setuptools && pip install pybind11
+	python setup.py bdist_wheel

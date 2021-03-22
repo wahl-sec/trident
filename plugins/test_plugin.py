@@ -15,4 +15,4 @@ from plugins.lib.network.lib.packet import TCP, UDP
 class TestPlugin:
     def execute_plugin(self, thread_event, value):
         for i in range(value, value + 10):
-            yield chr(i)
+            yield i + i
