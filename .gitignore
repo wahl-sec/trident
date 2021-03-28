@@ -4,12 +4,15 @@ venv/*
 .pytest_cache/*
 .DS_Store
 .vscode/*
+*.swp
 
 # Build
 build/*
 dist/*
 *.egg*
 *.pyc
+*.so
+*.o
 
 # Documentation
 docs/build/*

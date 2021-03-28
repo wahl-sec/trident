@@ -10,9 +10,9 @@ from plugins.lib.network.http import *
 from plugins.lib.network.port import *
 from plugins.lib.network.ping import *
 from plugins.lib.network.lib.packet import TCP, UDP
-
+from plugins.lib.files.files_ import add
 
 class TestPlugin:
     def execute_plugin(self, thread_event, value):
         for i in range(value, value + 10):
-            yield chr(i)
+            yield add(i, i);
