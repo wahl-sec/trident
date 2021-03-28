@@ -2,9 +2,9 @@
 name: trident-docker
 
 on:
-	push:
-		branches:
-			- main
+    push:
+        branches:
+            - main
 
 jobs:
     publish-docker-image:
