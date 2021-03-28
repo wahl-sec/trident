@@ -34,8 +34,8 @@ The arguments for Trident can also be displayed using the ``-h``, ``--help`` fla
 
 * ``-p:n``, ``--dont-store-on-error``
     * Do not store the accumulated results if the plugin encounters an error. Default behavior is to store the behavior up until the error occured (assuming that the plugin is using generators). (Default: ``False``)
-- ``-p:f``, ``--filter-results``
-    - Only store the values matching the filter of the form of regular expressions. (Default: ``[]``)
+* ``-p:f``, ``--filter-results``
+    * Only store the values matching the filter of the form of regular expressions. (Default: ``[]``)
 
 **Storage Configuration**
 
