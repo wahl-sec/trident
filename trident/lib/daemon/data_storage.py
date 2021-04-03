@@ -45,7 +45,7 @@ class TridentDataDaemonConfig:
         Raises `FileNotFoundError` if the normalized store path does not exist.
 
         :param store_path: The store path to verify and normalize.
-        :type store_path: str 
+        :type store_path: str
         :raises FileNotFoundError: The store path does not exist on the system.
         :return: The :class:`Path` object of the store on the system.
         :rtype: :class:`Path`
@@ -103,7 +103,12 @@ class TridentDataDaemon:
         """
         logger.debug(f"Updating store with: '{result}' for runner: '{self.daemon_config.runner.runner_id}'")
         try:
+            for value in result.values():
+                json.dumps(value)
+
             self._update_store_content(result)
+        except TypeError:
+            logger.warning(f"Result: '{result}' is not JSON serializable for runner: '{self.daemon_config.runner.runner_id}'")
         except Exception as e:
             raise e
 
@@ -117,6 +122,7 @@ class TridentDataDaemon:
                 store_obj.truncate()
         except Exception as e:
             logger.error(f"Failed to write to store: '{self.daemon_config.store_path}'")
+            logger.debug(e)
 
     def merge_store_data(self) -> NoReturn:
         """ Merges the store data with the existing store data available in the written store.

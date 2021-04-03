@@ -110,7 +110,7 @@ class Trident:
 
     def shut_down_trident_daemon(self) -> NoReturn:
         """ Signals all runners to stop execution.
-        
+
         :raises Exception: If an error occurs when stopping the runners.
         """
         try:
