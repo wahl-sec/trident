@@ -2,47 +2,6 @@
     "TRIDENT": {
         "logging_level": "INFO",
         "plugins": {
-            "test0": {
-                "path": "plugins.test_plugin"
-            }
-        }
-    },
-
-    "DEBUG2": {
-        "logging_level": "DEBUG",
-        "plugins": {
-            "test0": {
-                "path": "plugins.test_plugin", 
-                "plugin_args": {
-                    "value": 15
-                },
-                "args": {
-                    "notification": {
-                        "localhost": {
-                            "HTTP": {
-                                "method": "POST",
-                                "destination": "http://192.168.1.1"
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    },
-
-    "DEBUG": {
-        "logging_level": "DEBUG",
-        "plugins": {
-            "test0": {
-                "path": "plugins.test_plugin",
-                "plugin_args": {
-                    "path": "/mnt/c/Users/NZXT/Downloads/Test",
-                    "depth": -1,
-                    "exclude": [
-                        "Test2"
-                    ]
-                }
-            }
         }
     }
 }
