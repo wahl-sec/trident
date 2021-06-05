@@ -4,6 +4,9 @@
         "plugins": {
             "test0": {
                 "path": "plugins.test_plugin"
+            },
+            "test1": {
+                "path": "plugins.test_plugin"
             }
         }
     },

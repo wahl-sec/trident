@@ -63,7 +63,7 @@ def validate_config(config: Dict[AnyStr, Dict]) -> Dict[AnyStr, Dict]:
     for plugin_id, plugin_config in config["plugins"].items():
         if not plugin_config["args"]["store"] and ("no_store" not in plugin_config["args"]["store"] or not plugin_config["args"]["store"]["no_store"]):
             logger.warning(f"No 'store' args were specified for: '{plugin_id}', setting default values")
-            
+
             if "global_store" not in plugin_config["args"]["store"]:
                 logger.warning(f"Setting path for stores to 'data'")
                 plugin_config["args"]["store"]["path_store"] = "data"
@@ -96,7 +96,7 @@ def setup_plugin_arguments(args: Dict[AnyStr, AnyStr], config: Dict[AnyStr, Dict
                         "runner": {},
                         "notification": {}
                     }
-            
+
             # Store and runner existence are necessary for the validation
             for category in ["store", "runner", "notification"]:
                 if category not in plugin_config["args"]:
@@ -108,7 +108,7 @@ def setup_plugin_arguments(args: Dict[AnyStr, AnyStr], config: Dict[AnyStr, Dict
 
                 if section not in plugin_config["args"]:
                     plugin_config["args"][section] = {}
-                
+
                 for arg, value in config["args"][section].items():
                     # Don't overwrite values set in the specific plugin config if the arg is already defined.
                     if arg in plugin_config["args"][section]:

@@ -9,7 +9,7 @@ from trident.lib.daemon.trident import TridentDaemonConfig, TridentDaemon
 def trident_daemon_sync(tmpdir):
     return TridentDaemon(
         TridentDaemonConfig(
-            workers=1, 
+            workers=1,
             plugins={
                 "test0": {
                     "path": "tests.plugins.test_plugin",
@@ -35,7 +35,7 @@ def trident_daemon_sync(tmpdir):
 def trident_daemon_async(tmpdir):
     return TridentDaemon(
         TridentDaemonConfig(
-            workers=5, 
+            workers=5,
             plugins={
                 "test0": {
                     "path": "tests.plugins.test_plugin",
@@ -49,7 +49,7 @@ def trident_daemon_async(tmpdir):
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 },
@@ -65,7 +65,7 @@ def trident_daemon_async(tmpdir):
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 },
@@ -81,7 +81,7 @@ def trident_daemon_async(tmpdir):
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 },
@@ -97,7 +97,7 @@ def trident_daemon_async(tmpdir):
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 },
@@ -113,7 +113,7 @@ def trident_daemon_async(tmpdir):
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 }
@@ -125,7 +125,7 @@ def trident_daemon_async(tmpdir):
 def trident_daemon_sync_global(tmpdir):
     return TridentDaemon(
         TridentDaemonConfig(
-            workers=1, 
+            workers=1,
             plugins={
                 "test0": {
                     "path": "tests.plugins.test_plugin",
@@ -139,7 +139,7 @@ def trident_daemon_sync_global(tmpdir):
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 }
@@ -151,7 +151,7 @@ def trident_daemon_sync_global(tmpdir):
 def trident_daemon_async_global(tmpdir):
     return TridentDaemon(
         TridentDaemonConfig(
-            workers=5, 
+            workers=5,
             plugins={
                 "test0": {
                     "path": "tests.plugins.test_plugin",
@@ -165,7 +165,7 @@ def trident_daemon_async_global(tmpdir):
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 },
@@ -181,7 +181,7 @@ def trident_daemon_async_global(tmpdir):
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 },
@@ -197,7 +197,7 @@ def trident_daemon_async_global(tmpdir):
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 },
@@ -213,7 +213,7 @@ def trident_daemon_async_global(tmpdir):
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 },
@@ -229,7 +229,7 @@ def trident_daemon_async_global(tmpdir):
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 }
@@ -241,7 +241,7 @@ def trident_daemon_async_global(tmpdir):
 def trident_daemon_sync_no_store():
     return TridentDaemon(
         TridentDaemonConfig(
-            workers=1, 
+            workers=1,
             plugins={
                 "test0": {
                     "path": "tests.plugins.test_plugin",
@@ -255,7 +255,7 @@ def trident_daemon_sync_no_store():
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 }
@@ -267,7 +267,7 @@ def trident_daemon_sync_no_store():
 def trident_daemon_async_no_store():
     return TridentDaemon(
         TridentDaemonConfig(
-            workers=5, 
+            workers=5,
             plugins={
                 "test0": {
                     "path": "tests.plugins.test_plugin",
@@ -281,7 +281,7 @@ def trident_daemon_async_no_store():
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 },
@@ -297,7 +297,7 @@ def trident_daemon_async_no_store():
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 },
@@ -313,7 +313,7 @@ def trident_daemon_async_no_store():
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 },
@@ -329,7 +329,7 @@ def trident_daemon_async_no_store():
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 },
@@ -345,7 +345,7 @@ def trident_daemon_async_no_store():
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 }
@@ -357,7 +357,7 @@ def trident_daemon_async_no_store():
 def trident_daemon_invalid_argument_store_sync():
     return TridentDaemon(
         TridentDaemonConfig(
-            workers=1, 
+            workers=1,
             plugins={
                 "test0": {
                     "path": "tests.plugins.test_plugin",
@@ -371,7 +371,7 @@ def trident_daemon_invalid_argument_store_sync():
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 }
@@ -383,7 +383,7 @@ def trident_daemon_invalid_argument_store_sync():
 def trident_daemon_invalid_argument_store_async():
     return TridentDaemon(
         TridentDaemonConfig(
-            workers=5, 
+            workers=5,
             plugins={
                 "test0": {
                     "path": "tests.plugins.test_plugin",
@@ -397,7 +397,7 @@ def trident_daemon_invalid_argument_store_async():
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 },
@@ -413,7 +413,7 @@ def trident_daemon_invalid_argument_store_async():
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 },
@@ -429,7 +429,7 @@ def trident_daemon_invalid_argument_store_async():
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 },
@@ -445,7 +445,7 @@ def trident_daemon_invalid_argument_store_async():
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 },
@@ -461,7 +461,7 @@ def trident_daemon_invalid_argument_store_async():
                             "dont_store_on_error": False
                         },
                         "notification": {
-                            
+
                         }
                     }
                 }
