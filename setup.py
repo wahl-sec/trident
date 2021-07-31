@@ -8,11 +8,12 @@ from pybind11.setup_helpers import Pybind11Extension, build_ext
 with open("README.md", "r") as README:
     long_description = README.read()
 
+# Add any Pybind11 extensions as per this example
+# Pybind11Extension(
+#         "plugins.lib.files.files_",
+#         list(glob("plugins/lib/files/files.cpp"))
+# )
 ext_modules = [
-	Pybind11Extension(
-		"plugins.lib.files.files_",
-		list(glob("plugins/lib/files/files.cpp"))
-	)
 ]
 
 setuptools.setup(
@@ -22,7 +23,7 @@ setuptools.setup(
     description="Trident: Dynamic Resource and Security Monitor",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://gitlab.com/wahl-sec/trident",
+    url="https://github.com/wahl-sec/trident",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",

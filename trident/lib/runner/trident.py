@@ -101,7 +101,7 @@ class TridentRunnerConfig:
         Tries to import the module given the path provided and tries to initialize an instance given the plugin name.
 
         :raises ValueError: If the plugin name is not found in the plugin module.
-        :raises Exception: If any unexpected error occured when initializing the plugin. 
+        :raises Exception: If any unexpected error occured when initializing the plugin.
         :return: The plugin instance and the plugin module if successful otherwise None
         :rtype: (PluginClass, Module)
         """
@@ -141,6 +141,9 @@ class TridentRunner:
         """
         logger.info(f"Starting runner: '{self.runner_id}' ...")
         try:
+            if not hasattr(self.runner_config.plugin_instance, "execute_plugin"):
+                raise RuntimeError("Entry method 'execute_plugin' not defined.")
+
             # The thread event is used to allow the daemon to stop already started plugins.
             if "thread_event" not in signature(self.runner_config.plugin_instance.execute_plugin).parameters:
                 logger.warning(f"Thread event parameter not specified in 'execute_plugin' method for plugin: '{self.runner_config.plugin_name}' at '{self.runner_config.plugin_path}'")
@@ -233,11 +236,11 @@ class TridentRunner:
 
     def _evaluate_plugin(self, generator: Generator[Any, Any, Any]) -> NoReturn:
         """ Evaluate the initialized plugin generator for each returned value.
-        
+
         :param generator: The generator yielded from `start_runner`.
         :type generator: Generator
         :raises StopIteration: If generator did not return any more values from the plugin.
-        :raises Exception: If any errors occured when trying to access the next value. 
+        :raises Exception: If any errors occured when trying to access the next value.
         """
         results_index = 0
         while not self.runner_config.thread_event.is_set():

@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from dataclasses import dataclass
 from random import randint, random
 from time import sleep
 
 
-@dataclass
 class TestPlugin:
     def _add(self, x, y):
         return x + y
