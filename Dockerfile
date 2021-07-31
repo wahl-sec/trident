@@ -1,4 +1,4 @@
-FROM python:3.7
+FROM ubuntu:latest
 
 ADD Makefile /
 ADD trident /trident
@@ -8,6 +8,19 @@ ADD config /config
 ADD README.md /
 ADD setup.py /
 
-RUN make install
+SHELL ["/bin/bash", "-c"]
 
-ENTRYPOINT ["python", "-m", "trident"]
+RUN apt-get -y update \
+    && apt-get -y install curl \
+    && apt-get -y install software-properties-common \
+    && add-apt-repository ppa:deadsnakes/ppa -y \
+    && apt-get -y update \
+    && apt-get -y install python3.7 \
+    && ln -sf /usr/bin/python3.7 /usr/bin/python3 \
+    && apt-get -y install python3-pip \
+    && apt-get -y install python3.7-dev \
+    && curl https://sh.rustup.rs -sSf | sh -s -- -y \
+    && source $HOME/.cargo/env \
+    && make install
+
+ENTRYPOINT ["python3", "-m", "trident"]

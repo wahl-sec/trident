@@ -42,7 +42,7 @@ setuptools.setup(
             "pytest>=6.2.1",
             "pybind11>=2.6.2",
             "sphinx>=4.1.2",
-            "furo>=2021.7.28b40",
+            "furo==2021.7.28b40",
             "setuptools_rust>=0.12.1",
         ]
     },
