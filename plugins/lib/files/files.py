@@ -112,18 +112,18 @@ def entry_metadata(entry: Union[DirEntry, AnyStr]) -> EntryStat:
     :return: Dictionary of metadata for the given entry
     :rtype: EntryStat
     """
-    stat = entry.stat() if isinstance(entry, DirEntry) else stat(entry)
+    stat_ = entry.stat() if isinstance(entry, DirEntry) else stat(entry)
     return EntryStat(
-        mode=stat.st_mode,
-        inode=stat.st_ino,
-        device=stat.st_dev,
-        nlinks=stat.st_nlink,
-        uid=stat.st_uid,
-        gid=stat.st_gid,
-        size=stat.st_size,
-        atime=stat.st_atime,
-        mtime=stat.st_mtime,
-        ctime=stat.st_ctime
+        mode=stat_.st_mode,
+        inode=stat_.st_ino,
+        device=stat_.st_dev,
+        nlinks=stat_.st_nlink,
+        uid=stat_.st_uid,
+        gid=stat_.st_gid,
+        size=stat_.st_size,
+        atime=stat_.st_atime,
+        mtime=stat_.st_mtime,
+        ctime=stat_.st_ctime
     )
 
 def remove_entries(path: Union[Entry, AnyStr], recursive: bool=False, patterns: List[AnyStr]=None, exclude: List[AnyStr]=None) -> NoReturn:
