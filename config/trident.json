@@ -2,6 +2,9 @@
     "TRIDENT": {
         "logging_level": "INFO",
         "plugins": {
+            "plugin0": {
+                "path": "plugins.test_plugin"
+            }
         }
     }
 }

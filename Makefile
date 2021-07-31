@@ -2,12 +2,12 @@ SHELL := /usr/bin/env bash
 
 .TRIDENT: install
 install:
-	pip install setuptools && pip install pybind11
+	pip install setuptools && pip install pybind11 && pip install setuptools_rust
 	pip install -e .[dev]
 
 .TRIDENT: install-win
 install-win:
-	pip install setuptools && pip install pybind11
+	pip install setuptools && pip install pybind11 && pip install setuptools_rust
 	pip install -e .[dev]
 
 .TRIDENT: clean
@@ -20,11 +20,11 @@ clean:
 
 .TRIDENT: test
 test:
-	pip install setuptools && pip install pybind11
+	pip install setuptools && pip install pybind11 && pip install setuptools_rust
 	pip install -e .[dev]
 	pytest -v
 
 .TRIDENT: build
 build:
-	pip install setuptools && pip install pybind11
+	pip install setuptools && pip install pybind11 && pip install setuptools_rust
 	python setup.py bdist_wheel
