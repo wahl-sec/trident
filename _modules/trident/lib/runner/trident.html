@@ -1,175 +1,200 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" />
 
-
-<!DOCTYPE html>
-<html class="writer-html5" lang="en" >
-<head>
-  <meta charset="utf-8" />
-  
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  
-  <title>trident.lib.runner.trident &mdash; Trident 0.1-DEV documentation</title>
-  
-
-  
-  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
-  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
-
-  
-  
-
-  
-  
-
-  
-
-  
-  <!--[if lt IE 9]>
-    <script src="../../../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
+    <meta name="generator" content="sphinx-4.1.2, furo 2021.07.28.beta40"/>
+        <title>trident.lib.runner.trident - Trident 0.1-DEV documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css" />
     
-      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
-        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
-        <script src="../../../../_static/jquery.js"></script>
-        <script src="../../../../_static/underscore.js"></script>
-        <script src="../../../../_static/doctools.js"></script>
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style><link media="(prefers-color-scheme: dark)" rel="stylesheet" href="../../../../_static/pygments_dark.css"></head>
+  <body>
     
-    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
 
-    
-    <link rel="index" title="Index" href="../../../../genindex.html" />
-    <link rel="search" title="Search" href="../../../../search.html" /> 
-</head>
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
 
-<body class="wy-body-for-nav">
 
-   
-  <div class="wy-grid-for-nav">
-    
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search"  style="background: grey" >
-          
 
-          
-            <a href="../../../../index.html" class="icon icon-home"> Trident
-          
-
-          
-          </a>
-
-          
-            
-            
-          
-
-          
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
-</div>
-
-          
-        </div>
-
-        
-        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
-          
-            
-            
-              
-            
-            
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../../index.html"><div class="brand">Trident 0.1-DEV documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../index.html">
+  
+  
+  <span class="sidebar-brand-text">Trident 0.1-DEV documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../../search.html">
+  <input class="sidebar-search" placeholder=Search name="q">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../trident/lib.html">Trident Library Package</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../trident/lib.html">Trident Library Package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label for="toctree-checkbox-1"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../trident/lib/daemon.html">Trident Daemon Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../trident/lib/notification.html">Trident Notification Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../trident/lib/parser.html">Trident Parser Package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../trident/lib/runner.html">Trident Runner Package</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Trident Usage</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../usage.html">Trident Usage</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label for="toctree-checkbox-2"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Trident Source</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../../../github.html">Trident GitHub</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../github.html">Trident GitHub</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label for="toctree-checkbox-3"><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="simple">
+</ul>
+</li>
 </ul>
 
-            
-          
-        </div>
-        
-      </div>
-    </nav>
-
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
-
-      
-      <nav class="wy-nav-top" aria-label="top navigation">
-        
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../../../index.html">Trident</a>
-        
-      </nav>
-
-
-      <div class="wy-nav-content">
-        
-        <div class="rst-content">
-        
-          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div role="navigation" aria-label="breadcrumbs navigation">
-
-  <ul class="wy-breadcrumbs">
-    
-      <li><a href="../../../../index.html" class="icon icon-home"></a> &raquo;</li>
-        
-          <li><a href="../../../index.html">Module code</a> &raquo;</li>
-        
-      <li>trident.lib.runner.trident</li>
-    
-    
-      <li class="wy-breadcrumbs-aside">
-        
-      </li>
-    
-  </ul>
-
-  
-  <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-            
-  <h1>Source code for trident.lib.runner.trident</h1><div class="highlight"><pre>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <main class="main">
+    <div class="content">
+      <article role="main">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <h1>Source code for trident.lib.runner.trident</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python3</span>
 <span class="c1"># -*- coding: utf-8 -*-</span>
 
-<span class="sd">&quot;&quot;&quot; Trident: Runner</span>
+<span class="sd">""" Trident: Runner</span>
 
 <span class="sd">Runs and controls the execution of a valid plugin.</span>
 <span class="sd">@author: Jacob Wahlman</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Event</span>
@@ -179,11 +204,11 @@
 <span class="kn">import</span> <span class="nn">re</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">NewType</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">NoReturn</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">AnyStr</span>
-<span class="n">Module</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s2">&quot;Module&quot;</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span>
-<span class="n">PluginClass</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s2">&quot;PluginClass&quot;</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span>
+<span class="n">Module</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s2">"Module"</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span>
+<span class="n">PluginClass</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s2">"PluginClass"</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;__main__&quot;</span><span class="p">)</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"__main__"</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">trident.lib.daemon.data_storage</span> <span class="kn">import</span> <span class="n">TridentDataDaemonConfig</span><span class="p">,</span> <span class="n">TridentDataDaemon</span>
 <span class="kn">from</span> <span class="nn">trident.lib.daemon.notification</span> <span class="kn">import</span> <span class="n">TridentNotificationDaemonConfig</span><span class="p">,</span> <span class="n">TridentNotificationDaemon</span>
@@ -191,7 +216,7 @@
 
 <div class="viewcode-block" id="TridentRunnerConfig"><a class="viewcode-back" href="../../../../trident/lib/runner.html#trident.lib.runner.trident.TridentRunnerConfig">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">TridentRunnerConfig</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot; The configuration for the :class:`TridentRunner`.</span>
+    <span class="sd">""" The configuration for the :class:`TridentRunner`.</span>
 <span class="sd">    Defines the attributes that the runner runs, like plugin instance, module and other info required by the runner.</span>
 
 <span class="sd">    :param plugin_path: The path to the plugin used.</span>
@@ -210,7 +235,7 @@
 <span class="sd">    :type dont_store_on_error: bool</span>
 <span class="sd">    :param thread_event: The event flag used to signal to the plugin that it should exit.</span>
 <span class="sd">    :type thread_event: :class:`threading.Event`</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">plugin_path</span><span class="p">:</span> <span class="n">AnyStr</span>
     <span class="n">plugin_name</span><span class="p">:</span> <span class="n">AnyStr</span>
     <span class="n">plugin_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
@@ -232,65 +257,65 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">plugin_instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugin_module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_runner_plugin</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_apply_runner_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runner_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Apply any config parameter passed to this runner config.</span>
+        <span class="sd">""" Apply any config parameter passed to this runner config.</span>
 
 <span class="sd">        :param runner_config: Config containing the parameters to apply.</span>
 <span class="sd">        :type runner_config: dict</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="s2">&quot;dont_store_on_error&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">runner_config</span><span class="p">:</span>
-            <span class="n">runner_config</span><span class="p">[</span><span class="s2">&quot;dont_store_on_error&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="s2">"dont_store_on_error"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">runner_config</span><span class="p">:</span>
+            <span class="n">runner_config</span><span class="p">[</span><span class="s2">"dont_store_on_error"</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
 
-        <span class="k">if</span> <span class="s2">&quot;filter_results&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">runner_config</span><span class="p">:</span>
-            <span class="n">runner_config</span><span class="p">[</span><span class="s2">&quot;filter_results&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="s2">"filter_results"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">runner_config</span><span class="p">:</span>
+            <span class="n">runner_config</span><span class="p">[</span><span class="s2">"filter_results"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
         <span class="k">for</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">runner_config</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_resolve_plugin_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnyStr</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Construct the name of the plugin from the plugin path.</span>
+        <span class="sd">""" Construct the name of the plugin from the plugin path.</span>
 <span class="sd">        Converts the path to the plugin to the expected name of the class in the plugin module.</span>
 
 <span class="sd">        :return: The plugin name.</span>
 <span class="sd">        :rtype: str</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugin_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugin_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
         <span class="n">component_name</span> <span class="o">=</span> <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">components</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
-        <span class="k">if</span> <span class="s2">&quot;_&quot;</span> <span class="ow">in</span> <span class="n">component_name</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">component_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">))</span>
+        <span class="k">if</span> <span class="s2">"_"</span> <span class="ow">in</span> <span class="n">component_name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">component_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">component_name</span>
 
     <span class="k">def</span> <span class="nf">_initialize_runner_plugin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">PluginClass</span><span class="p">,</span> <span class="n">Module</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
-        <span class="sd">&quot;&quot;&quot; Initialize the plugin to be used by the :class:`TridentRunner`.</span>
+        <span class="sd">""" Initialize the plugin to be used by the :class:`TridentRunner`.</span>
 <span class="sd">        Tries to import the module given the path provided and tries to initialize an instance given the plugin name.</span>
 
 <span class="sd">        :raises ValueError: If the plugin name is not found in the plugin module.</span>
 <span class="sd">        :raises Exception: If any unexpected error occured when initializing the plugin.</span>
 <span class="sd">        :return: The plugin instance and the plugin module if successful otherwise None</span>
 <span class="sd">        :rtype: (PluginClass, Module)</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">plugin_module</span><span class="p">,</span> <span class="n">plugin_instance</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
             <span class="n">plugin_module</span> <span class="o">=</span> <span class="n">import_module</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plugin_path</span><span class="p">,</span> <span class="n">package</span><span class="o">=</span><span class="n">__package__</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugin_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">plugin_module</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to find a class named: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plugin_name</span><span class="si">}</span><span class="s2">&#39; in module: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plugin_path</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to find a class named: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plugin_name</span><span class="si">}</span><span class="s2">' in module: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plugin_path</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
             <span class="n">plugin_instance</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">plugin_module</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugin_name</span><span class="p">)()</span>
 
             <span class="k">return</span> <span class="n">plugin_instance</span><span class="p">,</span> <span class="n">plugin_module</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to initialize plugin: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plugin_path</span><span class="si">}</span><span class="s2">&#39; with error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to initialize plugin: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plugin_path</span><span class="si">}</span><span class="s2">' with error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span></div>
 
 
 <div class="viewcode-block" id="TridentRunner"><a class="viewcode-back" href="../../../../trident/lib/runner.html#trident.lib.runner.trident.TridentRunner">[docs]</a><span class="k">class</span> <span class="nc">TridentRunner</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot; The :class:`TridentRunner` used to control the execution of each plugin.</span>
+    <span class="sd">""" The :class:`TridentRunner` used to control the execution of each plugin.</span>
 <span class="sd">    Starts initialized plugins, evaluates results and calls for storage by the :class:`TridentDataDaemon` attached to this runner.</span>
 
 <span class="sd">    :param runner_config: The configuration used to define the behavior of this runner.</span>
 <span class="sd">    :type runner_config: :class:`TridentRunnerConfig`</span>
 <span class="sd">    :param runner_id: The unique identifier for this runner.</span>
 <span class="sd">    :type runner_id: str</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runner_config</span><span class="p">:</span> <span class="n">TridentRunnerConfig</span><span class="p">,</span> <span class="n">runner_id</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span> <span class="o">=</span> <span class="n">runner_config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span> <span class="o">=</span> <span class="n">runner_id</span>
@@ -299,24 +324,24 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">notification_daemon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_notification_daemon</span><span class="p">()</span>
 
 <div class="viewcode-block" id="TridentRunner.start_runner"><a class="viewcode-back" href="../../../../trident/lib/runner.html#trident.lib.runner.trident.TridentRunner.start_runner">[docs]</a>    <span class="k">def</span> <span class="nf">start_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Start the initialized :class:`TridentRunner` by calling the plugin method `execute_plugin` with the provided arguments.</span>
+        <span class="sd">""" Start the initialized :class:`TridentRunner` by calling the plugin method `execute_plugin` with the provided arguments.</span>
 
 <span class="sd">        :raises Exception: Re-raised exceptions that occurs in the plugin.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting runner: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39; ...&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Starting runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">' ..."</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="p">,</span> <span class="s2">&quot;execute_plugin&quot;</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Entry method &#39;execute_plugin&#39; not defined.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="p">,</span> <span class="s2">"execute_plugin"</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Entry method 'execute_plugin' not defined."</span><span class="p">)</span>
 
             <span class="c1"># The thread event is used to allow the daemon to stop already started plugins.</span>
-            <span class="k">if</span> <span class="s2">&quot;thread_event&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">signature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="o">.</span><span class="n">execute_plugin</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Thread event parameter not specified in &#39;execute_plugin&#39; method for plugin: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_name</span><span class="si">}</span><span class="s2">&#39; at &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_path</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">"thread_event"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">signature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="o">.</span><span class="n">execute_plugin</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Thread event parameter not specified in 'execute_plugin' method for plugin: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_name</span><span class="si">}</span><span class="s2">' at '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_path</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
                 <span class="n">runner_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="o">.</span><span class="n">execute_plugin</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_args</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">runner_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="o">.</span><span class="n">execute_plugin</span><span class="p">(</span><span class="n">thread_event</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">thread_event</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_args</span><span class="p">)</span>
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Runner: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39; encountered error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">' encountered error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span>
 
         <span class="k">if</span> <span class="n">runner_generator</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -325,22 +350,22 @@
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">e</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;No results were returned from the plugin: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No results were returned from the plugin: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_initialize_data_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TridentDataDaemon</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Initialize the :class:`TridentDataDaemon` connected to this runner from the :class:`TridentDataDaemonConfig`.</span>
+        <span class="sd">""" Initialize the :class:`TridentDataDaemon` connected to this runner from the :class:`TridentDataDaemonConfig`.</span>
 
 <span class="sd">        :raises Exception: If any exceptions occur when initializing the :class:`TridentDataDaemon`</span>
 <span class="sd">        :return: The initialized :class:`TridentDataDaemon`.</span>
 <span class="sd">        :rtype: :class:`TridentDataDaemon`</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">store_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;no_store&quot;</span><span class="p">):</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">store_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"no_store"</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">store_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;global_store&quot;</span><span class="p">):</span>
-            <span class="n">store_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">store_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;global_store&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">store_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"global_store"</span><span class="p">):</span>
+            <span class="n">store_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">store_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"global_store"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">store_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">store_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;path_store&quot;</span><span class="p">)</span>
+            <span class="n">store_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">store_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"path_store"</span><span class="p">)</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">trident_data_config</span> <span class="o">=</span> <span class="n">TridentDataDaemonConfig</span><span class="p">(</span>
@@ -350,16 +375,16 @@
             <span class="p">)</span>
             <span class="k">return</span> <span class="n">TridentDataDaemon</span><span class="p">(</span><span class="n">daemon_config</span><span class="o">=</span><span class="n">trident_data_config</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to initialize data daemon for runner: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to initialize data daemon for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span>
 
     <span class="k">def</span> <span class="nf">_initialize_notification_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TridentNotificationDaemon</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Initialize the :class:`TridentNotificationDaemon` connected to this runner from the :class:`TridentNotificationDaemonConfig`</span>
+        <span class="sd">""" Initialize the :class:`TridentNotificationDaemon` connected to this runner from the :class:`TridentNotificationDaemonConfig`</span>
 
 <span class="sd">        :raises Exception: If any exceptions occur when initializing the :class:`TridentNotificationDaemonConfig`</span>
 <span class="sd">        :return: The initialized :class:`TridentNotificationDaemon`</span>
 <span class="sd">        :rtype: :class:`TridentNotificationDaemon`</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">trident_notification_config</span> <span class="o">=</span> <span class="n">TridentNotificationDaemonConfig</span><span class="p">(</span>
                 <span class="n">runner</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
@@ -367,29 +392,29 @@
             <span class="p">)</span>
             <span class="k">return</span> <span class="n">TridentNotificationDaemon</span><span class="p">(</span><span class="n">daemon_config</span><span class="o">=</span><span class="n">trident_notification_config</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to initialize the notification daemon for runner: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to initialize the notification daemon for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span>
 
     <span class="k">def</span> <span class="nf">_evaluate_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">result_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Evaluate the result yielded/returned from the plugin for each iteration.</span>
+        <span class="sd">""" Evaluate the result yielded/returned from the plugin for each iteration.</span>
 
 <span class="sd">        :param result: The result returned from the plugin.</span>
 <span class="sd">        :type result: Any</span>
 <span class="sd">        :param result_index: The iteration index that the result was returned.</span>
 <span class="sd">        :type result_index: int</span>
 <span class="sd">        :raises Exception: If any error occur when storing the result.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">thread_event</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
             <span class="k">return</span>
 
-        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="p">,</span> <span class="s2">&quot;filter_results&quot;</span><span class="p">):</span>
-            <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="p">,</span> <span class="s2">&quot;filter_results&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="p">,</span> <span class="s2">"filter_results"</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="p">,</span> <span class="s2">"filter_results"</span><span class="p">):</span>
                 <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Result: &#39;</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&#39; matched pattern: &#39;</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">&#39; for runner: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Result: '</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">' matched pattern: '</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">' for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
                     <span class="k">break</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Result: &#39;</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&#39; did not match any pattern(s) for runner: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Result: '</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">' did not match any pattern(s) for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
                 <span class="k">return</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -399,13 +424,13 @@
             <span class="k">raise</span> <span class="n">e</span>
 
     <span class="k">def</span> <span class="nf">_evaluate_plugin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generator</span><span class="p">:</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
-        <span class="sd">&quot;&quot;&quot; Evaluate the initialized plugin generator for each returned value.</span>
+        <span class="sd">""" Evaluate the initialized plugin generator for each returned value.</span>
 
 <span class="sd">        :param generator: The generator yielded from `start_runner`.</span>
 <span class="sd">        :type generator: Generator</span>
 <span class="sd">        :raises StopIteration: If generator did not return any more values from the plugin.</span>
 <span class="sd">        :raises Exception: If any errors occured when trying to access the next value.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">results_index</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">thread_event</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>
             <span class="k">try</span><span class="p">:</span>
@@ -417,7 +442,7 @@
                     <span class="k">raise</span> <span class="ne">StopIteration</span>
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="ne">StopIteration</span><span class="p">):</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Runner: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39; encountered a &#39;</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&#39; with message: &#39;</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&#39; at run index: &#39;</span><span class="si">{</span><span class="n">results_index</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">' encountered a '</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">' with message: '</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">' at run index: '</span><span class="si">{</span><span class="n">results_index</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
 
                     <span class="k">raise</span> <span class="n">e</span>
 
@@ -425,11 +450,11 @@
                 <span class="n">results_index</span> <span class="o">+=</span> <span class="mi">1</span>
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="ne">StopIteration</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="p">,</span> <span class="s2">&quot;dont_store_on_error&quot;</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="p">,</span> <span class="s2">"dont_store_on_error"</span><span class="p">):</span>
                         <span class="k">raise</span> <span class="n">e</span>
 
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Runner: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39; exited with error, storing results up until error&quot;</span><span class="p">)</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">' exited with error, storing results up until error"</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">resource_queues</span><span class="p">:</span>
@@ -442,48 +467,35 @@
 
                 <span class="k">raise</span> <span class="n">e</span></div>
 </pre></div>
-
-           </div>
-           
-          </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p>
-        &#169; Copyright 2021, Jacob Wahlman.
-
-    </p>
-  </div>
-    
-    
-    
-    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    
-    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
-
-</footer>
+      </article>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
         </div>
-      </div>
 
-    </section>
-
-  </div>
-  
-
-  <script type="text/javascript">
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script>
-
-  
-  
-    
-   
-
-</body>
+        <div class="related-information">
+              Copyright &#169; 2021, Jacob Wahlman
+            |
+            Built with <a href="https://www.sphinx-doc.org/">Sphinx</a>
+              and
+              <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+              <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </main>
+</div><script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+    <script src="../../../../_static/jquery.js"></script>
+    <script src="../../../../_static/underscore.js"></script>
+    <script src="../../../../_static/doctools.js"></script>
+    <script src="../../../../_static/scripts/main.js"></script>
+    </body>
 </html>
