@@ -7,6 +7,11 @@ from plugins.lib.files.files import *
 
 
 class RemoveFiles:
-    def execute_plugin(self, path: AnyStr, pattern: AnyStr=None, depth: int=-1, exclude: List[AnyStr]=None):
+    def execute_plugin(
+        self,
+        path: AnyStr,
+        pattern: AnyStr = None,
+        depth: int = -1,
+        exclude: List[AnyStr] = None,
+    ):
         remove_entries(path=path, patterns=pattern)
-

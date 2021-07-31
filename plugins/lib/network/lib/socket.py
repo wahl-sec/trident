@@ -7,6 +7,7 @@ Implements the socket handler for Trident plugin.
 """
 
 from typing import NewType
+
 IPv4Address = NewType("IPv4Address", str)
 AddressFamily = NewType("AddressFamily", str)
 SocketType = NewType("SocketType", str)
@@ -16,7 +17,15 @@ import socket
 
 
 class Socket:
-    def __init__(self, host: IPv4Address, port: int, timeout: float, family: AddressFamily, type_: SocketType, proto: Protocol):
+    def __init__(
+        self,
+        host: IPv4Address,
+        port: int,
+        timeout: float,
+        family: AddressFamily,
+        type_: SocketType,
+        proto: Protocol,
+    ):
         self.host = host
         self.port = port
         self.timeout = timeout
@@ -32,7 +41,9 @@ class Socket:
         except Exception as e:
             raise e
 
-    def _create_socket(self, family: socket.AddressFamily, type_: socket.SocketType, proto: int) -> socket.socket:
+    def _create_socket(
+        self, family: socket.AddressFamily, type_: socket.SocketType, proto: int
+    ) -> socket.socket:
         try:
             socket_ = socket.socket(family=family, type=type_, proto=proto)
         except socket.error as e:

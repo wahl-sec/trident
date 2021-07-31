@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from random import randint, random
-from time import sleep
+from random import randint
 
 
 class TestPlugin:
@@ -10,5 +9,5 @@ class TestPlugin:
         return x + y
 
     def execute_plugin(self, thread_event):
-        for i in range(0, 10):
+        for _ in range(0, 10):
             yield self._add(randint(0, 10), randint(0, 10))

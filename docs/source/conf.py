@@ -12,17 +12,18 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../'))
+
+sys.path.insert(0, os.path.abspath("../../"))
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'Trident'
-copyright = '2021, Jacob Wahlman'
-author = 'Jacob Wahlman'
+project = "Trident"
+copyright = "2021, Jacob Wahlman"
+author = "Jacob Wahlman"
 
 # The full version, including alpha/beta/rc tags
-release = '0.1-DEV'
+release = "0.1-DEV"
 
 
 # -- General configuration ---------------------------------------------------
@@ -30,15 +31,23 @@ release = '0.1-DEV'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.todo', 'sphinx.ext.viewcode', 'sphinx.ext.autodoc', 'furo']
+extensions = ["sphinx.ext.todo", "sphinx.ext.viewcode", "sphinx.ext.autodoc", "furo"]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ['__main__.py', '__init__.py', 'tests', 'plugins', 'data', 'config', 'build']
+exclude_patterns = [
+    "__main__.py",
+    "__init__.py",
+    "tests",
+    "plugins",
+    "data",
+    "config",
+    "build",
+]
 
 
 # -- Options for HTML output -------------------------------------------------
@@ -46,13 +55,13 @@ exclude_patterns = ['__main__.py', '__init__.py', 'tests', 'plugins', 'data', 'c
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'furo'
+html_theme = "furo"
 html_theme_options = {
-    'display_version': True,
-    'prev_next_buttons_location': 'bottom',
-    'style_nav_header_background': 'grey',
-    'titles_only': True,
-    'logo_only': True
+    "display_version": True,
+    "prev_next_buttons_location": "bottom",
+    "style_nav_header_background": "grey",
+    "titles_only": True,
+    "logo_only": True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,

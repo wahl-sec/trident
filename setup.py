@@ -13,8 +13,7 @@ with open("README.md", "r") as README:
 #         "plugins.lib.files.files_",
 #         list(glob("plugins/lib/files/files.cpp"))
 # )
-ext_modules = [
-]
+ext_modules = []
 
 setuptools.setup(
     name="trident",
@@ -28,13 +27,19 @@ setuptools.setup(
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
-        "Operation System :: OS Independent"
+        "Operation System :: OS Independent",
     ],
     python_requires=">=3.7",
-	extras_require={
-		"dev": ["wheel>=0.35.1", "pytest>=6.2.1", "pybind11>=2.6.2", "sphinx>=3.4.3", "furo>=2021.7.28b40"]
-	},
+    extras_require={
+        "dev": [
+            "wheel>=0.35.1",
+            "pytest>=6.2.1",
+            "pybind11>=2.6.2",
+            "sphinx>=3.4.3",
+            "furo>=2021.7.28b40",
+        ]
+    },
     ext_modules=ext_modules,
     cmdclass={"build_ext": build_ext},
-    zip_safe=False
+    zip_safe=False,
 )
