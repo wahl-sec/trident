@@ -4,6 +4,7 @@
 import setuptools
 from glob import glob
 from pybind11.setup_helpers import Pybind11Extension, build_ext
+from setuptools_rust import RustExtension
 
 with open("README.md", "r") as README:
     long_description = README.read()
@@ -13,7 +14,12 @@ with open("README.md", "r") as README:
 #         "plugins.lib.files.files_",
 #         list(glob("plugins/lib/files/files.cpp"))
 # )
-ext_modules = []
+ext_modules = [
+    Pybind11Extension(
+        "plugins.lib.ext.network.network",
+        list(glob("plugins/lib/ext/network/network.cpp")),
+    )
+]
 
 setuptools.setup(
     name="trident",
@@ -35,11 +41,19 @@ setuptools.setup(
             "wheel>=0.35.1",
             "pytest>=6.2.1",
             "pybind11>=2.6.2",
-            "sphinx>=3.4.3",
+            "sphinx>=4.1.2",
             "furo>=2021.7.28b40",
+            "setuptools_rust>=0.12.1",
         ]
     },
     ext_modules=ext_modules,
+    rust_extensions=[
+        RustExtension(
+            "plugins.lib.ext.files.files",
+            glob("plugins/lib/ext/files/Cargo.toml")[0],
+            debug=False,
+        )
+    ],
     cmdclass={"build_ext": build_ext},
     zip_safe=False,
 )
