@@ -6,7 +6,8 @@ Implements logic to connect and communicate over ports on a given host.
 @author: Jacob Wahlman
 """
 
-from typing import AnyStr, NewType, Union, ByteString
+from typing import NewType, Union
+
 PortConnect = NewType("PortConnect", None)
 OpenPort = NewType("OpenPort", None)
 IPv4Address = NewType("IPv4Address", str)
@@ -21,7 +22,14 @@ from plugins.lib.network.lib.socket import Socket
 
 class PortConnect(Socket):
     def __init__(self, host: IPv4Address, port: int, timeout: float):
-        super(PortConnect, self).__init__(host=host, port=port, timeout=timeout, family=socket.AF_INET, type_=socket.SOCK_STREAM, proto=socket.IPPROTO_TCP)
+        super(PortConnect, self).__init__(
+            host=host,
+            port=port,
+            timeout=timeout,
+            family=socket.AF_INET,
+            type_=socket.SOCK_STREAM,
+            proto=socket.IPPROTO_TCP,
+        )
 
     def __enter__(self) -> PortConnect:
         self.connect()
@@ -43,26 +51,37 @@ class PortConnect(Socket):
         except Exception as e:
             return e
 
-        return error
-
-    def _wait_for_connect(self, time_sent: float, time_left: float) -> Union[socket.error, None]:
+    def _wait_for_connect(
+        self, time_sent: float, time_left: float
+    ) -> Union[socket.error, None]:
         if time_left <= 0:
             return TimeoutError(f"Socket timed out connecting to port: '{self.port}'")
 
-        self.read, self.write, error = select.select([self.socket], [self.socket], [self.socket], time_left)
+        self.read, self.write, error = select.select(
+            [self.socket], [self.socket], [self.socket], time_left
+        )
         received_time = time.time()
 
         self.delay = received_time - time_sent
         if self.read or self.write:
             return error
 
-        return self._wait_for_connect(time_sent=time_sent, time_left=time_sent - received_time)
+        return self._wait_for_connect(
+            time_sent=time_sent, time_left=time_sent - received_time
+        )
 
 
 class OpenPort(Socket):
-    def __init__(self, host: IPv4Address, port: int, timeout: float, backlog: int=1):
+    def __init__(self, host: IPv4Address, port: int, timeout: float, backlog: int = 1):
         self.backlog = backlog
-        super(OpenPort, self).__init__(host=host, port=port, timeout=timeout, family=socket.AF_INET, type_=socket.SOCK_STREAM, proto=socket.IPPROTO_TCP)
+        super(OpenPort, self).__init__(
+            host=host,
+            port=port,
+            timeout=timeout,
+            family=socket.AF_INET,
+            type_=socket.SOCK_STREAM,
+            proto=socket.IPPROTO_TCP,
+        )
 
     def __enter__(self, backlog=1) -> OpenPort:
         self.bind(backlog)

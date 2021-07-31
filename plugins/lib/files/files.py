@@ -15,11 +15,12 @@ from pathlib import Path
 
 
 class EntryStat(dict):
-    """ Represents metadata structure for an entry.
+    """Represents metadata structure for an entry.
     Instances of the class is stored inside the entry instances.
     The class is JSON serializable in order to be easily
     represented in the data stores.
     """
+
     mode: int
     inode: int
     device: int
@@ -31,15 +32,30 @@ class EntryStat(dict):
     mtime: float
     ctime: float
 
-    def __init__(self, mode, inode, device, nlinks, uid, gid, size, atime, mtime, ctime):
-        dict.__init__(self, mode=mode, inode=inode, device=device, nlinks=nlinks, uid=uid, gid=gid, size=size, atime=atime, mtime=mtime, ctime=ctime)
+    def __init__(
+        self, mode, inode, device, nlinks, uid, gid, size, atime, mtime, ctime
+    ):
+        dict.__init__(
+            self,
+            mode=mode,
+            inode=inode,
+            device=device,
+            nlinks=nlinks,
+            uid=uid,
+            gid=gid,
+            size=size,
+            atime=atime,
+            mtime=mtime,
+            ctime=ctime,
+        )
 
 
 class Entry(dict):
-    """ Represents an entry (files, directories, ...).
+    """Represents an entry (files, directories, ...).
     The class is JSON serializable in order to be easily
     represented in the data stores.
     """
+
     path: str
     name: str
     stat: EntryStat
@@ -48,8 +64,13 @@ class Entry(dict):
         dict.__init__(self, path=path, name=name, stat=stat)
 
 
-def entries(path: AnyStr, patterns: List[AnyStr]=None, depth: int=0, exclude: List[AnyStr]=None) -> Generator[DirEntry, None, None]:
-    """ Lists all the entries at the specific path.
+def entries(
+    path: AnyStr,
+    patterns: List[AnyStr] = None,
+    depth: int = 0,
+    exclude: List[AnyStr] = None,
+) -> Generator[DirEntry, None, None]:
+    """Lists all the entries at the specific path.
     Defaults to only scan the current depth (0) of entries.
 
     :param path: Path to start listing from
@@ -64,22 +85,42 @@ def entries(path: AnyStr, patterns: List[AnyStr]=None, depth: int=0, exclude: Li
     :returns: Generator of entries matching the pattern
     :rtype: Generator[DirEntry, None, None]
     """
-    def _generator(iterator: Generator, patterns: List[AnyStr], current_depth: int, exclude: List[AnyStr]):
+
+    def _generator(
+        iterator: Generator,
+        patterns: List[AnyStr],
+        current_depth: int,
+        exclude: List[AnyStr],
+    ):
         try:
             while True:
                 _object = next(iterator)
-                if exclude is not None and any([Path(_object.name).match(pattern) or Path(_object.path).match(pattern) for pattern in exclude]):
+                if exclude is not None and any(
+                    [
+                        Path(_object.name).match(pattern)
+                        or Path(_object.path).match(pattern)
+                        for pattern in exclude
+                    ]
+                ):
                     continue
 
                 if _object.is_dir() and (current_depth < depth or depth == -1):
-                    for _inner in _generator(scandir(_object.path), patterns, current_depth + 1, exclude):
+                    for _inner in _generator(
+                        scandir(_object.path), patterns, current_depth + 1, exclude
+                    ):
                         yield _inner
 
-                if patterns is None or any([Path(_object.name).match(pattern) or Path(_object.path).match(pattern) for pattern in patterns]):
+                if patterns is None or any(
+                    [
+                        Path(_object.name).match(pattern)
+                        or Path(_object.path).match(pattern)
+                        for pattern in patterns
+                    ]
+                ):
                     yield Entry(
                         path=_object.path,
                         name=_object.name,
-                        stat=entry_metadata(_object)
+                        stat=entry_metadata(_object),
                     )
 
         except StopIteration:
@@ -87,8 +128,16 @@ def entries(path: AnyStr, patterns: List[AnyStr]=None, depth: int=0, exclude: Li
 
     return _generator(scandir(path), patterns, 0, exclude)
 
-def execute(entry: Union[DirEntry, AnyStr], flags: List[AnyStr]=[], stdin: TextIO=PIPE, stdout: TextIO=PIPE, stderr: TextIO=PIPE, wait: bool=False) -> Tuple[TextIO, TextIO, TextIO, int]:
-    """ Execute a executable entry from a specific path or given entry.
+
+def execute(
+    entry: Union[DirEntry, AnyStr],
+    flags: List[AnyStr] = [],
+    stdin: TextIO = PIPE,
+    stdout: TextIO = PIPE,
+    stderr: TextIO = PIPE,
+    wait: bool = False,
+) -> Tuple[TextIO, TextIO, TextIO, int]:
+    """Execute a executable entry from a specific path or given entry.
 
     :param entry: The entry to execute
     :type entry: Union[DirEntry, AnyStr]
@@ -103,8 +152,9 @@ def execute(entry: Union[DirEntry, AnyStr], flags: List[AnyStr]=[], stdin: TextI
 
     return [proc.stdin, proc.stdout, proc.stderr, proc.returncode]
 
+
 def entry_metadata(entry: Union[DirEntry, AnyStr]) -> EntryStat:
-    """ Return the metadata of the given entry or path to the entry on the filesystem.
+    """Return the metadata of the given entry or path to the entry on the filesystem.
 
     :raises FileNotFoundError: If the file does not exist for the given path
     :param entry: Entry or path to entry to list metadata for
@@ -123,11 +173,17 @@ def entry_metadata(entry: Union[DirEntry, AnyStr]) -> EntryStat:
         size=stat_.st_size,
         atime=stat_.st_atime,
         mtime=stat_.st_mtime,
-        ctime=stat_.st_ctime
+        ctime=stat_.st_ctime,
     )
 
-def remove_entries(path: Union[Entry, AnyStr], recursive: bool=False, patterns: List[AnyStr]=None, exclude: List[AnyStr]=None) -> NoReturn:
-    """ Remove an entry from the filesystem.
+
+def remove_entries(
+    path: Union[Entry, AnyStr],
+    recursive: bool = False,
+    patterns: List[AnyStr] = None,
+    exclude: List[AnyStr] = None,
+) -> NoReturn:
+    """Remove an entry from the filesystem.
     If the entry is a directory then the recursive flag need to be set.
 
     :param path: Path to start removing from, can also be the specific entry to remove
@@ -141,6 +197,7 @@ def remove_entries(path: Union[Entry, AnyStr], recursive: bool=False, patterns: 
     defaults to None
     :type exclude: List[AnyStr], optional
     """
+
     def _remove(entry):
         if Path(entry["path"]).is_dir():
             rmdir(entry["path"])
@@ -150,6 +207,7 @@ def remove_entries(path: Union[Entry, AnyStr], recursive: bool=False, patterns: 
     if isinstance(path, Entry):
         _remove(path)
     else:
-        for entry in entries(path=path, depth=-1 if recursive else 0, patterns=patterns, exclude=exclude):
+        for entry in entries(
+            path=path, depth=-1 if recursive else 0, patterns=patterns, exclude=exclude
+        ):
             _remove(entry)
-

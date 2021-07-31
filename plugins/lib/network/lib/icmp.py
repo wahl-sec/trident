@@ -8,6 +8,7 @@ Based On: https://gist.githubusercontent.com/pklaus/856268/raw/a4e295d0dbd1140bd
 """
 
 from typing import AnyStr, NewType, ByteString
+
 AddressFamily = NewType("AddressFamily", str)
 SocketType = NewType("SocketType", str)
 IPv4Address = NewType("IPv4Address", str)
@@ -40,28 +41,54 @@ class PingQuery:
             raise StopIteration
 
         self.count -= 1
-        return Ping(host=self.host, packet_id=int((id(self.timeout) / (self.count + 1)) % 65535), timeout=self.timeout, count=self.count, family=socket.AF_INET, type_=socket.SOCK_RAW).ping()
+        return Ping(
+            host=self.host,
+            packet_id=int((id(self.timeout) / (self.count + 1)) % 65535),
+            timeout=self.timeout,
+            count=self.count,
+            family=socket.AF_INET,
+            type_=socket.SOCK_RAW,
+        ).ping()
 
     def ping(self):
         _result = {}
         for count in range(self.count):
-            _result[count] = Ping(host=self.host, packet_id=int((id(self.timeout) / (count + 1)) % 65535), timeout=self.timeout, count=count, family=socket.AF_INET, type_=socket.SOCK_RAW).ping()
+            _result[count] = Ping(
+                host=self.host,
+                packet_id=int((id(self.timeout) / (count + 1)) % 65535),
+                timeout=self.timeout,
+                count=count,
+                family=socket.AF_INET,
+                type_=socket.SOCK_RAW,
+            ).ping()
 
         return _result
 
 
 class Ping(Socket):
-    def __init__(self, host: IPv4Address, packet_id: int, timeout: int, count: int, family: AddressFamily, type_: SocketType):
+    def __init__(
+        self,
+        host: IPv4Address,
+        packet_id: int,
+        timeout: int,
+        count: int,
+        family: AddressFamily,
+        type_: SocketType,
+    ):
         self.packet_id = packet_id
         self.timeout = timeout
         self.count = count
         self.host = host
 
         self.delay = None
-        self.raw_socket = self._create_socket(socket.AF_INET, socket.SOCK_RAW, ICMP_CODE)
+        self.raw_socket = self._create_socket(
+            socket.AF_INET, socket.SOCK_RAW, ICMP_CODE
+        )
 
     def ping(self):
-        self._send_ping(packet=ICMP(destination=(self.host, 1), packet_id=self.packet_id).data)
+        self._send_ping(
+            packet=ICMP(destination=(self.host, 1), packet_id=self.packet_id).data
+        )
         self.delay = self._receive_ping(time_sent=time.time(), time_left=self.timeout)
         return self.host, self.delay
 
@@ -88,4 +115,6 @@ class Ping(Socket):
         if packet_id == self.packet_id:
             return received_time - time_sent
 
-        return self._receive_ping(time_sent=time_sent, time_left=time_sent - received_time)
+        return self._receive_ping(
+            time_sent=time_sent, time_left=time_sent - received_time
+        )

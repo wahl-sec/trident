@@ -13,7 +13,12 @@ from urllib.request import Request, urlopen
 from urllib.parse import urlencode
 
 
-def http_request(url: AnyStr, method: AnyStr="GET", headers: Dict[AnyStr, AnyStr]=dict(), data: Dict[AnyStr, AnyStr]=dict()) -> Generator:
+def http_request(
+    url: AnyStr,
+    method: AnyStr = "GET",
+    headers: Dict[AnyStr, AnyStr] = dict(),
+    data: Dict[AnyStr, AnyStr] = dict(),
+) -> Generator:
     if data is not None:
         data = urlencode(data).encode()
 
@@ -27,4 +32,6 @@ def http_request(url: AnyStr, method: AnyStr="GET", headers: Dict[AnyStr, AnyStr
         def __next__(self):
             return urlopen(self.request)
 
-    return iter(_Request(request=Request(url=url, method=method, headers=headers, data=data)))
+    return iter(
+        _Request(request=Request(url=url, method=method, headers=headers, data=data))
+    )
