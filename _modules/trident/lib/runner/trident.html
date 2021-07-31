@@ -196,7 +196,6 @@
 <span class="sd">@author: Jacob Wahlman</span>
 <span class="sd">"""</span>
 
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">threading</span> <span class="kn">import</span> <span class="n">Event</span>
 <span class="kn">from</span> <span class="nn">inspect</span> <span class="kn">import</span> <span class="n">signature</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
@@ -204,19 +203,24 @@
 <span class="kn">import</span> <span class="nn">re</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">NewType</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">NoReturn</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">AnyStr</span>
+
 <span class="n">Module</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s2">"Module"</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span>
 <span class="n">PluginClass</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s2">"PluginClass"</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
+
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"__main__"</span><span class="p">)</span>
 
 <span class="kn">from</span> <span class="nn">trident.lib.daemon.data_storage</span> <span class="kn">import</span> <span class="n">TridentDataDaemonConfig</span><span class="p">,</span> <span class="n">TridentDataDaemon</span>
-<span class="kn">from</span> <span class="nn">trident.lib.daemon.notification</span> <span class="kn">import</span> <span class="n">TridentNotificationDaemonConfig</span><span class="p">,</span> <span class="n">TridentNotificationDaemon</span>
+<span class="kn">from</span> <span class="nn">trident.lib.daemon.notification</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">TridentNotificationDaemonConfig</span><span class="p">,</span>
+    <span class="n">TridentNotificationDaemon</span><span class="p">,</span>
+<span class="p">)</span>
 
 
 <div class="viewcode-block" id="TridentRunnerConfig"><a class="viewcode-back" href="../../../../trident/lib/runner.html#trident.lib.runner.trident.TridentRunnerConfig">[docs]</a><span class="nd">@dataclass</span>
 <span class="k">class</span> <span class="nc">TridentRunnerConfig</span><span class="p">:</span>
-    <span class="sd">""" The configuration for the :class:`TridentRunner`.</span>
+    <span class="sd">"""The configuration for the :class:`TridentRunner`.</span>
 <span class="sd">    Defines the attributes that the runner runs, like plugin instance, module and other info required by the runner.</span>
 
 <span class="sd">    :param plugin_path: The path to the plugin used.</span>
@@ -236,6 +240,7 @@
 <span class="sd">    :param thread_event: The event flag used to signal to the plugin that it should exit.</span>
 <span class="sd">    :type thread_event: :class:`threading.Event`</span>
 <span class="sd">    """</span>
+
     <span class="n">plugin_path</span><span class="p">:</span> <span class="n">AnyStr</span>
     <span class="n">plugin_name</span><span class="p">:</span> <span class="n">AnyStr</span>
     <span class="n">plugin_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
@@ -244,7 +249,15 @@
     <span class="n">resource_queues</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">]]</span>
     <span class="n">thread_event</span><span class="p">:</span> <span class="n">Event</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plugin_path</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">plugin_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">store_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">runner_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">notification_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">resource_queues</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">]]):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">plugin_path</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">,</span>
+        <span class="n">plugin_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">store_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">runner_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">notification_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">resource_queues</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">]],</span>
+    <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plugin_path</span> <span class="o">=</span> <span class="n">plugin_path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plugin_args</span> <span class="o">=</span> <span class="n">plugin_args</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store_config</span> <span class="o">=</span> <span class="n">store_config</span>
@@ -257,7 +270,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">plugin_instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugin_module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_runner_plugin</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_apply_runner_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runner_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="sd">""" Apply any config parameter passed to this runner config.</span>
+        <span class="sd">"""Apply any config parameter passed to this runner config.</span>
 
 <span class="sd">        :param runner_config: Config containing the parameters to apply.</span>
 <span class="sd">        :type runner_config: dict</span>
@@ -272,21 +285,23 @@
             <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_resolve_plugin_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AnyStr</span><span class="p">:</span>
-        <span class="sd">""" Construct the name of the plugin from the plugin path.</span>
+        <span class="sd">"""Construct the name of the plugin from the plugin path.</span>
 <span class="sd">        Converts the path to the plugin to the expected name of the class in the plugin module.</span>
 
 <span class="sd">        :return: The plugin name.</span>
 <span class="sd">        :rtype: str</span>
 <span class="sd">        """</span>
         <span class="n">components</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugin_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"."</span><span class="p">)</span>
-        <span class="n">component_name</span> <span class="o">=</span> <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">components</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
+        <span class="n">component_name</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">components</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">components</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">components</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">title</span><span class="p">()</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="s2">"_"</span> <span class="ow">in</span> <span class="n">component_name</span><span class="p">:</span>
             <span class="k">return</span> <span class="s2">""</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">component_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"_"</span><span class="p">))</span>
 
         <span class="k">return</span> <span class="n">component_name</span>
 
     <span class="k">def</span> <span class="nf">_initialize_runner_plugin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">PluginClass</span><span class="p">,</span> <span class="n">Module</span><span class="p">],</span> <span class="kc">None</span><span class="p">]:</span>
-        <span class="sd">""" Initialize the plugin to be used by the :class:`TridentRunner`.</span>
+        <span class="sd">"""Initialize the plugin to be used by the :class:`TridentRunner`.</span>
 <span class="sd">        Tries to import the module given the path provided and tries to initialize an instance given the plugin name.</span>
 
 <span class="sd">        :raises ValueError: If the plugin name is not found in the plugin module.</span>
@@ -298,17 +313,21 @@
             <span class="n">plugin_module</span><span class="p">,</span> <span class="n">plugin_instance</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
             <span class="n">plugin_module</span> <span class="o">=</span> <span class="n">import_module</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plugin_path</span><span class="p">,</span> <span class="n">package</span><span class="o">=</span><span class="n">__package__</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugin_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">plugin_module</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to find a class named: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plugin_name</span><span class="si">}</span><span class="s2">' in module: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plugin_path</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Failed to find a class named: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plugin_name</span><span class="si">}</span><span class="s2">' in module: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plugin_path</span><span class="si">}</span><span class="s2">'"</span>
+                <span class="p">)</span>
             <span class="n">plugin_instance</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">plugin_module</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugin_name</span><span class="p">)()</span>
 
             <span class="k">return</span> <span class="n">plugin_instance</span><span class="p">,</span> <span class="n">plugin_module</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to initialize plugin: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plugin_path</span><span class="si">}</span><span class="s2">' with error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Failed to initialize plugin: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plugin_path</span><span class="si">}</span><span class="s2">' with error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span></div>
 
 
 <div class="viewcode-block" id="TridentRunner"><a class="viewcode-back" href="../../../../trident/lib/runner.html#trident.lib.runner.trident.TridentRunner">[docs]</a><span class="k">class</span> <span class="nc">TridentRunner</span><span class="p">:</span>
-    <span class="sd">""" The :class:`TridentRunner` used to control the execution of each plugin.</span>
+    <span class="sd">"""The :class:`TridentRunner` used to control the execution of each plugin.</span>
 <span class="sd">    Starts initialized plugins, evaluates results and calls for storage by the :class:`TridentDataDaemon` attached to this runner.</span>
 
 <span class="sd">    :param runner_config: The configuration used to define the behavior of this runner.</span>
@@ -316,6 +335,7 @@
 <span class="sd">    :param runner_id: The unique identifier for this runner.</span>
 <span class="sd">    :type runner_id: str</span>
 <span class="sd">    """</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runner_config</span><span class="p">:</span> <span class="n">TridentRunnerConfig</span><span class="p">,</span> <span class="n">runner_id</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span> <span class="o">=</span> <span class="n">runner_config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span> <span class="o">=</span> <span class="n">runner_id</span>
@@ -324,7 +344,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">notification_daemon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_notification_daemon</span><span class="p">()</span>
 
 <div class="viewcode-block" id="TridentRunner.start_runner"><a class="viewcode-back" href="../../../../trident/lib/runner.html#trident.lib.runner.trident.TridentRunner.start_runner">[docs]</a>    <span class="k">def</span> <span class="nf">start_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
-        <span class="sd">""" Start the initialized :class:`TridentRunner` by calling the plugin method `execute_plugin` with the provided arguments.</span>
+        <span class="sd">"""Start the initialized :class:`TridentRunner` by calling the plugin method `execute_plugin` with the provided arguments.</span>
 
 <span class="sd">        :raises Exception: Re-raised exceptions that occurs in the plugin.</span>
 <span class="sd">        """</span>
@@ -334,11 +354,23 @@
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Entry method 'execute_plugin' not defined."</span><span class="p">)</span>
 
             <span class="c1"># The thread event is used to allow the daemon to stop already started plugins.</span>
-            <span class="k">if</span> <span class="s2">"thread_event"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">signature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="o">.</span><span class="n">execute_plugin</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Thread event parameter not specified in 'execute_plugin' method for plugin: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_name</span><span class="si">}</span><span class="s2">' at '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_path</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
-                <span class="n">runner_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="o">.</span><span class="n">execute_plugin</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_args</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="s2">"thread_event"</span>
+                <span class="ow">not</span> <span class="ow">in</span> <span class="n">signature</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="o">.</span><span class="n">execute_plugin</span>
+                <span class="p">)</span><span class="o">.</span><span class="n">parameters</span>
+            <span class="p">):</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Thread event parameter not specified in 'execute_plugin' method for plugin: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_name</span><span class="si">}</span><span class="s2">' at '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_path</span><span class="si">}</span><span class="s2">'"</span>
+                <span class="p">)</span>
+                <span class="n">runner_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="o">.</span><span class="n">execute_plugin</span><span class="p">(</span>
+                    <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_args</span>
+                <span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">runner_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="o">.</span><span class="n">execute_plugin</span><span class="p">(</span><span class="n">thread_event</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">thread_event</span><span class="p">,</span> <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_args</span><span class="p">)</span>
+                <span class="n">runner_generator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="o">.</span><span class="n">execute_plugin</span><span class="p">(</span>
+                    <span class="n">thread_event</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">thread_event</span><span class="p">,</span>
+                    <span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_args</span><span class="p">,</span>
+                <span class="p">)</span>
 
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">' encountered error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
@@ -350,10 +382,12 @@
             <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">e</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"No results were returned from the plugin: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"No results were returned from the plugin: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span>
+            <span class="p">)</span></div>
 
     <span class="k">def</span> <span class="nf">_initialize_data_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TridentDataDaemon</span><span class="p">:</span>
-        <span class="sd">""" Initialize the :class:`TridentDataDaemon` connected to this runner from the :class:`TridentDataDaemonConfig`.</span>
+        <span class="sd">"""Initialize the :class:`TridentDataDaemon` connected to this runner from the :class:`TridentDataDaemonConfig`.</span>
 
 <span class="sd">        :raises Exception: If any exceptions occur when initializing the :class:`TridentDataDaemon`</span>
 <span class="sd">        :return: The initialized :class:`TridentDataDaemon`.</span>
@@ -369,17 +403,17 @@
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">trident_data_config</span> <span class="o">=</span> <span class="n">TridentDataDaemonConfig</span><span class="p">(</span>
-                <span class="n">runner</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
-                <span class="n">store_path</span><span class="o">=</span><span class="n">store_path</span><span class="p">,</span>
-                <span class="n">store_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span>
+                <span class="n">runner</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">store_path</span><span class="o">=</span><span class="n">store_path</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span>
             <span class="p">)</span>
             <span class="k">return</span> <span class="n">TridentDataDaemon</span><span class="p">(</span><span class="n">daemon_config</span><span class="o">=</span><span class="n">trident_data_config</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to initialize data daemon for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Failed to initialize data daemon for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span>
+            <span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span>
 
     <span class="k">def</span> <span class="nf">_initialize_notification_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TridentNotificationDaemon</span><span class="p">:</span>
-        <span class="sd">""" Initialize the :class:`TridentNotificationDaemon` connected to this runner from the :class:`TridentNotificationDaemonConfig`</span>
+        <span class="sd">"""Initialize the :class:`TridentNotificationDaemon` connected to this runner from the :class:`TridentNotificationDaemonConfig`</span>
 
 <span class="sd">        :raises Exception: If any exceptions occur when initializing the :class:`TridentNotificationDaemonConfig`</span>
 <span class="sd">        :return: The initialized :class:`TridentNotificationDaemon`</span>
@@ -392,11 +426,13 @@
             <span class="p">)</span>
             <span class="k">return</span> <span class="n">TridentNotificationDaemon</span><span class="p">(</span><span class="n">daemon_config</span><span class="o">=</span><span class="n">trident_notification_config</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to initialize the notification daemon for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Failed to initialize the notification daemon for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span>
+            <span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span>
 
     <span class="k">def</span> <span class="nf">_evaluate_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">result_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
-        <span class="sd">""" Evaluate the result yielded/returned from the plugin for each iteration.</span>
+        <span class="sd">"""Evaluate the result yielded/returned from the plugin for each iteration.</span>
 
 <span class="sd">        :param result: The result returned from the plugin.</span>
 <span class="sd">        :type result: Any</span>
@@ -411,10 +447,14 @@
             <span class="k">for</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="p">,</span> <span class="s2">"filter_results"</span><span class="p">):</span>
                 <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">match</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">):</span>
-                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Result: '</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">' matched pattern: '</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">' for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">"Result: '</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">' matched pattern: '</span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s2">' for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span>
+                    <span class="p">)</span>
                     <span class="k">break</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Result: '</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">' did not match any pattern(s) for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Result: '</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">' did not match any pattern(s) for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span>
+                <span class="p">)</span>
                 <span class="k">return</span>
 
         <span class="k">try</span><span class="p">:</span>
@@ -424,7 +464,7 @@
             <span class="k">raise</span> <span class="n">e</span>
 
     <span class="k">def</span> <span class="nf">_evaluate_plugin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generator</span><span class="p">:</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
-        <span class="sd">""" Evaluate the initialized plugin generator for each returned value.</span>
+        <span class="sd">"""Evaluate the initialized plugin generator for each returned value.</span>
 
 <span class="sd">        :param generator: The generator yielded from `start_runner`.</span>
 <span class="sd">        :type generator: Generator</span>
@@ -442,7 +482,9 @@
                     <span class="k">raise</span> <span class="ne">StopIteration</span>
                 <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="ne">StopIteration</span><span class="p">):</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">' encountered a '</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">' with message: '</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">' at run index: '</span><span class="si">{</span><span class="n">results_index</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">"Runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">' encountered a '</span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">' with message: '</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">' at run index: '</span><span class="si">{</span><span class="n">results_index</span><span class="si">}</span><span class="s2">'"</span>
+                        <span class="p">)</span>
 
                     <span class="k">raise</span> <span class="n">e</span>
 
@@ -454,13 +496,22 @@
                         <span class="k">raise</span> <span class="n">e</span>
 
                     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">' exited with error, storing results up until error"</span><span class="p">)</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">"Runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">' exited with error, storing results up until error"</span>
+                        <span class="p">)</span>
 
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">resource_queues</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">resource_queues</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="p">(</span>
+                        <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span>
+                        <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">resource_queues</span>
+                    <span class="p">):</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">resource_queues</span><span class="p">[</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span>
+                        <span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="p">]</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">resource_queues</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="p">)</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">resource_queues</span><span class="p">[</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span>
+                        <span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="p">)</span>
 
                 <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="ne">StopIteration</span><span class="p">):</span>
                     <span class="k">break</span>

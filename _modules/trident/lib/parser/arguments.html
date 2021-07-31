@@ -203,72 +203,119 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">NoReturn</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
+
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"__main__"</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="TridentArgumentParser"><a class="viewcode-back" href="../../../../trident/lib/parser.html#trident.lib.parser.arguments.TridentArgumentParser">[docs]</a><span class="k">class</span> <span class="nc">TridentArgumentParser</span><span class="p">:</span>
-    <span class="sd">""" Argument parser for the Trident program. Collects the required/optional arguments and ensures validity of each argument. """</span>
+    <span class="sd">"""Argument parser for the Trident program. Collects the required/optional arguments and ensures validity of each argument."""</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parser</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_setup_parser</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_collect_arguments</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_setup_parser</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ArgumentParser</span><span class="p">:</span>
-        <span class="sd">""" Setup the :class:`ArgumentParser` used to parse the program arguments.</span>
+        <span class="sd">"""Setup the :class:`ArgumentParser` used to parse the program arguments.</span>
 
 <span class="sd">        :return: The parser used by Trident.</span>
 <span class="sd">        :rtype: :class:`ArgumentParser`</span>
 <span class="sd">        """</span>
         <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">(</span>
-            <span class="n">prog</span><span class="o">=</span><span class="s2">"Trident"</span><span class="p">,</span>
-            <span class="n">description</span><span class="o">=</span><span class="s2">"Trident: Asynchronous Monitor Environment"</span>
+            <span class="n">prog</span><span class="o">=</span><span class="s2">"Trident"</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">"Trident: Asynchronous Monitor Environment"</span>
         <span class="p">)</span>
         <span class="k">return</span> <span class="n">parser</span>
 
     <span class="k">def</span> <span class="nf">_collect_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
-        <span class="sd">""" Collect all argument definitions from optional, plugin, storage and required arguments. """</span>
+        <span class="sd">"""Collect all argument definitions from optional, plugin, storage and required arguments."""</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_collect_optional_arguments</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_collect_plugin_arguments</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_collect_storage_arguments</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_collect_required_arguments</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_collect_optional_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
-        <span class="sd">""" Define the optional arguments for Trident, like logging level and the amount of workers to use. """</span>
+        <span class="sd">"""Define the optional arguments for Trident, like logging level and the amount of workers to use."""</span>
         <span class="n">group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Trident Logging"</span><span class="p">)</span>
         <span class="n">logging_group</span> <span class="o">=</span> <span class="n">group</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
-        <span class="n">logging_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-v"</span><span class="p">,</span> <span class="s2">"--verbose"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Enable verbose logging for Trident."</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-        <span class="n">logging_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-q"</span><span class="p">,</span> <span class="s2">"--quiet"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Disables all logging for Trident."</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">logging_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">"-v"</span><span class="p">,</span>
+            <span class="s2">"--verbose"</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"Enable verbose logging for Trident."</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">logging_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">"-q"</span><span class="p">,</span>
+            <span class="s2">"--quiet"</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"Disables all logging for Trident."</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="n">group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Trident Runtime Arguments"</span><span class="p">)</span>
-        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-w"</span><span class="p">,</span> <span class="s2">"--workers"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_valid_positive_integer</span><span class="p">,</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">"-w"</span><span class="p">,</span>
+            <span class="s2">"--workers"</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_valid_positive_integer</span><span class="p">,</span>
             <span class="n">help</span><span class="o">=</span><span class="s2">"Specify the maximum number of workers to run concurrently in Trident."</span>
-                <span class="s2">" Defaults to '1' which means Trident will run all plugins sequentially. Must be a positive integer."</span><span class="p">)</span>
+            <span class="s2">" Defaults to '1' which means Trident will run all plugins sequentially. Must be a positive integer."</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_collect_plugin_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
-        <span class="sd">""" Define the arguments applied on all the plugins in Trident. """</span>
+        <span class="sd">"""Define the arguments applied on all the plugins in Trident."""</span>
         <span class="n">group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Trident Plugin(s)"</span><span class="p">)</span>
-        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-p:n"</span><span class="p">,</span> <span class="s2">"--dont-store-on-error"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-p:f"</span><span class="p">,</span> <span class="s2">"--filter-results"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">"+"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Filter "</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">"-p:n"</span><span class="p">,</span> <span class="s2">"--dont-store-on-error"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">"-p:f"</span><span class="p">,</span> <span class="s2">"--filter-results"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">"+"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Filter "</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_collect_storage_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
-        <span class="sd">""" Define the arguments used to define the storage behaviour. """</span>
+        <span class="sd">"""Define the arguments used to define the storage behaviour."""</span>
         <span class="n">arg_group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Trident Storage"</span><span class="p">)</span>
-        <span class="n">arg_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-s:p"</span><span class="p">,</span> <span class="s2">"--path-store"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s2">"PATH"</span><span class="p">,</span>
+        <span class="n">arg_group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">"-s:p"</span><span class="p">,</span>
+            <span class="s2">"--path-store"</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">metavar</span><span class="o">=</span><span class="s2">"PATH"</span><span class="p">,</span>
             <span class="n">help</span><span class="o">=</span><span class="s2">"Path to where on the filesystem to store the Trident store."</span><span class="p">,</span>
-            <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
 
         <span class="n">group</span> <span class="o">=</span> <span class="n">arg_group</span><span class="o">.</span><span class="n">add_mutually_exclusive_group</span><span class="p">()</span>
-        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-s:n"</span><span class="p">,</span> <span class="s2">"--no-store"</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Disables all storage of results generated by Trident plugins."</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-s:g"</span> <span class="p">,</span><span class="s2">"--global-store"</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Use a global store for all runners."</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">"-s:n"</span><span class="p">,</span>
+            <span class="s2">"--no-store"</span><span class="p">,</span>
+            <span class="n">action</span><span class="o">=</span><span class="s2">"store_true"</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"Disables all storage of results generated by Trident plugins."</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">"-s:g"</span><span class="p">,</span>
+            <span class="s2">"--global-store"</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"Use a global store for all runners."</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_collect_required_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
-        <span class="sd">""" Define the required arguments used for the Trident program. """</span>
+        <span class="sd">"""Define the required arguments used for the Trident program."""</span>
         <span class="n">group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Trident Required Arguments"</span><span class="p">)</span>
-        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-c"</span><span class="p">,</span> <span class="s2">"--config"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Trident Config File. Defaults to './config/trident.json'"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"config/trident.json"</span><span class="p">)</span>
-        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s2">"-c:s"</span><span class="p">,</span> <span class="s2">"--section"</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">"Trident Config File Section. Defaults to 'TRIDENT'"</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">"TRIDENT"</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">"-c"</span><span class="p">,</span>
+            <span class="s2">"--config"</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"Trident Config File. Defaults to './config/trident.json'"</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="s2">"config/trident.json"</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">"-c:s"</span><span class="p">,</span>
+            <span class="s2">"--section"</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"Trident Config File Section. Defaults to 'TRIDENT'"</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="s2">"TRIDENT"</span><span class="p">,</span>
+        <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_valid_positive_integer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="sd">""" Ensures that the provided value can be intrepreted as an integer and is positive.</span>
+        <span class="sd">"""Ensures that the provided value can be intrepreted as an integer and is positive.</span>
 <span class="sd">        :param value: The value to check.</span>
 <span class="sd">        :return: The integer passed if valid.</span>
 <span class="sd">        :rtype: int</span>

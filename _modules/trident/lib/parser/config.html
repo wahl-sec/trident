@@ -202,22 +202,26 @@
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">AnyStr</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
+
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">"__main__"</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="TridentConfigParser"><a class="viewcode-back" href="../../../../trident/lib/parser.html#trident.lib.parser.config.TridentConfigParser">[docs]</a><span class="k">class</span> <span class="nc">TridentConfigParser</span><span class="p">:</span>
-    <span class="sd">""" Parses the configuration file used by Trident to define plugins and arguments.</span>
-<span class="sd">    </span>
+    <span class="sd">"""Parses the configuration file used by Trident to define plugins and arguments.</span>
+
 <span class="sd">    :param config_file_path: The path to the config file on the host.</span>
 <span class="sd">    :type config_file_path: str</span>
 <span class="sd">    :param config_file_section: The section in the config file that should be used.</span>
 <span class="sd">    :type config_file_section: str</span>
 <span class="sd">    """</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_file_path</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">config_file_section</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_setup_parser</span><span class="p">(</span><span class="n">config_file_path</span><span class="p">,</span> <span class="n">config_file_section</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_setup_parser</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_file_path</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">config_file_section</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">AnyStr</span><span class="p">]:</span>
-        <span class="sd">""" Setup the config file parser from the given path and section.</span>
+    <span class="k">def</span> <span class="nf">_setup_parser</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">config_file_path</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">config_file_section</span><span class="p">:</span> <span class="n">AnyStr</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">AnyStr</span><span class="p">]:</span>
+        <span class="sd">"""Setup the config file parser from the given path and section.</span>
 
 <span class="sd">        :param config_file_path: The path to the config file on the host.</span>
 <span class="sd">        :type config_file_path: str</span>
@@ -236,16 +240,20 @@
             <span class="k">raise</span> <span class="n">e</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="n">config_file_section</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Section: '</span><span class="si">{</span><span class="n">config_file_section</span><span class="si">}</span><span class="s2">' does not exist for config file: '</span><span class="si">{</span><span class="n">config_file_path</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Section: '</span><span class="si">{</span><span class="n">config_file_section</span><span class="si">}</span><span class="s2">' does not exist for config file: '</span><span class="si">{</span><span class="n">config_file_path</span><span class="si">}</span><span class="s2">'"</span>
+            <span class="p">)</span>
 
-        <span class="n">data</span><span class="p">[</span><span class="n">config_file_section</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_data_section</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">config_file_section</span><span class="p">])</span>
+        <span class="n">data</span><span class="p">[</span><span class="n">config_file_section</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_convert_data_section</span><span class="p">(</span>
+            <span class="n">data</span><span class="p">[</span><span class="n">config_file_section</span><span class="p">]</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_verify_config_file_section</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">config_file_section</span><span class="p">]):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Config file is not valid due to previous error."</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="n">config_file_section</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">_normalize_config_file_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_file_path</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-        <span class="sd">""" Normalize the path to the config file using the convention of the platform that Trident is run on.</span>
+        <span class="sd">"""Normalize the path to the config file using the convention of the platform that Trident is run on.</span>
 
 <span class="sd">        :param config_file_path: The path to the config file path to normalize.</span>
 <span class="sd">        :type config_file_path: str</span>
@@ -259,9 +267,11 @@
             <span class="k">raise</span> <span class="n">e</span>
 
         <span class="k">return</span> <span class="n">normalized_path</span>
-    
-    <span class="k">def</span> <span class="nf">_convert_data_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_data_section</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">AnyStr</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">AnyStr</span><span class="p">]]:</span>
-        <span class="sd">""" Convert all the argument keys in the config dictionary to lowercase.</span>
+
+    <span class="k">def</span> <span class="nf">_convert_data_section</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">config_data_section</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">AnyStr</span><span class="p">]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">AnyStr</span><span class="p">]]:</span>
+        <span class="sd">"""Convert all the argument keys in the config dictionary to lowercase.</span>
 <span class="sd">        Ignores the plugin arguments keys since the arguments might be meant to be in any other case.</span>
 
 <span class="sd">        :param config_data_section: The section of the config file to convert.</span>
@@ -269,6 +279,7 @@
 <span class="sd">        :return: The converted config dictionary.</span>
 <span class="sd">        :rtype: dict</span>
 <span class="sd">        """</span>
+
         <span class="k">def</span> <span class="nf">_convert</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">converted</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
                 <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"plugin_args"</span><span class="p">,</span> <span class="s2">"payload"</span><span class="p">]:</span>
@@ -279,11 +290,13 @@
                     <span class="n">converted</span><span class="p">[</span><span class="n">k</span><span class="o">.</span><span class="n">lower</span><span class="p">()]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
 
             <span class="k">return</span> <span class="n">converted</span>
-        
+
         <span class="k">return</span> <span class="n">_convert</span><span class="p">(</span><span class="n">config_data_section</span><span class="p">,</span> <span class="p">{})</span>
 
-    <span class="k">def</span> <span class="nf">_verify_config_file_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_section_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">AnyStr</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-        <span class="sd">""" Verify the validity of the keys given in the config file section.</span>
+    <span class="k">def</span> <span class="nf">_verify_config_file_section</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">config_section_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">AnyStr</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">"""Verify the validity of the keys given in the config file section.</span>
 <span class="sd">        Ensures that the required arguments are provided in the section.</span>
 
 <span class="sd">        :param config_section_args: The configuration read from the section.</span>
@@ -293,7 +306,9 @@
 <span class="sd">        """</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">"logging_level"</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">config_section_args</span><span class="p">:</span>
-                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Couldn't read value from config value with key: '</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Couldn't read value from config value with key: '</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">'"</span>
+                <span class="p">)</span>
                 <span class="k">break</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">True</span>
