@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -82,15 +85,15 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../trident/lib.html">Trident Library Package</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Usage:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Trident Usage</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Trident Source</span></p>
+<p class="caption" role="heading"><span class="caption-text">Trident Source</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../github.html">Trident GitHub</a></li>
 </ul>
@@ -262,7 +265,7 @@
 <span class="sd">        Tries to import the module given the path provided and tries to initialize an instance given the plugin name.</span>
 
 <span class="sd">        :raises ValueError: If the plugin name is not found in the plugin module.</span>
-<span class="sd">        :raises Exception: If any unexpected error occured when initializing the plugin. </span>
+<span class="sd">        :raises Exception: If any unexpected error occured when initializing the plugin.</span>
 <span class="sd">        :return: The plugin instance and the plugin module if successful otherwise None</span>
 <span class="sd">        :rtype: (PluginClass, Module)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -302,6 +305,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Starting runner: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39; ...&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="p">,</span> <span class="s2">&quot;execute_plugin&quot;</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Entry method &#39;execute_plugin&#39; not defined.&quot;</span><span class="p">)</span>
+
             <span class="c1"># The thread event is used to allow the daemon to stop already started plugins.</span>
             <span class="k">if</span> <span class="s2">&quot;thread_event&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">signature</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="o">.</span><span class="n">execute_plugin</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="p">:</span>
                 <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Thread event parameter not specified in &#39;execute_plugin&#39; method for plugin: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_name</span><span class="si">}</span><span class="s2">&#39; at &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_path</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
@@ -394,11 +400,11 @@
 
     <span class="k">def</span> <span class="nf">_evaluate_plugin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">generator</span><span class="p">:</span> <span class="n">Generator</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Evaluate the initialized plugin generator for each returned value.</span>
-<span class="sd">        </span>
+
 <span class="sd">        :param generator: The generator yielded from `start_runner`.</span>
 <span class="sd">        :type generator: Generator</span>
 <span class="sd">        :raises StopIteration: If generator did not return any more values from the plugin.</span>
-<span class="sd">        :raises Exception: If any errors occured when trying to access the next value. </span>
+<span class="sd">        :raises Exception: If any errors occured when trying to access the next value.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">results_index</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">thread_event</span><span class="o">.</span><span class="n">is_set</span><span class="p">():</span>

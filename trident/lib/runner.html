@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
@@ -84,7 +87,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../lib.html">Trident Library Package</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="daemon.html">Trident Daemon Package</a></li>
@@ -94,11 +97,11 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Usage:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Trident Usage</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Trident Source</span></p>
+<p class="caption" role="heading"><span class="caption-text">Trident Source</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../github.html">Trident GitHub</a></li>
 </ul>
@@ -181,8 +184,8 @@
 <p>Runs and controls the execution of a valid plugin.
 &#64;author: Jacob Wahlman</p>
 <dl class="py class">
-<dt id="trident.lib.runner.trident.TridentRunner">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">trident.lib.runner.trident.</span></code><code class="sig-name descname"><span class="pre">TridentRunner</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runner_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#trident.lib.runner.trident.TridentRunnerConfig" title="trident.lib.runner.trident.TridentRunnerConfig"><span class="pre">trident.lib.runner.trident.TridentRunnerConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">runner_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">AnyStr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/runner/trident.html#TridentRunner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.runner.trident.TridentRunner" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.runner.trident.TridentRunner">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">trident.lib.runner.trident.</span></span><span class="sig-name descname"><span class="pre">TridentRunner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runner_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#trident.lib.runner.trident.TridentRunnerConfig" title="trident.lib.runner.trident.TridentRunnerConfig"><span class="pre">trident.lib.runner.trident.TridentRunnerConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">runner_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">AnyStr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/runner/trident.html#TridentRunner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.runner.trident.TridentRunner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The <a class="reference internal" href="#trident.lib.runner.trident.TridentRunner" title="trident.lib.runner.trident.TridentRunner"><code class="xref py py-class docutils literal notranslate"><span class="pre">TridentRunner</span></code></a> used to control the execution of each plugin.
 Starts initialized plugins, evaluates results and calls for storage by the <code class="xref py py-class docutils literal notranslate"><span class="pre">TridentDataDaemon</span></code> attached to this runner.</p>
@@ -195,8 +198,8 @@ Starts initialized plugins, evaluates results and calls for storage by the <code
 </dd>
 </dl>
 <dl class="py method">
-<dt id="trident.lib.runner.trident.TridentRunner.start_runner">
-<code class="sig-name descname"><span class="pre">start_runner</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">NoReturn</span><a class="reference internal" href="../../_modules/trident/lib/runner/trident.html#TridentRunner.start_runner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.runner.trident.TridentRunner.start_runner" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.runner.trident.TridentRunner.start_runner">
+<span class="sig-name descname"><span class="pre">start_runner</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/trident/lib/runner/trident.html#TridentRunner.start_runner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.runner.trident.TridentRunner.start_runner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Start the initialized <a class="reference internal" href="#trident.lib.runner.trident.TridentRunner" title="trident.lib.runner.trident.TridentRunner"><code class="xref py py-class docutils literal notranslate"><span class="pre">TridentRunner</span></code></a> by calling the plugin method <cite>execute_plugin</cite> with the provided arguments.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Raises</dt>
@@ -208,8 +211,8 @@ Starts initialized plugins, evaluates results and calls for storage by the <code
 </dd></dl>
 
 <dl class="py class">
-<dt id="trident.lib.runner.trident.TridentRunnerConfig">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">trident.lib.runner.trident.</span></code><code class="sig-name descname"><span class="pre">TridentRunnerConfig</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plugin_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">AnyStr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plugin_args</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runner_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notification_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resource_queues</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/runner/trident.html#TridentRunnerConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.runner.trident.TridentRunnerConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">trident.lib.runner.trident.</span></span><span class="sig-name descname"><span class="pre">TridentRunnerConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plugin_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">AnyStr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plugin_args</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">runner_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">notification_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resource_queues</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/runner/trident.html#TridentRunnerConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The configuration for the <a class="reference internal" href="#trident.lib.runner.trident.TridentRunner" title="trident.lib.runner.trident.TridentRunner"><code class="xref py py-class docutils literal notranslate"><span class="pre">TridentRunner</span></code></a>.
 Defines the attributes that the runner runs, like plugin instance, module and other info required by the runner.</p>
@@ -228,38 +231,38 @@ Defines the attributes that the runner runs, like plugin instance, module and ot
 </dd>
 </dl>
 <dl class="py attribute">
-<dt id="trident.lib.runner.trident.TridentRunnerConfig.plugin_args">
-<code class="sig-name descname"><span class="pre">plugin_args</span></code><em class="property"><span class="pre">:</span> <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.plugin_args" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.runner.trident.TridentRunnerConfig.plugin_args">
+<span class="sig-name descname"><span class="pre">plugin_args</span></span><em class="property"><span class="pre">:</span> <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.plugin_args" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="trident.lib.runner.trident.TridentRunnerConfig.plugin_instance">
-<code class="sig-name descname"><span class="pre">plugin_instance</span></code><em class="property"><span class="pre">:</span> <span class="pre">object</span></em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.plugin_instance" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.runner.trident.TridentRunnerConfig.plugin_instance">
+<span class="sig-name descname"><span class="pre">plugin_instance</span></span><em class="property"><span class="pre">:</span> <span class="pre">object</span></em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.plugin_instance" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="trident.lib.runner.trident.TridentRunnerConfig.plugin_module">
-<code class="sig-name descname"><span class="pre">plugin_module</span></code><em class="property"><span class="pre">:</span> <span class="pre">object</span></em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.plugin_module" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.runner.trident.TridentRunnerConfig.plugin_module">
+<span class="sig-name descname"><span class="pre">plugin_module</span></span><em class="property"><span class="pre">:</span> <span class="pre">object</span></em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.plugin_module" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="trident.lib.runner.trident.TridentRunnerConfig.plugin_name">
-<code class="sig-name descname"><span class="pre">plugin_name</span></code><em class="property"><span class="pre">:</span> <span class="pre">AnyStr</span></em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.plugin_name" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.runner.trident.TridentRunnerConfig.plugin_name">
+<span class="sig-name descname"><span class="pre">plugin_name</span></span><em class="property"><span class="pre">:</span> <span class="pre">AnyStr</span></em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.plugin_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="trident.lib.runner.trident.TridentRunnerConfig.plugin_path">
-<code class="sig-name descname"><span class="pre">plugin_path</span></code><em class="property"><span class="pre">:</span> <span class="pre">AnyStr</span></em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.plugin_path" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.runner.trident.TridentRunnerConfig.plugin_path">
+<span class="sig-name descname"><span class="pre">plugin_path</span></span><em class="property"><span class="pre">:</span> <span class="pre">AnyStr</span></em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.plugin_path" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="trident.lib.runner.trident.TridentRunnerConfig.resource_queues">
-<code class="sig-name descname"><span class="pre">resource_queues</span></code><em class="property"><span class="pre">:</span> <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.resource_queues" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.runner.trident.TridentRunnerConfig.resource_queues">
+<span class="sig-name descname"><span class="pre">resource_queues</span></span><em class="property"><span class="pre">:</span> <span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">AnyStr</span><span class="p"><span class="pre">,</span> </span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.resource_queues" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="trident.lib.runner.trident.TridentRunnerConfig.thread_event">
-<code class="sig-name descname"><span class="pre">thread_event</span></code><em class="property"><span class="pre">:</span> <span class="pre">threading.Event</span></em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.thread_event" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.runner.trident.TridentRunnerConfig.thread_event">
+<span class="sig-name descname"><span class="pre">thread_event</span></span><em class="property"><span class="pre">:</span> <span class="pre">threading.Event</span></em><a class="headerlink" href="#trident.lib.runner.trident.TridentRunnerConfig.thread_event" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

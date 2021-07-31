@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
         <script src="../../../../_static/doctools.js"></script>
@@ -82,15 +85,15 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../trident/lib.html">Trident Library Package</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Usage:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Trident Usage</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Trident Source</span></p>
+<p class="caption" role="heading"><span class="caption-text">Trident Source</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../github.html">Trident GitHub</a></li>
 </ul>
@@ -206,7 +209,7 @@
 <span class="sd">        Raises `FileNotFoundError` if the normalized store path does not exist.</span>
 
 <span class="sd">        :param store_path: The store path to verify and normalize.</span>
-<span class="sd">        :type store_path: str </span>
+<span class="sd">        :type store_path: str</span>
 <span class="sd">        :raises FileNotFoundError: The store path does not exist on the system.</span>
 <span class="sd">        :return: The :class:`Path` object of the store on the system.</span>
 <span class="sd">        :rtype: :class:`Path`</span>
@@ -264,7 +267,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Updating store with: &#39;</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&#39; for runner: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
             <span class="bp">self</span><span class="o">.</span><span class="n">_update_store_content</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Result: &#39;</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">&#39; is not JSON serializable for runner: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">e</span></div>
 
@@ -277,7 +285,8 @@
                 <span class="n">store_obj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">store_data</span><span class="p">))</span>
                 <span class="n">store_obj</span><span class="o">.</span><span class="n">truncate</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to write to store: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Failed to write to store: &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="TridentDataDaemon.merge_store_data"><a class="viewcode-back" href="../../../../trident/lib/daemon.html#trident.lib.daemon.data_storage.TridentDataDaemon.merge_store_data">[docs]</a>    <span class="k">def</span> <span class="nf">merge_store_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot; Merges the store data with the existing store data available in the written store.</span>

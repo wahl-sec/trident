@@ -13,6 +13,8 @@
   
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
 
   
   
@@ -29,6 +31,7 @@
   
     
       <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
         <script src="../../_static/jquery.js"></script>
         <script src="../../_static/underscore.js"></script>
         <script src="../../_static/doctools.js"></script>
@@ -84,7 +87,7 @@
               
             
             
-              <p class="caption"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="../lib.html">Trident Library Package</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">Trident Daemon Package</a></li>
@@ -94,11 +97,11 @@
 </ul>
 </li>
 </ul>
-<p class="caption"><span class="caption-text">Usage:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Trident Usage</a></li>
 </ul>
-<p class="caption"><span class="caption-text">Trident Source</span></p>
+<p class="caption" role="heading"><span class="caption-text">Trident Source</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../github.html">Trident GitHub</a></li>
 </ul>
@@ -181,8 +184,8 @@
 <p>Trident daemon handling the data collected by all runners under a Trident daemon.
 &#64;author: Jacob Wahlman</p>
 <dl class="py class">
-<dt id="trident.lib.daemon.data_storage.TridentDataDaemon">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">trident.lib.daemon.data_storage.</span></code><code class="sig-name descname"><span class="pre">TridentDataDaemon</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">daemon_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#trident.lib.daemon.data_storage.TridentDataDaemonConfig" title="trident.lib.daemon.data_storage.TridentDataDaemonConfig"><span class="pre">trident.lib.daemon.data_storage.TridentDataDaemonConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/daemon/data_storage.html#TridentDataDaemon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemon" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.daemon.data_storage.TridentDataDaemon">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">trident.lib.daemon.data_storage.</span></span><span class="sig-name descname"><span class="pre">TridentDataDaemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">daemon_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#trident.lib.daemon.data_storage.TridentDataDaemonConfig" title="trident.lib.daemon.data_storage.TridentDataDaemonConfig"><span class="pre">trident.lib.daemon.data_storage.TridentDataDaemonConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/daemon/data_storage.html#TridentDataDaemon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemon" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Daemon handling all the reading/writing to the stores used by each <code class="xref py py-class docutils literal notranslate"><span class="pre">TridentRunner</span></code>.
 All access goes through this daemon in order to verify that no conflicts occur when writing to the store
@@ -193,8 +196,8 @@ and that all file handlers are properly opened/closed.</p>
 </dd>
 </dl>
 <dl class="py method">
-<dt id="trident.lib.daemon.data_storage.TridentDataDaemon.merge_store_data">
-<code class="sig-name descname"><span class="pre">merge_store_data</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">NoReturn</span><a class="reference internal" href="../../_modules/trident/lib/daemon/data_storage.html#TridentDataDaemon.merge_store_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemon.merge_store_data" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.daemon.data_storage.TridentDataDaemon.merge_store_data">
+<span class="sig-name descname"><span class="pre">merge_store_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/trident/lib/daemon/data_storage.html#TridentDataDaemon.merge_store_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemon.merge_store_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Merges the store data with the existing store data available in the written store.
 This is used when the store has results written to it from previous iterations.</p>
 <dl class="field-list simple">
@@ -205,8 +208,8 @@ This is used when the store has results written to it from previous iterations.<
 </dd></dl>
 
 <dl class="py method">
-<dt id="trident.lib.daemon.data_storage.TridentDataDaemon.store_runner_result">
-<code class="sig-name descname"><span class="pre">store_runner_result</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> &#x2192; <span class="pre">NoReturn</span><a class="reference internal" href="../../_modules/trident/lib/daemon/data_storage.html#TridentDataDaemon.store_runner_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemon.store_runner_result" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.daemon.data_storage.TridentDataDaemon.store_runner_result">
+<span class="sig-name descname"><span class="pre">store_runner_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/trident/lib/daemon/data_storage.html#TridentDataDaemon.store_runner_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemon.store_runner_result" title="Permalink to this definition">¶</a></dt>
 <dd><p>Store the results given in the initialized store. This updates the store in the program and does not
 write the store to the disk.</p>
 <dl class="field-list simple">
@@ -217,16 +220,16 @@ write the store to the disk.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="trident.lib.daemon.data_storage.TridentDataDaemon.write_to_store">
-<code class="sig-name descname"><span class="pre">write_to_store</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">NoReturn</span><a class="reference internal" href="../../_modules/trident/lib/daemon/data_storage.html#TridentDataDaemon.write_to_store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemon.write_to_store" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.daemon.data_storage.TridentDataDaemon.write_to_store">
+<span class="sig-name descname"><span class="pre">write_to_store</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/trident/lib/daemon/data_storage.html#TridentDataDaemon.write_to_store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemon.write_to_store" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes the current initialized store to the disk on the system for the given store path.</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
-<dt id="trident.lib.daemon.data_storage.TridentDataDaemonConfig">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">trident.lib.daemon.data_storage.</span></code><code class="sig-name descname"><span class="pre">TridentDataDaemonConfig</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runner</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">TridentRunner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">AnyStr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">AnyStr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/daemon/data_storage.html#TridentDataDaemonConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemonConfig" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.daemon.data_storage.TridentDataDaemonConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">trident.lib.daemon.data_storage.</span></span><span class="sig-name descname"><span class="pre">TridentDataDaemonConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">runner</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">TridentRunner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">AnyStr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">AnyStr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/daemon/data_storage.html#TridentDataDaemonConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemonConfig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Config class for <a class="reference internal" href="#trident.lib.daemon.data_storage.TridentDataDaemon" title="trident.lib.daemon.data_storage.TridentDataDaemon"><code class="xref py py-class docutils literal notranslate"><span class="pre">TridentDataDaemon</span></code></a> controlling the data handling for each <code class="xref py py-class docutils literal notranslate"><span class="pre">TridentRunner</span></code>.</p>
 <dl class="field-list simple">
@@ -239,18 +242,18 @@ write the store to the disk.</p>
 </dd>
 </dl>
 <dl class="py attribute">
-<dt id="trident.lib.daemon.data_storage.TridentDataDaemonConfig.runner">
-<code class="sig-name descname"><span class="pre">runner</span></code><em class="property"><span class="pre">:</span> <span class="pre">TridentRunner</span></em><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemonConfig.runner" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.daemon.data_storage.TridentDataDaemonConfig.runner">
+<span class="sig-name descname"><span class="pre">runner</span></span><em class="property"><span class="pre">:</span> <span class="pre">TridentRunner</span></em><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemonConfig.runner" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="trident.lib.daemon.data_storage.TridentDataDaemonConfig.store_name">
-<code class="sig-name descname"><span class="pre">store_name</span></code><em class="property"><span class="pre">:</span> <span class="pre">AnyStr</span></em><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemonConfig.store_name" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.daemon.data_storage.TridentDataDaemonConfig.store_name">
+<span class="sig-name descname"><span class="pre">store_name</span></span><em class="property"><span class="pre">:</span> <span class="pre">AnyStr</span></em><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemonConfig.store_name" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="trident.lib.daemon.data_storage.TridentDataDaemonConfig.store_path">
-<code class="sig-name descname"><span class="pre">store_path</span></code><em class="property"><span class="pre">:</span> <span class="pre">pathlib.Path</span></em><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemonConfig.store_path" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.daemon.data_storage.TridentDataDaemonConfig.store_path">
+<span class="sig-name descname"><span class="pre">store_path</span></span><em class="property"><span class="pre">:</span> <span class="pre">pathlib.Path</span></em><a class="headerlink" href="#trident.lib.daemon.data_storage.TridentDataDaemonConfig.store_path" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -263,8 +266,8 @@ write the store to the disk.</p>
 The runners are run in a asynchronous environment controlled by the daemon to allow them to run concurrently.
 &#64;author: Jacob Wahlman</p>
 <dl class="py class">
-<dt id="trident.lib.daemon.trident.TridentDaemon">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">trident.lib.daemon.trident.</span></code><code class="sig-name descname"><span class="pre">TridentDaemon</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">daemon_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#trident.lib.daemon.trident.TridentDaemonConfig" title="trident.lib.daemon.trident.TridentDaemonConfig"><span class="pre">trident.lib.daemon.trident.TridentDaemonConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/daemon/trident.html#TridentDaemon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemon" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.daemon.trident.TridentDaemon">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">trident.lib.daemon.trident.</span></span><span class="sig-name descname"><span class="pre">TridentDaemon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">daemon_config</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#trident.lib.daemon.trident.TridentDaemonConfig" title="trident.lib.daemon.trident.TridentDaemonConfig"><span class="pre">trident.lib.daemon.trident.TridentDaemonConfig</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/daemon/trident.html#TridentDaemon"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemon" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Main daemon controlling each <code class="xref py py-class docutils literal notranslate"><span class="pre">TridentRunner</span></code> for the program.
 Starts execution of the runners, waits for completion and handles any interrupts to the runners.</p>
@@ -274,21 +277,21 @@ Starts execution of the runners, waits for completion and handles any interrupts
 </dd>
 </dl>
 <dl class="py method">
-<dt id="trident.lib.daemon.trident.TridentDaemon.start_all_runners">
-<code class="sig-name descname"><span class="pre">start_all_runners</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">NoReturn</span><a class="reference internal" href="../../_modules/trident/lib/daemon/trident.html#TridentDaemon.start_all_runners"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemon.start_all_runners" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.daemon.trident.TridentDaemon.start_all_runners">
+<span class="sig-name descname"><span class="pre">start_all_runners</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/trident/lib/daemon/trident.html#TridentDaemon.start_all_runners"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemon.start_all_runners" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a <code class="xref py py-class docutils literal notranslate"><span class="pre">concurrent.futures.Future</span></code> for each <code class="xref py py-class docutils literal notranslate"><span class="pre">TridentRunner</span></code> and start each runner asynchronously.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="trident.lib.daemon.trident.TridentDaemon.stop_all_runners">
-<code class="sig-name descname"><span class="pre">stop_all_runners</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">NoReturn</span><a class="reference internal" href="../../_modules/trident/lib/daemon/trident.html#TridentDaemon.stop_all_runners"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemon.stop_all_runners" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.daemon.trident.TridentDaemon.stop_all_runners">
+<span class="sig-name descname"><span class="pre">stop_all_runners</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/trident/lib/daemon/trident.html#TridentDaemon.stop_all_runners"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemon.stop_all_runners" title="Permalink to this definition">¶</a></dt>
 <dd><p>Stop execution for all <code class="xref py py-class docutils literal notranslate"><span class="pre">TridentRunner</span></code>, if it has already started it’s execution then it can’t be halted
 so a <code class="xref py py-class docutils literal notranslate"><span class="pre">threading.Event</span></code> will be set to signal for the plugin to halt when seen during execution.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt id="trident.lib.daemon.trident.TridentDaemon.wait_for_runners">
-<code class="sig-name descname"><span class="pre">wait_for_runners</span></code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; <span class="pre">NoReturn</span><a class="reference internal" href="../../_modules/trident/lib/daemon/trident.html#TridentDaemon.wait_for_runners"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemon.wait_for_runners" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.daemon.trident.TridentDaemon.wait_for_runners">
+<span class="sig-name descname"><span class="pre">wait_for_runners</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="reference internal" href="../../_modules/trident/lib/daemon/trident.html#TridentDaemon.wait_for_runners"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemon.wait_for_runners" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wait for each runner future to report as completed meaning that each <code class="xref py py-class docutils literal notranslate"><span class="pre">TridentRunner</span></code> has finished.
 Raises exception for each future that encountered an exception while running.</p>
 <dl class="field-list simple">
@@ -301,8 +304,8 @@ Raises exception for each future that encountered an exception while running.</p
 </dd></dl>
 
 <dl class="py class">
-<dt id="trident.lib.daemon.trident.TridentDaemonConfig">
-<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">trident.lib.daemon.trident.</span></code><code class="sig-name descname"><span class="pre">TridentDaemonConfig</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plugins</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/daemon/trident.html#TridentDaemonConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemonConfig" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.daemon.trident.TridentDaemonConfig">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">trident.lib.daemon.trident.</span></span><span class="sig-name descname"><span class="pre">TridentDaemonConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">workers</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plugins</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/trident/lib/daemon/trident.html#TridentDaemonConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemonConfig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Config class for the <a class="reference internal" href="#trident.lib.daemon.trident.TridentDaemon" title="trident.lib.daemon.trident.TridentDaemon"><code class="xref py py-class docutils literal notranslate"><span class="pre">TridentDaemon</span></code></a> controlling each <code class="xref py py-class docutils literal notranslate"><span class="pre">TridentRunner</span></code>.</p>
 <dl class="field-list simple">
@@ -316,13 +319,13 @@ Raises exception for each future that encountered an exception while running.</p
 </dd>
 </dl>
 <dl class="py attribute">
-<dt id="trident.lib.daemon.trident.TridentDaemonConfig.plugins">
-<code class="sig-name descname"><span class="pre">plugins</span></code><em class="property"><span class="pre">:</span> <span class="pre">Dict</span></em><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemonConfig.plugins" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.daemon.trident.TridentDaemonConfig.plugins">
+<span class="sig-name descname"><span class="pre">plugins</span></span><em class="property"><span class="pre">:</span> <span class="pre">Dict</span></em><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemonConfig.plugins" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
-<dt id="trident.lib.daemon.trident.TridentDaemonConfig.workers">
-<code class="sig-name descname"><span class="pre">workers</span></code><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemonConfig.workers" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="trident.lib.daemon.trident.TridentDaemonConfig.workers">
+<span class="sig-name descname"><span class="pre">workers</span></span><em class="property"><span class="pre">:</span> <span class="pre">int</span></em><a class="headerlink" href="#trident.lib.daemon.trident.TridentDaemonConfig.workers" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
