@@ -32,7 +32,7 @@ setuptools.setup(
     ],
     python_requires=">=3.7",
 	extras_require={
-		"dev": ["wheel>=0.35.1", "pytest>=6.2.1", "pybind11>=2.6.2", "sphinx>=3.4.3", "sphinx-rtd-theme>=0.5.1"]
+		"dev": ["wheel>=0.35.1", "pytest>=6.2.1", "pybind11>=2.6.2", "sphinx>=3.4.3", "furo>=2021.7.28b40"]
 	},
     ext_modules=ext_modules,
     cmdclass={"build_ext": build_ext},
