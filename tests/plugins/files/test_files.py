@@ -19,9 +19,9 @@ def test_remove_entries(trident_daemon_files_sync):
     for runner in trident_daemon_files_sync._future_runners.values():
         if runner.runner_id == "files0":
             first, second = runner.data_daemon.store_data["runners"][runner.runner_id]["results"]["0"].values()
-            assert first in ("test", "test1") and second in ("test", "test1") 
+            assert {first["name"], second["name"]} == {"test", "test1"}
             runner.start_runner()
             first, second = runner.data_daemon.store_data["runners"][runner.runner_id]["results"]["0"].values()
-            assert first in ("test", "files0.json") and second in ("test", "files0.json")
+            assert {first["name"], second["name"]} == {"test", "files0.json"}
             break
 
