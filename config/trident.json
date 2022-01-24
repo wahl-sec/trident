@@ -1,10 +1,8 @@
 {
     "TRIDENT": {
-        "logging_level": "INFO",
+        "logging_level": "DEBUG",
         "plugins": {
-            "plugin0": {
-                "path": "plugins.test_plugin"
-            }
+            "plugin0": {}
         }
     }
 }

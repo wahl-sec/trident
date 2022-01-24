@@ -1,18 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import List, AnyStr
-
-from plugins.lib.files.files import *
-
 
 class FindFiles:
     def execute_plugin(
         self,
-        path: AnyStr,
-        pattern: AnyStr = None,
+        thread_event,
+        path: str,
         depth: int = -1,
-        exclude: List[AnyStr] = None,
+        follow_symlinks: bool = True,
     ):
-        for entry in entries(path, pattern, depth, exclude):
-            yield entry
+        pass
