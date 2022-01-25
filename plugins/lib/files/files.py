@@ -20,8 +20,9 @@ from typing import (
     NoReturn,
 )
 
-from os import DirEntry, scandir, stat, remove, rmdir
+from os import DirEntry, stat, chmod
 from os.path import commonpath
+from shutil import copy, copy2, move, rmtree
 from subprocess import Popen, PIPE
 from dataclasses import dataclass
 from pathlib import Path
@@ -69,7 +70,7 @@ def entries(
     exclude: List[str] = None,
     follow_symlinks: bool = True,
     exceptions: bool = False,
-) -> Generator[DirEntry, None, None]:
+) -> Generator[Entry, None, None]:
     """Lists all the entries at the specific path.
     Defaults to only scan the current depth (0) of entries.
 
@@ -83,13 +84,13 @@ def entries(
     :type exclude: List[str], optional
     :param exceptions: Raise exceptions that occur to the plugin for it to handle, if set to `False` no exceptions will be raised, defaults to `False`
     :type exceptions: bool, optional
-    :yield: DirEntry
+    :yield: Entry
     :returns: Generator of entries matching the pattern
-    :rtype: Generator[DirEntry, None, None]
+    :rtype: Generator[Entry, None, None]
     """
 
     def _generator(
-        iterator: Generator,
+        iterator: Generator[Path, None, None],
         patterns: List[str],
         current_depth: int,
         exclude: List[str],
@@ -100,8 +101,7 @@ def entries(
                 _object = next(iterator)
                 if exclude is not None and any(
                     [
-                        Path(_object.name).match(pattern)
-                        or Path(_object.path).match(pattern)
+                        _object.match(pattern) or Path(_object.name).match(pattern)
                         for pattern in exclude
                     ]
                 ):
@@ -117,7 +117,7 @@ def entries(
                 ):
                     try:
                         for _inner in _generator(
-                            scandir(_object.path),
+                            _object.iterdir(),
                             patterns,
                             current_depth + 1,
                             exclude,
@@ -129,13 +129,12 @@ def entries(
                             raise exc from None
                 if patterns is None or any(
                     [
-                        Path(_object.name).match(pattern)
-                        or Path(_object.path).match(pattern)
+                        _object.match(pattern) or Path(_object.name).match(pattern)
                         for pattern in patterns
                     ]
                 ):
                     yield Entry(
-                        path=_object.path,
+                        path=str(_object),
                         name=_object.name,
                         stat=entry_metadata(_object),
                     )
@@ -143,11 +142,11 @@ def entries(
         except StopIteration:
             pass
 
-    return _generator(scandir(path), patterns, 0, exclude, follow_symlinks)
+    return _generator(Path(path).iterdir(), patterns, 0, exclude, follow_symlinks)
 
 
 def execute(
-    entry: Union[DirEntry, str],
+    entry: Union[Entry, str],
     flags: List[str] = [],
     stdin: TextIO = PIPE,
     stdout: TextIO = PIPE,
@@ -160,7 +159,7 @@ def execute(
     """Execute a executable entry from a specific path or given entry.
 
     :param entry: The entry to execute
-    :type entry: Union[DirEntry, str]
+    :type entry: Union[Entry, str]
     :param flags: Flags to pass to the executable, defaults to None
     :type flags: List[str], optional
     :param wait: If the program should wait for the execution to finish or continue running, defaults to `False`
@@ -189,7 +188,7 @@ def execute(
     return [proc.stdin, proc.stdout, proc.stderr, proc.returncode]
 
 
-def entry_metadata(entry: Union[DirEntry, str], exceptions: bool = True) -> EntryStat:
+def entry_metadata(entry: Union[Entry, str], exceptions: bool = True) -> EntryStat:
     """Return the metadata of the given entry or path to the entry on the filesystem.
 
     :raises FileNotFoundError: If the file does not exist for the given path
@@ -243,16 +242,17 @@ def remove_entry(
     :param exceptions: Raise exceptions that occur to the plugin for it to handle, if set to `False` no exceptions will be raised, defaults to `True`
     :type exceptions: bool, optional
     """
+    _path = Path(path.path) if isinstance(path, Entry) else Path(path)
 
-    def _remove(entry):
-        if Path(entry["path"]).is_dir():
-            rmdir(entry["path"])
+    def _remove(_entry: Path):
+        if _entry.is_dir():
+            rmtree(str(_entry))
         else:
-            remove(entry["path"])
+            _entry.unlink(missing_ok=True)
 
     try:
-        if isinstance(path, Entry):
-            _remove(path)
+        if _path.is_file():
+            _remove(_path)
         else:
             for entry in entries(
                 path=path,
@@ -266,19 +266,149 @@ def remove_entry(
             raise exc from None
 
 
-def move_entry() -> NoReturn:
-    """Move a given entry to another path on the filesystem."""
-    pass
+def move_entry(
+    path: Union[Entry, str],
+    path_to: Union[Entry, str],
+    preserve_metadata: bool = True,
+    exceptions: bool = True,
+) -> str:
+    """Move a given entry to another path on the filesystem.
+
+    :param path: Path to the entry on the filesystem to move, can be either a directory or a file
+    :type path: Union[Entry, str]
+    :param path_to: Path to the location on the filesystem to move the entry to
+    :type path_to: Union[Entry, str]
+    :param preserve_metadata: Preserve the metadata when moving the file or directory, defaults to `True`
+    :type preserve_metadata: bool, optional
+    :param exceptions: Raise exceptions that occur to the plugin for it to handle, if set to `False` no exceptions will be raised, defaults to `True`
+    :type exceptions: bool, optional
+    :returns: The path to the destination
+    :rtype: str
+    """
+    _path = Path(path.path) if isinstance(path, Entry) else Path(path)
+    _path_to = Path(path_to.path) if isinstance(path_to, Entry) else Path(path_to)
+
+    try:
+        return str(
+            Path(
+                move(
+                    src=str(_path),
+                    dst=str(_path_to),
+                    copy_function=copy2 if preserve_metadata else copy,
+                )
+            )
+        )
+    except Exception as exc:
+        if exceptions:
+            raise exc from None
 
 
-def copy_entry() -> NoReturn:
-    """Copy the given entry to another path on the filesystem."""
-    pass
+def copy_entry(
+    path: Union[Entry, str],
+    path_to: Union[Entry, str],
+    preserve_metadata: bool = True,
+    follow_symlinks: bool = True,
+    exceptions: bool = True,
+) -> str:
+    """Copy the given entry to another path on the filesystem.
+
+    :param path: Path to the entry on the filesystem to copy, can be either a directory or a file
+    :type path: Union[Entry, str]
+    :param path_to: Path to the location on the filesystem to copy the entry to
+    :type path_to: Union[Entry, str]
+    :param preserve_metadata: Preserve the metadata when copying the file or directory, defaults to `True`
+    :type preserve_metadata: bool, optional
+    :param follow_symlinks: If set to `False` then the copy will be a symbolic link to source otherwise the actual file will be copied, defaults to `True`
+    :type follow_symlinks: bool, optional
+    :param exceptions: Raise exceptions that occur to the plugin for it to handle, if set to `False` no exceptions will be raised, defaults to `True`
+    :type exceptions: bool, optional
+    :returns: The path to the destination
+    :rtype: str
+    """
+    _path = Path(path.path) if isinstance(path, Entry) else Path(path)
+    _path_to = Path(path_to.path) if isinstance(path_to, Entry) else Path(path_to)
+
+    try:
+        _copy_fun = copy2 if preserve_metadata else copy
+        return str(
+            Path(
+                _copy_fun(
+                    src=str(_path), dst=str(_path_to), follow_symlinks=follow_symlinks
+                )
+            )
+        )
+    except Exception as exc:
+        if exceptions:
+            raise exc from None
 
 
-def update_entry_mode() -> NoReturn:
-    """Update the mode for the given entry."""
-    pass
+def update_entry_mode(
+    path: Union[Entry, str],
+    mode: Literal[
+        "S_ISUID",
+        "S_ISGID",
+        "S_ENFMT",
+        "S_ISVTX",
+        "S_IREAD",
+        "S_IWRITE",
+        "S_IEXEC",
+        "S_IRWXU",
+        "S_IRUSR",
+        "S_IWUSR",
+        "S_IXUSR",
+        "S_IRWXG",
+        "S_IRGRP",
+        "S_IWGRP",
+        "S_IXGRP",
+        "S_IRWXO",
+        "S_IROTH",
+        "S_IWOTH",
+        "S_IXOTH",
+    ],
+    follow_symlinks: bool = True,
+    exceptions: bool = True,
+) -> NoReturn:
+    """Update the mode for the given entry.
+
+    :param path: Path to the entry on the filesystem to update the mode for, can be either a directory or a file
+    :type path: Union[Entry, str]
+    :param mode: The mode to update the entry to, defined in the `stat` module in the Python standard library
+    :type mode: Literal["S_ISUID", "S_ISGID", "S_ENFMT", "S_ISVTX", "S_IREAD", "S_IWRITE", "S_IEXEC", "S_IRWXU", "S_IRUSR", "S_IWUSR", "S_IXUSR", "S_IRWXG", "S_IRGRP", "S_IWGRP", "S_IXGRP", "S_IRWXO", "S_IROTH", "S_IWOTH", "S_IXOTH"]
+    :param follow_symlinks: If set to `False` then the mode will updated on the symbolic link otherwise the actual file, defaults to `True`
+    :type follow_symlinks: bool, optional
+    :param exceptions: Raise exceptions that occur to the plugin for it to handle, if set to `False` no exceptions will be raised, defaults to `True`
+    :type exceptions: bool, optional
+    """
+    _path = Path(path.path) if isinstance(path, Entry) else Path(path)
+
+    try:
+        if mode not in [
+            "S_ISUID",
+            "S_ISGID",
+            "S_ENFMT",
+            "S_ISVTX",
+            "S_IREAD",
+            "S_IWRITE",
+            "S_IEXEC",
+            "S_IRWXU",
+            "S_IRUSR",
+            "S_IWUSR",
+            "S_IXUSR",
+            "S_IRWXG",
+            "S_IRGRP",
+            "S_IWGRP",
+            "S_IXGRP",
+            "S_IRWXO",
+            "S_IROTH",
+            "S_IWOTH",
+            "S_IXOTH",
+        ]:
+            raise ValueError("Invalid file mode defined")
+
+        chmod(path=str(_path), mode=mode, follow_symlinks=follow_symlinks)
+    except Exception as exc:
+        if exceptions:
+            raise exc from None
 
 
 def write_entry(
@@ -313,21 +443,19 @@ def write_entry(
     :param exceptions: Raise exceptions that occur to the plugin for it to handle, if set to `False` no exceptions will be raised, defaults to `True`
     :type exceptions: bool, optional
     """
-    _path = path.path if isinstance(path, Entry) else path
+    _path = Path(path.path) if isinstance(path, Entry) else Path(path)
     try:
         if not directory:
-            _entry = Path(_path)
-            _entry.touch(
+            _path.touch(
                 mode=entry_mode if entry_mode is not None else 438, exist_ok=overwrite
             )
-            with _entry.open(mode=mode, encoding=encoding) as entry:
+            with _path.open(mode=mode, encoding=encoding) as entry:
                 if not entry.writable():
                     raise OSError(f"Entry at {_path} is not writable.")
 
                 entry.write(content)
         else:
-            _entry = Path(_path)
-            _entry.mkdir(
+            _path.mkdir(
                 mode=entry_mode if entry_mode is not None else 511,
                 parents=parents,
                 exist_ok=overwrite,

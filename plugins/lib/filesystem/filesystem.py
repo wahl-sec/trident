@@ -7,7 +7,7 @@ Implemented using generators to allow for asynchronous plugins.
 @author: Jacob Wahlman
 """
 
-from typing import List, Optional, Union, Generator
+from typing import Optional, Union, Generator
 
 from dataclasses import dataclass
 from shutil import disk_usage
