@@ -11,19 +11,19 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
-            - name: Setup Python 
+            - name: Setup Python
               uses: actions/setup-python@v2
               with:
-                python-version: '3.7'
+                  python-version: "3.8"
 
             - name: Build Trident Documentation
               run: |
-                make install
-                cd docs && make html
-                cd .. && mkdir public && mv ./docs/build/html/* ./public
+                  make install
+                  cd docs && make html
+                  cd .. && mkdir public && mv ./docs/build/html/* ./public
 
             - name: Deploy Trident Documentation
               uses: peaceiris/actions-gh-pages@v3
               with:
-                github_token: ${{ secrets.GITHUB_TOKEN }}
-                publish_dir: ./public
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./public

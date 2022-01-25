@@ -13,15 +13,15 @@ jobs:
     build-ubuntu:
         strategy:
             matrix:
-                python-version: [3.7]
-        
+                python-version: [3.8]
+
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
             - name: Setup Python ${{ matrix.python-version }}
               uses: actions/setup-python@v2
               with:
-                python-version: ${{ matrix.python-version }}
+                  python-version: ${{ matrix.python-version }}
 
             - name: Install Trident
               run: make install
@@ -32,15 +32,15 @@ jobs:
     build-macos:
         strategy:
             matrix:
-                python-version: [3.7]
-        
+                python-version: [3.8]
+
         runs-on: macos-latest
         steps:
             - uses: actions/checkout@v2
             - name: Setup Python ${{ matrix.python-version }}
               uses: actions/setup-python@v2
               with:
-                python-version: ${{ matrix.python-version }}
+                  python-version: ${{ matrix.python-version }}
 
             - name: Install Trident
               run: make install
@@ -51,15 +51,15 @@ jobs:
     build-windows:
         strategy:
             matrix:
-                python-version: [3.7]
-        
+                python-version: [3.8]
+
         runs-on: windows-latest
         steps:
             - uses: actions/checkout@v2
             - name: Setup Python ${{ matrix.python-version }}
               uses: actions/setup-python@v2
               with:
-                python-version: ${{ matrix.python-version }}
+                  python-version: ${{ matrix.python-version }}
 
             - name: Install Trident
               run: make install-win

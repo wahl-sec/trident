@@ -17,11 +17,11 @@ For usage instructions on `Trident` please refer to the [usage](#usage) section.
 _`Trident` is tested using the versions below but might work with earlier versions as well_
 
 -   `make` >= 4.4 (If building using the `Makefile`)
--   `Python` >= 3.7
+-   `Python` >= 3.8
 
 ### **Development Requirements**
 
--   `Python` >= 3.6
+-   `Python` >= 3.8
     -   `pytest` >= 6.2.1
     -   `wheel` >= 0.36.2
     -   `setuptools` >= 51.1.2

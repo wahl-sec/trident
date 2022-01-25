@@ -15,12 +15,10 @@ RUN apt-get -y update \
     && apt-get -y install software-properties-common \
     && add-apt-repository ppa:deadsnakes/ppa -y \
     && apt-get -y update \
-    && apt-get -y install python3.7 \
-    && ln -sf /usr/bin/python3.7 /usr/bin/python3 \
+    && apt-get -y install python3.8 \
+    && ln -sf /usr/bin/python3.8 /usr/bin/python3 \
     && apt-get -y install python3-pip \
-    && apt-get -y install python3.7-dev \
-    && curl https://sh.rustup.rs -sSf | sh -s -- -y \
-    && source $HOME/.cargo/env \
+    && apt-get -y install python3.8-dev \
     && make install
 
 ENTRYPOINT ["python3", "-m", "trident"]
