@@ -24,8 +24,9 @@ from os import DirEntry, stat, chmod
 from os.path import commonpath
 from shutil import copy, copy2, move, rmtree
 from subprocess import Popen, PIPE
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from pathlib import Path
+from json import dumps
 from re import compile
 import zipfile
 import tarfile
@@ -50,6 +51,10 @@ class EntryStat:
     mtime: float
     ctime: float
 
+    @property
+    def __dict__(self):
+        return asdict(self)
+
 
 @dataclass
 class Entry:
@@ -61,6 +66,10 @@ class Entry:
     path: str
     name: str
     stat: EntryStat
+
+    @property
+    def __dict__(self):
+        return asdict(self)
 
 
 def entries(
@@ -260,7 +269,7 @@ def remove_entry(
                 patterns=patterns,
                 exclude=exclude,
             ):
-                _remove(entry)
+                _remove(Path(entry.path))
     except Exception as exc:
         if exceptions:
             raise exc from None

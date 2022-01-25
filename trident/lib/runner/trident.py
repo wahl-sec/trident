@@ -287,7 +287,7 @@ class TridentRunner:
             try:
                 try:
                     result = next(generator)
-                except TypeError:
+                except TypeError as e:
                     result = generator
                     self._evaluate_result(result, results_index)
                     raise StopIteration

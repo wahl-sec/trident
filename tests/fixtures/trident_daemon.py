@@ -38,7 +38,7 @@ def trident_daemon_files_sync(tmpdir):
             workers=1,
             plugins={
                 "files0": {
-                    "path": "plugins.files.find_files",
+                    "path": "tests.plugins.files.find_files",
                     "plugin_args": {"path": tmpdir},
                     "args": {
                         "store": {
@@ -51,8 +51,8 @@ def trident_daemon_files_sync(tmpdir):
                     },
                 },
                 "files1": {
-                    "path": "plugins.files.remove_files",
-                    "plugin_args": {"path": tmpdir, "pattern": ["test1"]},
+                    "path": "tests.plugins.files.remove_files",
+                    "plugin_args": {"path": tmpdir, "patterns": ["test1"]},
                     "args": {
                         "store": {
                             "path_store": tmpdir,

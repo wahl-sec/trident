@@ -20,7 +20,7 @@ def test_entries(trident_daemon_files_sync):
             )
 
 
-def test_remove_entries(trident_daemon_files_sync):
+def test_remove_entry(trident_daemon_files_sync):
     assert trident_daemon_files_sync._future_runners is None
     trident_daemon_files_sync.start_all_runners()
     trident_daemon_files_sync.wait_for_runners()
@@ -36,3 +36,35 @@ def test_remove_entries(trident_daemon_files_sync):
             ]["0"].values()
             assert {first["name"], second["name"]} == {"test", "files0.json"}
             break
+
+
+def test_move_entry(trident_daemon_files_sync):
+    pass
+
+
+def test_copy_entry(trident_daemon_files_sync):
+    pass
+
+
+def test_update_entry_mode(trident_daemon_files_sync):
+    pass
+
+
+def test_write_entry(trident_daemon_files_sync):
+    pass
+
+
+def test_archive_entry(trident_daemon_files_sync):
+    pass
+
+
+def test_unarchive_entry(trident_daemon_files_sync):
+    pass
+
+
+def test_entry_content_contains(trident_daemon_files_sync):
+    pass
+
+
+def test_execute_entry(trident_daemon_files_sync):
+    pass
