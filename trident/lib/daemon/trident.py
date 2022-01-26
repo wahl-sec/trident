@@ -151,6 +151,8 @@ class TridentDaemon:
             else:
                 plugin_path = plugin_config["path"]
 
+            plugin_name = plugin_config["name"] if "name" in plugin_config else None
+
             if "plugin_args" not in plugin_config:
                 logger.debug(f"No arguments specified for plugin: '{plugin_id}'")
                 plugin_args = {}
@@ -161,6 +163,7 @@ class TridentDaemon:
                 runner = self._initialize_runner(
                     runner_config=TridentRunnerConfig(
                         plugin_path=plugin_path,
+                        plugin_name=plugin_name,
                         plugin_args=plugin_args,
                         store_config=plugin_config["args"]["store"],
                         runner_config=plugin_config["args"]["runner"],

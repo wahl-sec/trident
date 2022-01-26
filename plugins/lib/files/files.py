@@ -13,6 +13,7 @@ from typing import (
     Generator,
     List,
     Literal,
+    NewType,
     Optional,
     Union,
     TextIO,
@@ -20,14 +21,20 @@ from typing import (
     NoReturn,
 )
 
+OctStr = NewType("OctStr", str)
+
+DEFAULT_COMPRESS_LEVEL_ZIP = 9
+DEFAULT_COMPRESS_LEVEL_TAR = 9
+
 from os import DirEntry, stat, chmod
 from os.path import commonpath
-from shutil import copy, copy2, move, rmtree
+from shutil import copy, copy2, copytree, move, rmtree
 from subprocess import Popen, PIPE
 from dataclasses import dataclass, asdict
 from pathlib import Path
 from json import dumps
 from re import compile
+import stat as _stat
 import zipfile
 import tarfile
 
@@ -40,7 +47,7 @@ class EntryStat:
     represented in the data stores.
     """
 
-    mode: int
+    mode: str
     inode: int
     device: int
     nlinks: int
@@ -72,13 +79,38 @@ class Entry:
         return asdict(self)
 
 
+def entry(path: str, follow_symlinks: bool = True, exceptions: bool = True) -> Entry:
+    """Given an absolute path to an entry returns its entry representation.
+
+    :param path: Path to the entry to get
+    :type path: str
+    :param follow_symlinks: If the path is a symbolic link follow the symbolic link and return the actual file if `True` else the entry for the link, defaults to `True`
+    :type follow_symlinks: bool
+    :param exceptions: Raise exceptions that occur to the plugin for it to handle, if set to `False` no exceptions will be raised, defaults to `True`
+    :type exceptions: bool, optional
+    """
+    _path = Path(path)
+    try:
+        while _path.is_symlink() and follow_symlinks:
+            _path = _path.readlink()
+
+        return Entry(
+            path=str(_path),
+            name=_path.name,
+            stat=entry_metadata(entry=str(_path), exceptions=exceptions),
+        )
+    except Exception as exc:
+        if exceptions:
+            raise exc from None
+
+
 def entries(
     path: str,
     patterns: List[str] = None,
     depth: int = 0,
     exclude: List[str] = None,
     follow_symlinks: bool = True,
-    exceptions: bool = False,
+    exceptions: bool = True,
 ) -> Generator[Entry, None, None]:
     """Lists all the entries at the specific path.
     Defaults to only scan the current depth (0) of entries.
@@ -215,7 +247,7 @@ def entry_metadata(entry: Union[Entry, str], exceptions: bool = True) -> EntrySt
             raise exc from None
 
     return EntryStat(
-        mode=stat_.st_mode,
+        mode=oct(stat_.st_mode),
         inode=stat_.st_ino,
         device=stat_.st_dev,
         nlinks=stat_.st_nlink,
@@ -346,6 +378,18 @@ def copy_entry(
                 )
             )
         )
+    except IsADirectoryError:
+        _copy_fun = copy2 if preserve_metadata else copy
+        return str(
+            Path(
+                copytree(
+                    src=str(_path),
+                    dst=str(_path_to),
+                    symlinks=follow_symlinks,
+                    copy_function=_copy_fun,
+                )
+            )
+        )
     except Exception as exc:
         if exceptions:
             raise exc from None
@@ -353,26 +397,29 @@ def copy_entry(
 
 def update_entry_mode(
     path: Union[Entry, str],
-    mode: Literal[
-        "S_ISUID",
-        "S_ISGID",
-        "S_ENFMT",
-        "S_ISVTX",
-        "S_IREAD",
-        "S_IWRITE",
-        "S_IEXEC",
-        "S_IRWXU",
-        "S_IRUSR",
-        "S_IWUSR",
-        "S_IXUSR",
-        "S_IRWXG",
-        "S_IRGRP",
-        "S_IWGRP",
-        "S_IXGRP",
-        "S_IRWXO",
-        "S_IROTH",
-        "S_IWOTH",
-        "S_IXOTH",
+    mode: Union[
+        Literal[
+            "S_ISUID",
+            "S_ISGID",
+            "S_ENFMT",
+            "S_ISVTX",
+            "S_IREAD",
+            "S_IWRITE",
+            "S_IEXEC",
+            "S_IRWXU",
+            "S_IRUSR",
+            "S_IWUSR",
+            "S_IXUSR",
+            "S_IRWXG",
+            "S_IRGRP",
+            "S_IWGRP",
+            "S_IXGRP",
+            "S_IRWXO",
+            "S_IROTH",
+            "S_IWOTH",
+            "S_IXOTH",
+        ],
+        OctStr,
     ],
     follow_symlinks: bool = True,
     exceptions: bool = True,
@@ -381,8 +428,8 @@ def update_entry_mode(
 
     :param path: Path to the entry on the filesystem to update the mode for, can be either a directory or a file
     :type path: Union[Entry, str]
-    :param mode: The mode to update the entry to, defined in the `stat` module in the Python standard library
-    :type mode: Literal["S_ISUID", "S_ISGID", "S_ENFMT", "S_ISVTX", "S_IREAD", "S_IWRITE", "S_IEXEC", "S_IRWXU", "S_IRUSR", "S_IWUSR", "S_IXUSR", "S_IRWXG", "S_IRGRP", "S_IWGRP", "S_IXGRP", "S_IRWXO", "S_IROTH", "S_IWOTH", "S_IXOTH"]
+    :param mode: The mode to update the entry to, defined in the `stat` module in the Python standard library, it can also be an octal string representation of the permission, e.g `"0o777"`
+    :type mode: Union[Literal["S_ISUID", "S_ISGID", "S_ENFMT", "S_ISVTX", "S_IREAD", "S_IWRITE", "S_IEXEC", "S_IRWXU", "S_IRUSR", "S_IWUSR", "S_IXUSR", "S_IRWXG", "S_IRGRP", "S_IWGRP", "S_IXGRP", "S_IRWXO", "S_IROTH", "S_IWOTH", "S_IXOTH"], OctStr]
     :param follow_symlinks: If set to `False` then the mode will updated on the symbolic link otherwise the actual file, defaults to `True`
     :type follow_symlinks: bool, optional
     :param exceptions: Raise exceptions that occur to the plugin for it to handle, if set to `False` no exceptions will be raised, defaults to `True`
@@ -391,7 +438,7 @@ def update_entry_mode(
     _path = Path(path.path) if isinstance(path, Entry) else Path(path)
 
     try:
-        if mode not in [
+        if mode in [
             "S_ISUID",
             "S_ISGID",
             "S_ENFMT",
@@ -412,7 +459,9 @@ def update_entry_mode(
             "S_IWOTH",
             "S_IXOTH",
         ]:
-            raise ValueError("Invalid file mode defined")
+            mode = getattr(_stat, mode)
+        else:
+            mode = int(mode, base=8)
 
         chmod(path=str(_path), mode=mode, follow_symlinks=follow_symlinks)
     except Exception as exc:
@@ -504,7 +553,13 @@ def archive_entry(
             with tarfile.open(
                 name=str(_archive),
                 mode=_mode,
-                **{"compresslevel": level} if format in ["gz", "bz2", "xz"] else {},
+                **{
+                    "compresslevel": level
+                    if level is not None
+                    else DEFAULT_COMPRESS_LEVEL_TAR
+                }
+                if format in ["gz", "bz2", "xz"]
+                else {},
             ) as _tar:
                 for _path in path:
                     _path = (
@@ -524,7 +579,9 @@ def archive_entry(
                 file=str(_archive),
                 mode="w",
                 compression=zipfile.ZIP_DEFLATED,
-                compresslevel=level,
+                compresslevel=level
+                if level is not None
+                else DEFAULT_COMPRESS_LEVEL_ZIP,
             ) as _zip:
                 for _path in path:
                     _path = (
@@ -664,7 +721,7 @@ def entry_content_contains(
     ] = "r",
     encoding: str = "utf-8",
     exceptions: bool = True,
-    limit_line: int = -1,
+    limit_line: Optional[int] = None,
 ) -> Dict[int, Dict[str, str]]:
     """Return a context used to read and interact with the given entry.
     By default the entry is opened in read-only mode.
@@ -679,8 +736,8 @@ def entry_content_contains(
     :type encoding: str, optional
     :param exceptions: Raise exceptions that occur to the plugin for it to handle, if set to `False` no exceptions will be raised, defaults to `True`
     :type exceptions: bool, optional
-    :param limit_line: Limit the line to include to make the logs a bit smaller, defined by number of characters to include, defaults to full line (`-1`)
-    :type limit_line: int, optional
+    :param limit_line: Limit the line to include to make the logs a bit smaller, defined by number of characters to include, defaults to full line (`None`)
+    :type limit_line: Optional[int], optional
     :return: The IO wrapper for the entry
     :rtype: Union[TextIO, BinaryIO]
     """

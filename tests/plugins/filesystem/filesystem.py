@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from plugins.lib.filesystem.filesystem import (
-    file_path_total,
-    file_path_free,
-    file_path_usage,
-)
+
+class FindFileSystems:
+    def execute_plugin(self, path):
+        pass
 
 
 class FilePathTotal:
@@ -19,5 +18,10 @@ class FilePathFree:
 
 
 class FilePathUsage:
+    def execute_plugin(self, path):
+        pass
+
+
+class FileDiskPartitions:
     def execute_plugin(self, path):
         pass
