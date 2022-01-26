@@ -333,6 +333,9 @@
 <span class="sd">        """</span>
         <span class="n">_initialized_runners</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">plugin_id</span><span class="p">,</span> <span class="n">plugin_config</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">plugins</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="s2">"disabled"</span> <span class="ow">in</span> <span class="n">plugin_config</span> <span class="ow">and</span> <span class="n">plugin_config</span><span class="p">[</span><span class="s2">"disabled"</span><span class="p">]:</span>
+                <span class="k">continue</span>
+
             <span class="k">if</span> <span class="s2">"path"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">plugin_config</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                     <span class="sa">f</span><span class="s2">"Missing path to plugin for plugin: '</span><span class="si">{</span><span class="n">plugin_id</span><span class="si">}</span><span class="s2">' in config."</span>
