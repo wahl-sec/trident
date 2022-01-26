@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" />
 
-    <meta name="generator" content="sphinx-4.1.2, furo 2021.07.28.beta40"/>
+    <meta name="generator" content="sphinx-4.4.0, furo 2021.07.28.beta40"/>
         <title>trident.lib.daemon.data_storage - Trident 0.1-DEV documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css" />
@@ -305,10 +305,14 @@
             <span class="sa">f</span><span class="s2">"Updating store with: '</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">' for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span>
         <span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-                <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+            <span class="n">_result</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="s2">"__dict__"</span><span class="p">):</span>
+                    <span class="n">_result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="vm">__dict__</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">_result</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
-            <span class="bp">self</span><span class="o">.</span><span class="n">_update_store_content</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_update_store_content</span><span class="p">(</span><span class="n">_result</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">"Result: '</span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s2">' is not JSON serializable for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span>
@@ -381,11 +385,11 @@
                 <span class="sa">f</span><span class="s2">"Failed to parse the JSON data from the store: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="si">}</span><span class="s2">'"</span>
             <span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span>
-        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">e</span>
 
     <span class="k">def</span> <span class="nf">_update_store_content</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
-        <span class="sd">"""Update the initialized store values from the given result values.</span>
+        <span class="sd">"""Update the initialized store values with the given result values.</span>
 
 <span class="sd">        :param result: The result structure to update the store from.</span>
 <span class="sd">        :type result: dict</span>

@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" />
 
-    <meta name="generator" content="sphinx-4.1.2, furo 2021.07.28.beta40"/>
+    <meta name="generator" content="sphinx-4.4.0, furo 2021.07.28.beta40"/>
         <title>trident.lib.runner.trident - Trident 0.1-DEV documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css" />
@@ -202,7 +202,18 @@
 <span class="kn">from</span> <span class="nn">importlib</span> <span class="kn">import</span> <span class="n">import_module</span>
 <span class="kn">import</span> <span class="nn">re</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">NewType</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">NoReturn</span><span class="p">,</span> <span class="n">Generator</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">AnyStr</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">NewType</span><span class="p">,</span>
+    <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">Optional</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">,</span>
+    <span class="n">List</span><span class="p">,</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">NoReturn</span><span class="p">,</span>
+    <span class="n">Generator</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+    <span class="n">AnyStr</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="n">Module</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s2">"Module"</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span>
 <span class="n">PluginClass</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s2">"PluginClass"</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span>
@@ -226,7 +237,7 @@
 <span class="sd">    :param plugin_path: The path to the plugin used.</span>
 <span class="sd">    :type plugin_path: str</span>
 <span class="sd">    :param plugin_name: The name of the plugin used.</span>
-<span class="sd">    :type plugin_name: str</span>
+<span class="sd">    :type plugin_name: Optional[str]</span>
 <span class="sd">    :param plugin_args: The arguments that should be passed to the plugin when executing.</span>
 <span class="sd">    :type plugin_args: dict</span>
 <span class="sd">    :param plugin_module: The module object given by `import_module` from the `importlib` library.</span>
@@ -251,7 +262,8 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">plugin_path</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">,</span>
+        <span class="n">plugin_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">plugin_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
         <span class="n">plugin_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
         <span class="n">store_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
         <span class="n">runner_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
@@ -266,7 +278,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">thread_event</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_apply_runner_config</span><span class="p">(</span><span class="n">runner_config</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">plugin_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_plugin_name</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plugin_name</span> <span class="o">=</span> <span class="n">plugin_name</span> <span class="k">if</span> <span class="n">plugin_name</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">_resolve_plugin_name</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plugin_instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">plugin_module</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_runner_plugin</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_apply_runner_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runner_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -476,7 +488,7 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="k">try</span><span class="p">:</span>
                     <span class="n">result</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">generator</span><span class="p">)</span>
-                <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                <span class="k">except</span> <span class="ne">TypeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
                     <span class="n">result</span> <span class="o">=</span> <span class="n">generator</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_evaluate_result</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">results_index</span><span class="p">)</span>
                     <span class="k">raise</span> <span class="ne">StopIteration</span>
