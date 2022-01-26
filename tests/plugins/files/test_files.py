@@ -269,6 +269,7 @@ def test_entry_content_contains(trident_daemon_files_sync):
     indirect=["trident_daemon_files_sync"],
 )
 def test_execute_entry(trident_daemon_files_sync):
+    # TODO: Support This test does not work on Windows because of /bin/sh, so we should implement another test for Windows
     assert trident_daemon_files_sync._future_runners is None
     trident_daemon_files_sync.start_all_runners()
     trident_daemon_files_sync.wait_for_runners()
