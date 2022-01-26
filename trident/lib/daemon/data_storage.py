@@ -116,10 +116,14 @@ class TridentDataDaemon:
             f"Updating store with: '{result}' for runner: '{self.daemon_config.runner.runner_id}'"
         )
         try:
-            for value in result.values():
-                json.dumps(value)
+            _result = {}
+            for key, value in result.items():
+                if hasattr(value, "__dict__"):
+                    _result[key] = value.__dict__
+                else:
+                    _result[key] = value
 
-            self._update_store_content(result)
+            self._update_store_content(_result)
         except TypeError:
             logger.warning(
                 f"Result: '{result}' is not JSON serializable for runner: '{self.daemon_config.runner.runner_id}'"
@@ -192,11 +196,11 @@ class TridentDataDaemon:
                 f"Failed to parse the JSON data from the store: '{self.daemon_config.store_path}'"
             )
             raise e
-        except Exception:
+        except Exception as e:
             raise e
 
     def _update_store_content(self, result: Dict) -> NoReturn:
-        """Update the initialized store values from the given result values.
+        """Update the initialized store values with the given result values.
 
         :param result: The result structure to update the store from.
         :type result: dict

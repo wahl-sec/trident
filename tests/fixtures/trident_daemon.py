@@ -30,39 +30,242 @@ def trident_daemon_sync(tmpdir):
 
 
 @pytest.fixture
-def trident_daemon_files_sync(tmpdir):
+def trident_daemon_files_sync(request, tmpdir):
     tmpdir.mkdir("test")
     tmpdir.mkdir("test1")
     return TridentDaemon(
         TridentDaemonConfig(
             workers=1,
             plugins={
-                "files0": {
-                    "path": "plugins.files.find_files",
-                    "plugin_args": {"path": tmpdir},
-                    "args": {
-                        "store": {
-                            "path_store": tmpdir,
-                            "no_store": False,
-                            "global_store": None,
+                plugin: config
+                for plugin, config in {
+                    "find_files": {
+                        "path": "tests.plugins.files.files",
+                        "name": "FindFiles",
+                        "plugin_args": {"path": tmpdir},
+                        "args": {
+                            "store": {
+                                "path_store": tmpdir,
+                                "no_store": False,
+                                "global_store": None,
+                            },
+                            "runner": {"dont_store_on_error": False},
+                            "notification": {},
                         },
-                        "runner": {"dont_store_on_error": False},
-                        "notification": {},
                     },
-                },
-                "files1": {
-                    "path": "plugins.files.remove_files",
-                    "plugin_args": {"path": tmpdir, "pattern": ["test1"]},
-                    "args": {
-                        "store": {
-                            "path_store": tmpdir,
-                            "no_store": False,
-                            "global_store": None,
+                    "find_file": {
+                        "path": "tests.plugins.files.files",
+                        "name": "FindFile",
+                        "plugin_args": {"path": tmpdir},
+                        "args": {
+                            "store": {
+                                "path_store": tmpdir,
+                                "no_store": False,
+                                "global_store": None,
+                            },
+                            "runner": {"dont_store_on_error": False},
+                            "notification": {},
                         },
-                        "runner": {"dont_store_on_error": False},
-                        "notification": {},
                     },
-                },
+                    "remove_files": {
+                        "path": "tests.plugins.files.files",
+                        "name": "RemoveFiles",
+                        "plugin_args": {"path": tmpdir, "patterns": ["test1"]},
+                        "args": {
+                            "store": {
+                                "path_store": tmpdir,
+                                "no_store": False,
+                                "global_store": None,
+                            },
+                            "runner": {"dont_store_on_error": False},
+                            "notification": {},
+                        },
+                    },
+                    "move_files": {
+                        "path": "tests.plugins.files.files",
+                        "name": "MoveFiles",
+                        "plugin_args": {
+                            "path": f"{tmpdir}/test",
+                            "path_to": f"{tmpdir}/new",
+                        },
+                        "args": {
+                            "store": {
+                                "path_store": tmpdir,
+                                "no_store": False,
+                                "global_store": None,
+                            },
+                            "runner": {"dont_store_on_error": False},
+                            "notification": {},
+                        },
+                    },
+                    "copy_files": {
+                        "path": "tests.plugins.files.files",
+                        "name": "CopyFiles",
+                        "plugin_args": {
+                            "path": f"{tmpdir}/test",
+                            "path_to": f"{tmpdir}/copy",
+                        },
+                        "args": {
+                            "store": {
+                                "path_store": tmpdir,
+                                "no_store": False,
+                                "global_store": None,
+                            },
+                            "runner": {"dont_store_on_error": False},
+                            "notification": {},
+                        },
+                    },
+                    "update_file_mode": {
+                        "path": "tests.plugins.files.files",
+                        "name": "UpdateFileMode",
+                        "plugin_args": {"path": tmpdir, "mode": "0o40777"},
+                        "args": {
+                            "store": {
+                                "path_store": tmpdir,
+                                "no_store": False,
+                                "global_store": None,
+                            },
+                            "runner": {"dont_store_on_error": False},
+                            "notification": {},
+                        },
+                    },
+                    "create_files": {
+                        "path": "tests.plugins.files.files",
+                        "name": "CreateFiles",
+                        "plugin_args": {
+                            "path": f"{tmpdir}/write.txt",
+                            "content": "Hello, this is a text",
+                        },
+                        "args": {
+                            "store": {
+                                "path_store": tmpdir,
+                                "no_store": False,
+                                "global_store": None,
+                            },
+                            "runner": {"dont_store_on_error": False},
+                            "notification": {},
+                        },
+                    },
+                    "archive_files": {
+                        "path": "tests.plugins.files.files",
+                        "name": "ArchiveFiles",
+                        "plugin_args": {
+                            "path": [f"{tmpdir}/test", f"{tmpdir}/test1"],
+                            "archive": f"{tmpdir}/archive.tar.gz",
+                            "format": "gz",
+                        },
+                        "args": {
+                            "store": {
+                                "path_store": tmpdir,
+                                "no_store": False,
+                                "global_store": None,
+                            },
+                            "runner": {"dont_store_on_error": False},
+                            "notification": {},
+                        },
+                    },
+                    "unarchive_files": {
+                        "path": "tests.plugins.files.files",
+                        "name": "UnarchiveFiles",
+                        "plugin_args": {
+                            "archive": f"{tmpdir}/archive.tar.gz",
+                            "path": f"{tmpdir}/out",
+                        },
+                        "args": {
+                            "store": {
+                                "path_store": tmpdir,
+                                "no_store": False,
+                                "global_store": None,
+                            },
+                            "runner": {"dont_store_on_error": False},
+                            "notification": {},
+                        },
+                    },
+                    "match_file_content": {
+                        "path": "tests.plugins.files.files",
+                        "name": "MatchFileContent",
+                        "plugin_args": {
+                            "path": f"{tmpdir}/write.txt",
+                            "patterns": ["Hello.*"],
+                        },
+                        "args": {
+                            "store": {
+                                "path_store": tmpdir,
+                                "no_store": False,
+                                "global_store": None,
+                            },
+                            "runner": {"dont_store_on_error": False},
+                            "notification": {},
+                        },
+                    },
+                    "create_executable_file": {
+                        "path": "tests.plugins.files.files",
+                        "name": "CreateExecutableFile",
+                        "plugin_args": {
+                            "path": f"{tmpdir}/script.sh",
+                            "content": f"touch {tmpdir}/script_file",
+                        },
+                        "args": {
+                            "store": {
+                                "path_store": tmpdir,
+                                "no_store": False,
+                                "global_store": None,
+                            },
+                            "runner": {"dont_store_on_error": False},
+                            "notification": {},
+                        },
+                    },
+                    "update_executable_file_mode": {
+                        "path": "tests.plugins.files.files",
+                        "name": "UpdateExecutableFileMode",
+                        "plugin_args": {
+                            "path": f"{tmpdir}/script.sh",
+                            "mode": "0o111777",
+                        },
+                        "args": {
+                            "store": {
+                                "path_store": tmpdir,
+                                "no_store": False,
+                                "global_store": None,
+                            },
+                            "runner": {"dont_store_on_error": False},
+                            "notification": {},
+                        },
+                    },
+                    "execute_file": {
+                        "path": "tests.plugins.files.files",
+                        "name": "ExecuteFile",
+                        "plugin_args": {
+                            "entry": f"{tmpdir}/script.sh",
+                            "pre": ["/bin/sh"],
+                            "wait": True,
+                        },
+                        "args": {
+                            "store": {
+                                "path_store": tmpdir,
+                                "no_store": False,
+                                "global_store": None,
+                            },
+                            "runner": {"dont_store_on_error": False},
+                            "notification": {},
+                        },
+                    },
+                    "find_filesystems": {
+                        "path": "tests.plugins.filesystem.filesystem",
+                        "name": "FindFileSystem",
+                        "plugin_args": {},
+                        "args": {
+                            "store": {
+                                "path_store": tmpdir,
+                                "no_store": False,
+                                "global_store": None,
+                            },
+                            "runner": {"dont_store_on_error": False},
+                            "notification": {},
+                        },
+                    },
+                }.items()
+                if plugin in request.param
             },
         )
     )

@@ -13,7 +13,18 @@ from dataclasses import dataclass
 from importlib import import_module
 import re
 
-from typing import NewType, Dict, Union, List, Any, NoReturn, Generator, Tuple, AnyStr
+from typing import (
+    NewType,
+    Dict,
+    Optional,
+    Union,
+    List,
+    Any,
+    NoReturn,
+    Generator,
+    Tuple,
+    AnyStr,
+)
 
 Module = NewType("Module", object)
 PluginClass = NewType("PluginClass", object)
@@ -37,7 +48,7 @@ class TridentRunnerConfig:
     :param plugin_path: The path to the plugin used.
     :type plugin_path: str
     :param plugin_name: The name of the plugin used.
-    :type plugin_name: str
+    :type plugin_name: Optional[str]
     :param plugin_args: The arguments that should be passed to the plugin when executing.
     :type plugin_args: dict
     :param plugin_module: The module object given by `import_module` from the `importlib` library.
@@ -62,7 +73,8 @@ class TridentRunnerConfig:
 
     def __init__(
         self,
-        plugin_path: AnyStr,
+        plugin_path: str,
+        plugin_name: Optional[str],
         plugin_args: Dict[AnyStr, Any],
         store_config: Dict[AnyStr, Any],
         runner_config: Dict[AnyStr, Any],
@@ -77,7 +89,7 @@ class TridentRunnerConfig:
 
         self.thread_event = Event()
         self._apply_runner_config(runner_config)
-        self.plugin_name = self._resolve_plugin_name()
+        self.plugin_name = plugin_name if plugin_name else self._resolve_plugin_name()
         self.plugin_instance, self.plugin_module = self._initialize_runner_plugin()
 
     def _apply_runner_config(self, runner_config: Dict[AnyStr, Any]) -> None:
@@ -287,7 +299,7 @@ class TridentRunner:
             try:
                 try:
                     result = next(generator)
-                except TypeError:
+                except TypeError as e:
                     result = generator
                     self._evaluate_result(result, results_index)
                     raise StopIteration
