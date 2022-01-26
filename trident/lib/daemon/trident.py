@@ -144,6 +144,9 @@ class TridentDaemon:
         """
         _initialized_runners = []
         for plugin_id, plugin_config in self.daemon_config.plugins.items():
+            if "disabled" in plugin_config and plugin_config["disabled"]:
+                continue
+
             if "path" not in plugin_config:
                 raise ValueError(
                     f"Missing path to plugin for plugin: '{plugin_id}' in config."
