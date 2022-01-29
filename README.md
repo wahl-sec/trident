@@ -487,3 +487,7 @@ The library tries to implement each functionality using primarily generators to 
 By default `Trident` tries to pass the `thread_event` parameter to the plugin, this is of type `Event` from the `threading` library and is used to allow the system to halt the execution of `Trident` with keyboard interrupt. Note that the plugin needs to implement periodic checks of this variable using `thread_event.is_set()` in order for this to work. If the plugin does not implement the check then if `Trident` is passed an interrupt by the system then `Trident` will not be able to exit until the plugin operations finish.
 
 `Trident` allows the user to pass any initial parameters to the plugin by defining the `args` key in the plugin configuration followed by the value. `Trident` will try to pass each variable found in the `args` section of the plugin configuration to the `execute_plugin` method, so the method needs to have these parameters defined as well.
+
+#### **Creating States**
+
+When running plugins that take some time to run it might be necessary to interrupt the execution sometimes and continue later. Therefore `Trident` supports saving and loading plugin states using checkpoints similar to data stores. The checkpoints are saved as `JSON` but the format is up to the author of the plugin as they need to decide when to save and load the state.

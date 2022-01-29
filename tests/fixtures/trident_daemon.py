@@ -22,6 +22,7 @@ def trident_daemon_sync(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 }
             },
@@ -51,6 +52,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {},
                         },
                     },
                     "find_file": {
@@ -65,6 +67,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {},
                         },
                     },
                     "remove_files": {
@@ -79,6 +82,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {},
                         },
                     },
                     "move_files": {
@@ -96,6 +100,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {},
                         },
                     },
                     "copy_files": {
@@ -113,6 +118,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {},
                         },
                     },
                     "update_file_mode": {
@@ -127,6 +133,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {},
                         },
                     },
                     "create_files": {
@@ -144,6 +151,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {},
                         },
                     },
                     "archive_files": {
@@ -162,6 +170,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {},
                         },
                     },
                     "unarchive_files": {
@@ -179,6 +188,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {},
                         },
                     },
                     "match_file_content": {
@@ -196,6 +206,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {},
                         },
                     },
                     "create_executable_file": {
@@ -213,6 +224,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {},
                         },
                     },
                     "update_executable_file_mode": {
@@ -230,6 +242,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {},
                         },
                     },
                     "execute_file": {
@@ -248,6 +261,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {},
                         },
                     },
                     "find_filesystems": {
@@ -262,6 +276,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {},
                         },
                     },
                 }.items()
@@ -287,6 +302,7 @@ def trident_daemon_async(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
                 "test1": {
@@ -299,6 +315,7 @@ def trident_daemon_async(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
                 "test2": {
@@ -311,6 +328,7 @@ def trident_daemon_async(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
                 "test3": {
@@ -323,6 +341,7 @@ def trident_daemon_async(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
                 "test4": {
@@ -335,6 +354,7 @@ def trident_daemon_async(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
             },
@@ -358,6 +378,7 @@ def trident_daemon_sync_global(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 }
             },
@@ -381,6 +402,7 @@ def trident_daemon_async_global(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
                 "test1": {
@@ -393,6 +415,7 @@ def trident_daemon_async_global(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
                 "test2": {
@@ -405,6 +428,7 @@ def trident_daemon_async_global(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
                 "test3": {
@@ -417,6 +441,7 @@ def trident_daemon_async_global(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
                 "test4": {
@@ -429,6 +454,7 @@ def trident_daemon_async_global(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
             },
@@ -452,6 +478,7 @@ def trident_daemon_sync_no_store():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 }
             },
@@ -475,6 +502,7 @@ def trident_daemon_async_no_store():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
                 "test1": {
@@ -487,6 +515,7 @@ def trident_daemon_async_no_store():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
                 "test2": {
@@ -499,6 +528,7 @@ def trident_daemon_async_no_store():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
                 "test3": {
@@ -511,6 +541,7 @@ def trident_daemon_async_no_store():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
                 "test4": {
@@ -523,6 +554,7 @@ def trident_daemon_async_no_store():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
             },
@@ -546,6 +578,7 @@ def trident_daemon_invalid_argument_store_sync():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 }
             },
@@ -569,6 +602,7 @@ def trident_daemon_invalid_argument_store_async():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
                 "test1": {
@@ -581,6 +615,7 @@ def trident_daemon_invalid_argument_store_async():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
                 "test2": {
@@ -593,6 +628,7 @@ def trident_daemon_invalid_argument_store_async():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
                 "test3": {
@@ -605,6 +641,7 @@ def trident_daemon_invalid_argument_store_async():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
                 "test4": {
@@ -617,6 +654,7 @@ def trident_daemon_invalid_argument_store_async():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {},
                     },
                 },
             },

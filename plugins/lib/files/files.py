@@ -148,15 +148,15 @@ def entries(
                 ):
                     continue
 
-                if (
-                    _object.is_dir()
-                    and (current_depth < depth or depth == -1)
-                    and (
-                        (_object.is_symlink() and follow_symlinks)
-                        or not _object.is_symlink()
-                    )
-                ):
-                    try:
+                try:
+                    if (
+                        _object.is_dir()
+                        and (current_depth < depth or depth == -1)
+                        and (
+                            (_object.is_symlink() and follow_symlinks)
+                            or not _object.is_symlink()
+                        )
+                    ):
                         for _inner in _generator(
                             _object.iterdir(),
                             patterns,
@@ -165,9 +165,10 @@ def entries(
                             follow_symlinks,
                         ):
                             yield _inner
-                    except Exception as exc:
-                        if exceptions:
-                            raise exc from None
+                except Exception as exc:
+                    if exceptions:
+                        raise exc from None
+
                 if patterns is None or any(
                     [
                         _object.match(pattern) or Path(_object.name).match(pattern)
@@ -177,7 +178,7 @@ def entries(
                     yield Entry(
                         path=str(_object),
                         name=_object.name,
-                        stat=entry_metadata(_object),
+                        stat=entry_metadata(_object, exceptions=exceptions),
                     )
 
         except StopIteration:
@@ -229,7 +230,9 @@ def execute(
     return [proc.stdin, proc.stdout, proc.stderr, proc.returncode]
 
 
-def entry_metadata(entry: Union[Entry, str], exceptions: bool = True) -> EntryStat:
+def entry_metadata(
+    entry: Union[Entry, str], exceptions: bool = True
+) -> Optional[EntryStat]:
     """Return the metadata of the given entry or path to the entry on the filesystem.
 
     :raises FileNotFoundError: If the file does not exist for the given path
@@ -237,27 +240,26 @@ def entry_metadata(entry: Union[Entry, str], exceptions: bool = True) -> EntrySt
     :type entry: Union[DirEntry, str]
     :param exceptions: Raise exceptions that occur to the plugin for it to handle, if set to `False` no exceptions will be raised, defaults to `True`
     :type exceptions: bool, optional
-    :return: Dictionary of metadata for the given entry
-    :rtype: EntryStat
+    :return: Dictionary of metadata for the given entry if the metadata was readable otherwise `None`
+    :rtype: Optional[EntryStat]
     """
     try:
         stat_ = entry.stat() if isinstance(entry, DirEntry) else stat(entry)
+        return EntryStat(
+            mode=oct(stat_.st_mode),
+            inode=stat_.st_ino,
+            device=stat_.st_dev,
+            nlinks=stat_.st_nlink,
+            uid=stat_.st_uid,
+            gid=stat_.st_gid,
+            size=stat_.st_size,
+            atime=stat_.st_atime,
+            mtime=stat_.st_mtime,
+            ctime=stat_.st_ctime,
+        )
     except Exception as exc:
         if exceptions:
             raise exc from None
-
-    return EntryStat(
-        mode=oct(stat_.st_mode),
-        inode=stat_.st_ino,
-        device=stat_.st_dev,
-        nlinks=stat_.st_nlink,
-        uid=stat_.st_uid,
-        gid=stat_.st_gid,
-        size=stat_.st_size,
-        atime=stat_.st_atime,
-        mtime=stat_.st_mtime,
-        ctime=stat_.st_ctime,
-    )
 
 
 def remove_entry(

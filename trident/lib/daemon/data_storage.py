@@ -12,7 +12,7 @@ from os import path
 from pathlib import Path
 from dataclasses import dataclass
 
-from typing import Dict, NewType, Any, NoReturn, AnyStr
+from typing import Dict, NewType, Any, NoReturn, AnyStr, Optional, Union
 
 TridentRunner = NewType("TridentRunner", None)
 
@@ -35,30 +35,48 @@ class TridentDataDaemonConfig:
 
     runner: TridentRunner
     store_path: Path
-    store_name: AnyStr
+    store_name: str
+    checkpoint_path: Optional[Path]
 
-    def __init__(self, runner: TridentRunner, store_path: AnyStr, store_name: AnyStr):
+    def __init__(
+        self,
+        runner: TridentRunner,
+        store_name: str,
+        store_path: str,
+        checkpoint_path: Optional[str] = None,
+    ):
         self.runner = runner
         self.store_name = store_name
-        self.store_path = self._determine_store_path(store_path)
 
-    def _determine_store_path(self, store_path: AnyStr) -> Path:
+        if store_path is not None:
+            self.store_path = self._determine_store_path(store_path)
+        else:
+            self.store_path = None
+
+        if checkpoint_path is not None or self.store_path:
+            self.checkpoint_path = self._determine_checkpoint_path(
+                checkpoint_path, store_path
+            )
+        else:
+            self.checkpoint_path = None
+
+    def _determine_store_path(self, store_path: str) -> Path:
         """Verifies that the store path is a valid path that exists and is normalizable, returns the normalized path if valid.
         Raises `FileNotFoundError` if the normalized store path does not exist.
 
         :param store_path: The store path to verify and normalize.
         :type store_path: str
         :raises FileNotFoundError: The store path does not exist on the system.
-        :return: The :class:`Path` object of the store on the system.
-        :rtype: :class:`Path`
+        :return: The :class:`pathlib.Path` object of the store on the system.
+        :rtype: :class:`pathlib.Path`
         """
         store_path_n = self._normalize_store_path(store_path)
-        if path.isfile(store_path_n):
+        if store_path_n.is_file():
             logger.debug(
                 f"Using existing store path: '{store_path_n}' for runner: '{self.runner.runner_id}'"
             )
             return store_path_n
-        elif path.isdir(store_path_n) or path.exists(path.dirname(store_path_n)):
+        elif store_path_n.is_dir() or store_path_n.exists():
             logger.debug(
                 f"Creating store in path: '{store_path_n}' for runner: '{self.runner.runner_id}'"
             )
@@ -68,10 +86,46 @@ class TridentDataDaemonConfig:
             return self._normalize_store_path(f"{store_path}/{self.store_name}.json")
         else:
             raise FileNotFoundError(
-                f"Store path: {store_path_n} does not exist for runner: '{self.runner.runner_id}'"
+                f"Store path: '{store_path_n}' does not exist for runner: '{self.runner.runner_id}'"
             )
 
-    def _normalize_store_path(self, store_path: AnyStr) -> Path:
+    def _determine_checkpoint_path(
+        self, checkpoint_path: Union[str, None], store_path: str
+    ) -> Path:
+        """Returns the path to where the checkpoint for the runner should be stored if it was enabled
+        By default it will place next to the store path named as `[RUNNER_ID]_CHECKPOINT.json`
+
+        :param checkpoint_path: The checkpoint path if provided
+        :type checkpoint_path: Union[str, None]
+        :param store_path: The store path to base the checkpoint path on.
+        :type store_path: str
+        :return: The :class:`pathlib.Path` object of the checkpoint on the system.
+        :rtype: :class:`pathlib.Path`
+        """
+        if checkpoint_path is not None:
+            path_n = self._normalize_store_path(checkpoint_path)
+        else:
+            path_n = self._normalize_store_path(store_path)
+
+        if path_n.suffix:
+            checkpoint_path_n = self._normalize_store_path(
+                f"{path_n.parent}/{self.runner.runner_id}_CHECKPOINT.json"
+            )
+        if path_n.is_dir() or path_n.exists():
+            checkpoint_path_n = self._normalize_store_path(
+                f"{path_n}/{self.runner.runner_id}_CHECKPOINT.json"
+            )
+        else:
+            checkpoint_path_n = self._normalize_store_path(
+                f"{path_n}/{self.runner.runner_id}_CHECKPOINT.json"
+            )
+
+        logger.debug(
+            f"Creating checkpoint at: '{checkpoint_path_n}' for runner: '{self.runner.runner_id}'"
+        )
+        return checkpoint_path_n
+
+    def _normalize_store_path(self, store_path: str) -> Path:
         """Normalizes the path to the store by using the :class:`Path` object.
 
         :param store_path: The path to the store to normalize.
@@ -82,8 +136,9 @@ class TridentDataDaemonConfig:
         try:
             store_path_n = Path(store_path)
         except Exception as e:
-            logger.fatal(f"Failed to normalize path due to unexpected error: {e}")
-            raise e
+            logger.fatal(
+                f"Failed to normalize path due to unexpected error: {e}", exc_info=e
+            )
 
         return store_path_n
 
@@ -99,8 +154,13 @@ class TridentDataDaemon:
 
     def __init__(self, daemon_config: TridentDataDaemonConfig):
         self.daemon_config = daemon_config
-        self.store_data = self._initialize_store()
-        self.run_index = self._get_run_index()
+
+        if self.daemon_config.store_path is not None:
+            self.store_data = self._initialize_store()
+            self.run_index = self._get_run_index()
+        else:
+            self.store_data, self.run_index = None, 0
+
         logger.debug(
             f"Trident data daemon initialized for runner: '{self.daemon_config.runner.runner_id}'"
         )
@@ -142,8 +202,29 @@ class TridentDataDaemon:
                 store_obj.write(json.dumps(self.store_data))
                 store_obj.truncate()
         except Exception as e:
-            logger.error(f"Failed to write to store: '{self.daemon_config.store_path}'")
-            logger.debug(e)
+            logger.error(
+                f"Failed to write to store: '{self.daemon_config.store_path}' for runner: '{self.daemon_config.runner.runner_id}'",
+                exc_info=e,
+            )
+
+    def create_state_checkpoint(self) -> NoReturn:
+        """Creates the checkpoint representing the current state of the plugin and stores it in the path given by `checkpoint_path` in :class:`TridentDataDaemonConfig`"""
+        logger.debug(
+            f"Writing to checkpoint at path: '{self.daemon_config.checkpoint_path}' for runner: '{self.daemon_config.runner.runner_id}'"
+        )
+
+        _state = self.daemon_config.runner.runner_state
+        if _state is not None:
+            try:
+                with open(self.daemon_config.checkpoint_path, "r+") as checkpoint_obj:
+                    checkpoint_obj.seek(0)
+                    checkpoint_obj.write(json.dumps(_state))
+                    checkpoint_obj.truncate()
+            except Exception as e:
+                logger.fatal(
+                    f"Failed to write to checkpoint: '{self.daemon_config.checkpoint_path}' for runner: '{self.daemon_config.runner.runner_id}'",
+                    exc_info=e,
+                )
 
     def merge_store_data(self) -> NoReturn:
         """Merges the store data with the existing store data available in the written store.
@@ -173,7 +254,28 @@ class TridentDataDaemon:
             )
             raise e
         except Exception as e:
-            raise e
+            logger.fatal(
+                f"Failed to read state from store path: '{self.daemon_config.checkpoint_path}' for runner: '{self.daemon_config.runner.runner_id}'",
+                exc_info=e,
+            )
+
+    def load_state_checkpoint(self) -> Dict[Union[str, int], Any]:
+        """Load the checkpoint state for the current plugin from the path given by `checkpoint_path` in :class:`TridentDataDaemonConfig`"""
+        logger.debug(
+            f"Reading from the checkpoint at path: '{self.daemon_config.checkpoint_path}' for runner: '{self.daemon_config.runner.runner_id}'"
+        )
+
+        try:
+            with open(self.daemon_config.checkpoint_path, "r") as checkpoint_obj:
+                return json.load(checkpoint_obj)
+        except FileNotFoundError:
+            pass
+        except Exception as e:
+            logger.error(
+                f"Failed to read state from checkpoint path: '{self.daemon_config.checkpoint_path}' for runner: '{self.daemon_config.runner.runner_id}'",
+                exc_info=e,
+            )
+        return {}
 
     def _initialize_store(self) -> Dict[str, Dict[str, Dict[str, Dict]]]:
         """Initialize the store structure if the store does not exist, otherwise read the existing store data and return.
@@ -197,6 +299,10 @@ class TridentDataDaemon:
             )
             raise e
         except Exception as e:
+            logger.error(
+                f"Failed to initialize store: '{self.daemon_config.store_path}' for runner: '{self.daemon_config.runner.runner_id}'",
+                exc_info=e,
+            )
             raise e
 
     def _update_store_content(self, result: Dict) -> NoReturn:
@@ -223,7 +329,8 @@ class TridentDataDaemon:
             raise e
         except Exception as e:
             logger.error(
-                f"Failed to read from store: '{self.daemon_config.store_path}'"
+                f"Failed to read from store: '{self.daemon_config.store_path}' for runner: '{self.daemon_config.runner.runner_id}'",
+                exc_info=e,
             )
             raise e
 
@@ -247,7 +354,8 @@ class TridentDataDaemon:
             return self.store_data["runners"][self.daemon_config.runner.runner_id]
         except Exception as e:
             logger.error(
-                f"Failed to get runner content for store: '{self.daemon_config.store_path}'"
+                f"Failed to get runner content for store: '{self.daemon_config.store_path}' for runner: '{self.daemon_config.runner.runner_id}'",
+                exc_info=e,
             )
             raise e
 
@@ -262,7 +370,8 @@ class TridentDataDaemon:
             return content["results"]
         except Exception as e:
             logger.error(
-                f"Failed to get result for runner: '{self.daemon_config.runner.runner_id}'"
+                f"Failed to get result for runner: '{self.daemon_config.runner.runner_id}'",
+                exc_info=e,
             )
             raise e
 
@@ -281,7 +390,8 @@ class TridentDataDaemon:
             return str(max([int(index) for index in content.keys()]) + 1)
         except Exception as e:
             logger.error(
-                f"Failed to get the run index for store: '{self.daemon_config.store_path}'"
+                f"Failed to get the run index for store: '{self.daemon_config.store_path}' for runner: '{self.daemon_config.runner.runner_id}'",
+                exc_info=e,
             )
             raise e
 
@@ -296,4 +406,8 @@ class TridentDataDaemon:
             with open(self.daemon_config.store_path, "r") as store_obj:
                 return json.load(store_obj)
         except Exception as e:
+            logger.error(
+                f"Failed to get the store data at: '{self.daemon_config.store_path}' for runner: '{self.daemon_config.runner.runner_id}'",
+                exc_info=e,
+            )
             raise e
