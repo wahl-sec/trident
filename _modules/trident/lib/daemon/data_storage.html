@@ -201,7 +201,7 @@
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">NewType</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">NoReturn</span><span class="p">,</span> <span class="n">AnyStr</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">NewType</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">NoReturn</span><span class="p">,</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="n">TridentRunner</span> <span class="o">=</span> <span class="n">NewType</span><span class="p">(</span><span class="s2">"TridentRunner"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
@@ -224,30 +224,49 @@
 
     <span class="n">runner</span><span class="p">:</span> <span class="n">TridentRunner</span>
     <span class="n">store_path</span><span class="p">:</span> <span class="n">Path</span>
-    <span class="n">store_name</span><span class="p">:</span> <span class="n">AnyStr</span>
+    <span class="n">store_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">checkpoint_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runner</span><span class="p">:</span> <span class="n">TridentRunner</span><span class="p">,</span> <span class="n">store_path</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">store_name</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">runner</span><span class="p">:</span> <span class="n">TridentRunner</span><span class="p">,</span>
+        <span class="n">store_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">store_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">checkpoint_path</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">runner</span> <span class="o">=</span> <span class="n">runner</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store_name</span> <span class="o">=</span> <span class="n">store_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">store_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_determine_store_path</span><span class="p">(</span><span class="n">store_path</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_determine_store_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store_path</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">store_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">store_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_determine_store_path</span><span class="p">(</span><span class="n">store_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">store_path</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">checkpoint_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_path</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_determine_checkpoint_path</span><span class="p">(</span>
+                <span class="n">checkpoint_path</span><span class="p">,</span> <span class="n">store_path</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_path</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">_determine_store_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="sd">"""Verifies that the store path is a valid path that exists and is normalizable, returns the normalized path if valid.</span>
 <span class="sd">        Raises `FileNotFoundError` if the normalized store path does not exist.</span>
 
 <span class="sd">        :param store_path: The store path to verify and normalize.</span>
 <span class="sd">        :type store_path: str</span>
 <span class="sd">        :raises FileNotFoundError: The store path does not exist on the system.</span>
-<span class="sd">        :return: The :class:`Path` object of the store on the system.</span>
-<span class="sd">        :rtype: :class:`Path`</span>
+<span class="sd">        :return: The :class:`pathlib.Path` object of the store on the system.</span>
+<span class="sd">        :rtype: :class:`pathlib.Path`</span>
 <span class="sd">        """</span>
         <span class="n">store_path_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_store_path</span><span class="p">(</span><span class="n">store_path</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">store_path_n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">store_path_n</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">"Using existing store path: '</span><span class="si">{</span><span class="n">store_path_n</span><span class="si">}</span><span class="s2">' for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span>
             <span class="p">)</span>
             <span class="k">return</span> <span class="n">store_path_n</span>
-        <span class="k">elif</span> <span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">store_path_n</span><span class="p">)</span> <span class="ow">or</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">store_path_n</span><span class="p">)):</span>
+        <span class="k">elif</span> <span class="n">store_path_n</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="ow">or</span> <span class="n">store_path_n</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                 <span class="sa">f</span><span class="s2">"Creating store in path: '</span><span class="si">{</span><span class="n">store_path_n</span><span class="si">}</span><span class="s2">' for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span>
             <span class="p">)</span>
@@ -257,10 +276,44 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_store_path</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">store_path</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">store_name</span><span class="si">}</span><span class="s2">.json"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">FileNotFoundError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"Store path: </span><span class="si">{</span><span class="n">store_path_n</span><span class="si">}</span><span class="s2"> does not exist for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span>
+                <span class="sa">f</span><span class="s2">"Store path: '</span><span class="si">{</span><span class="n">store_path_n</span><span class="si">}</span><span class="s2">' does not exist for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span>
             <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_normalize_store_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store_path</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_determine_checkpoint_path</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">store_path</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+        <span class="sd">"""Returns the path to where the checkpoint for the runner should be stored if it was enabled</span>
+<span class="sd">        By default it will place next to the store path named as `[RUNNER_ID]_CHECKPOINT.json`</span>
+
+<span class="sd">        :param checkpoint_path: The checkpoint path if provided</span>
+<span class="sd">        :type checkpoint_path: Union[str, None]</span>
+<span class="sd">        :param store_path: The store path to base the checkpoint path on.</span>
+<span class="sd">        :type store_path: str</span>
+<span class="sd">        :return: The :class:`pathlib.Path` object of the checkpoint on the system.</span>
+<span class="sd">        :rtype: :class:`pathlib.Path`</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="n">checkpoint_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">path_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_store_path</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">path_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_store_path</span><span class="p">(</span><span class="n">store_path</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">path_n</span><span class="o">.</span><span class="n">suffix</span><span class="p">:</span>
+            <span class="n">checkpoint_path_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_store_path</span><span class="p">(</span><span class="n">path_n</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">path_n</span><span class="o">.</span><span class="n">is_dir</span><span class="p">()</span> <span class="ow">or</span> <span class="n">path_n</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="n">checkpoint_path_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_store_path</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">path_n</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">_CHECKPOINT.json"</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">checkpoint_path_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_normalize_store_path</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">path_n</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">_CHECKPOINT.json"</span>
+            <span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"Creating checkpoint at: '</span><span class="si">{</span><span class="n">checkpoint_path_n</span><span class="si">}</span><span class="s2">' for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">checkpoint_path_n</span>
+
+    <span class="k">def</span> <span class="nf">_normalize_store_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">store_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="sd">"""Normalizes the path to the store by using the :class:`Path` object.</span>
 
 <span class="sd">        :param store_path: The path to the store to normalize.</span>
@@ -271,8 +324,9 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">store_path_n</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">store_path</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">fatal</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to normalize path due to unexpected error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-            <span class="k">raise</span> <span class="n">e</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">fatal</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Failed to normalize path due to unexpected error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="n">e</span>
+            <span class="p">)</span>
 
         <span class="k">return</span> <span class="n">store_path_n</span></div>
 
@@ -288,8 +342,13 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">daemon_config</span><span class="p">:</span> <span class="n">TridentDataDaemonConfig</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span> <span class="o">=</span> <span class="n">daemon_config</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">store_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_store</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">run_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_run_index</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">store_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_store</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_run_index</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">store_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_index</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span>
+
         <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">"Trident data daemon initialized for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span>
         <span class="p">)</span>
@@ -331,8 +390,29 @@
                 <span class="n">store_obj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">store_data</span><span class="p">))</span>
                 <span class="n">store_obj</span><span class="o">.</span><span class="n">truncate</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Failed to write to store: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Failed to write to store: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="si">}</span><span class="s2">' for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">,</span>
+                <span class="n">exc_info</span><span class="o">=</span><span class="n">e</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TridentDataDaemon.create_state_checkpoint"><a class="viewcode-back" href="../../../../trident/lib/daemon.html#trident.lib.daemon.data_storage.TridentDataDaemon.create_state_checkpoint">[docs]</a>    <span class="k">def</span> <span class="nf">create_state_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+        <span class="sd">"""Creates the checkpoint representing the current state of the plugin and stores it in the path given by `checkpoint_path` in :class:`TridentDataDaemonConfig`"""</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"Writing to checkpoint at path: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">checkpoint_path</span><span class="si">}</span><span class="s2">' for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span>
+        <span class="p">)</span>
+
+        <span class="n">_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_state</span>
+        <span class="k">if</span> <span class="n">_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="s2">"r+"</span><span class="p">)</span> <span class="k">as</span> <span class="n">checkpoint_obj</span><span class="p">:</span>
+                    <span class="n">checkpoint_obj</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">checkpoint_obj</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">_state</span><span class="p">))</span>
+                    <span class="n">checkpoint_obj</span><span class="o">.</span><span class="n">truncate</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">fatal</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">"Failed to write to checkpoint: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">checkpoint_path</span><span class="si">}</span><span class="s2">' for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">,</span>
+                    <span class="n">exc_info</span><span class="o">=</span><span class="n">e</span><span class="p">,</span>
+                <span class="p">)</span></div>
 
 <div class="viewcode-block" id="TridentDataDaemon.merge_store_data"><a class="viewcode-back" href="../../../../trident/lib/daemon.html#trident.lib.daemon.data_storage.TridentDataDaemon.merge_store_data">[docs]</a>    <span class="k">def</span> <span class="nf">merge_store_data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">"""Merges the store data with the existing store data available in the written store.</span>
@@ -362,7 +442,28 @@
             <span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">e</span></div>
+            <span class="n">logger</span><span class="o">.</span><span class="n">fatal</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Failed to read state from store path: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">checkpoint_path</span><span class="si">}</span><span class="s2">' for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">,</span>
+                <span class="n">exc_info</span><span class="o">=</span><span class="n">e</span><span class="p">,</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="TridentDataDaemon.load_state_checkpoint"><a class="viewcode-back" href="../../../../trident/lib/daemon.html#trident.lib.daemon.data_storage.TridentDataDaemon.load_state_checkpoint">[docs]</a>    <span class="k">def</span> <span class="nf">load_state_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="sd">"""Load the checkpoint state for the current plugin from the path given by `checkpoint_path` in :class:`TridentDataDaemonConfig`"""</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"Reading from the checkpoint at path: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">checkpoint_path</span><span class="si">}</span><span class="s2">' for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span>
+        <span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">checkpoint_path</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">checkpoint_obj</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">checkpoint_obj</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Failed to read state from checkpoint path: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">checkpoint_path</span><span class="si">}</span><span class="s2">' for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">,</span>
+                <span class="n">exc_info</span><span class="o">=</span><span class="n">e</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="p">{}</span></div>
 
     <span class="k">def</span> <span class="nf">_initialize_store</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">]]]:</span>
         <span class="sd">"""Initialize the store structure if the store does not exist, otherwise read the existing store data and return.</span>
@@ -386,6 +487,10 @@
             <span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Failed to initialize store: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="si">}</span><span class="s2">' for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">,</span>
+                <span class="n">exc_info</span><span class="o">=</span><span class="n">e</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span>
 
     <span class="k">def</span> <span class="nf">_update_store_content</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">result</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
@@ -412,7 +517,8 @@
             <span class="k">raise</span> <span class="n">e</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"Failed to read from store: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="si">}</span><span class="s2">'"</span>
+                <span class="sa">f</span><span class="s2">"Failed to read from store: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="si">}</span><span class="s2">' for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">,</span>
+                <span class="n">exc_info</span><span class="o">=</span><span class="n">e</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span>
 
@@ -436,7 +542,8 @@
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">store_data</span><span class="p">[</span><span class="s2">"runners"</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"Failed to get runner content for store: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="si">}</span><span class="s2">'"</span>
+                <span class="sa">f</span><span class="s2">"Failed to get runner content for store: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="si">}</span><span class="s2">' for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">,</span>
+                <span class="n">exc_info</span><span class="o">=</span><span class="n">e</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span>
 
@@ -451,7 +558,8 @@
             <span class="k">return</span> <span class="n">content</span><span class="p">[</span><span class="s2">"results"</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"Failed to get result for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span>
+                <span class="sa">f</span><span class="s2">"Failed to get result for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">,</span>
+                <span class="n">exc_info</span><span class="o">=</span><span class="n">e</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span>
 
@@ -470,7 +578,8 @@
             <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">max</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">content</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">"Failed to get the run index for store: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="si">}</span><span class="s2">'"</span>
+                <span class="sa">f</span><span class="s2">"Failed to get the run index for store: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="si">}</span><span class="s2">' for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">,</span>
+                <span class="n">exc_info</span><span class="o">=</span><span class="n">e</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span>
 
@@ -485,6 +594,10 @@
             <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">store_obj</span><span class="p">:</span>
                 <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">store_obj</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"Failed to get the store data at: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">store_path</span><span class="si">}</span><span class="s2">' for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">runner</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span><span class="p">,</span>
+                <span class="n">exc_info</span><span class="o">=</span><span class="n">e</span><span class="p">,</span>
+            <span class="p">)</span>
             <span class="k">raise</span> <span class="n">e</span></div>
 </pre></div>
       </article>

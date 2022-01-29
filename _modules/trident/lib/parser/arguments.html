@@ -231,6 +231,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_collect_optional_arguments</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_collect_plugin_arguments</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_collect_storage_arguments</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_collect_checkpoint_arguments</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_collect_required_arguments</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_collect_optional_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
@@ -296,6 +297,18 @@
             <span class="s2">"--global-store"</span><span class="p">,</span>
             <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
             <span class="n">help</span><span class="o">=</span><span class="s2">"Use a global store for all runners."</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_collect_checkpoint_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+        <span class="sd">"""Define the arguments used to defined the checkpoint behaviour."""</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">"Trident Checkpoint"</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span>
+            <span class="s2">"-c:p"</span><span class="p">,</span>
+            <span class="s2">"--checkpoint-path"</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+            <span class="n">metavar</span><span class="o">=</span><span class="s2">"PATH"</span><span class="p">,</span>
+            <span class="n">help</span><span class="o">=</span><span class="s2">"Path to where on the filesystem to store the Trident checkpoint."</span><span class="p">,</span>
+            <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_collect_required_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>

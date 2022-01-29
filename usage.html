@@ -281,6 +281,16 @@
 </dl>
 </li>
 </ul>
+<p><strong>Checkpoint Configuration</strong></p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">-c:p</span></code>, <code class="docutils literal notranslate"><span class="pre">--checkpoint-path</span></code></dt><dd><ul>
+<li><p>Define the path to where the checkpoints are located. (Default: <code class="docutils literal notranslate"><span class="pre">data</span></code>)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
 </section>
 <section id="configuration">
 <h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
@@ -521,6 +531,17 @@
 <span class="linenos">38</span><span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
+<p>The <code class="docutils literal notranslate"><span class="pre">checkpoint</span></code> section allows for the following arguments:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">checkpoint_path</span></code></dt><dd><ul>
+<li><p>Specify the checkpoint path to store and load states from, if not provided the checkpoint path will be determined from the store path.</p></li>
+<li><p>By not specifiying a <code class="docutils literal notranslate"><span class="pre">checkpoint_path</span></code> and not implementing the state methods then no checkpoint will be created.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
 <p>The <code class="docutils literal notranslate"><span class="pre">notification</span></code> section allows for the following arguments for <code class="docutils literal notranslate"><span class="pre">HTTP</span></code> notifications.</p>
 <ul class="simple">
 <li><dl class="simple">
@@ -745,6 +766,29 @@
 <p>By default Trident tries to pass the <code class="docutils literal notranslate"><span class="pre">thread_event</span></code> parameter to the plugin, this is of type <code class="docutils literal notranslate"><span class="pre">Event</span></code> from the <code class="docutils literal notranslate"><span class="pre">threading</span></code> library and is used to allow the system to halt the execution of Trident with keyboard interrupt. Note that the plugin needs to implement periodic checks of this variable using <code class="docutils literal notranslate"><span class="pre">thread_event.is_set()</span></code> in order for this to work. If the plugin does not implement the check then if Trident is passed an interrupt by the system then Trident will not be able to exit until the plugin operations finish.</p>
 <p>Trident allows the user to pass any initial parameters to the plugin by defining the <code class="docutils literal notranslate"><span class="pre">args</span></code> key in the plugin configuration followed by the value. Trident will try to pass each variable found in the <code class="docutils literal notranslate"><span class="pre">args</span></code> section of the plugin configuration to the <code class="docutils literal notranslate"><span class="pre">execute_plugin</span></code> method, so the method needs to have these parameters defined as well.</p>
 </section>
+<section id="creating-and-loading-states">
+<h2>Creating and Loading States<a class="headerlink" href="#creating-and-loading-states" title="Permalink to this headline">¶</a></h2>
+<p>When running plugins that take some time to run it might be necessary to interrupt the execution sometimes and continue later. Therefore <cite>Trident</cite> supports saving and loading plugin states using checkpoints similar to data stores. The checkpoints are saved as <cite>JSON</cite> but the format is up to the author of the plugin as they need to decide when to save and load the state.</p>
+<p>In order to save and load the states of the plugin the plugin needs to implement the <cite>getter</cite> and <cite>setter</cite> for <cite>plugin_state</cite> as described in the below minimal example.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="k">class</span> <span class="nc">FindFile</span><span class="p">:</span>
+<span class="linenos"> 2</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos"> 3</span>        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="linenos"> 4</span>
+<span class="linenos"> 5</span>    <span class="nd">@property</span>
+<span class="linenos"> 6</span>    <span class="k">def</span> <span class="nf">plugin_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos"> 7</span>        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span>    <span class="nd">@plugin_state</span><span class="o">.</span><span class="n">setter</span>
+<span class="linenos">10</span>    <span class="k">def</span> <span class="nf">plugin_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+<span class="linenos">11</span>        <span class="bp">self</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">state</span>
+<span class="linenos">12</span>
+<span class="linenos">13</span>    <span class="k">def</span> <span class="nf">execute_plugin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_event</span><span class="p">,</span> <span class="n">file_name</span><span class="p">):</span>
+<span class="linenos">14</span>        <span class="c1"># Find the file with the name file_name on the system, the starting point is in self._state</span>
+<span class="linenos">15</span>        <span class="o">...</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">getter</span></code> (<code class="docutils literal notranslate"><span class="pre">property</span></code>) and the <code class="docutils literal notranslate"><span class="pre">setter</span></code> (<code class="docutils literal notranslate"><span class="pre">plugin_state.setter</span></code>) can be implemented in any way the author wants as long as the <code class="docutils literal notranslate"><span class="pre">getter</span></code> returns a <code class="docutils literal notranslate"><span class="pre">JSON</span></code> serializable object.</p>
+</section>
 </section>
 
       </article>
@@ -807,6 +851,7 @@
 <li><a class="reference internal" href="#developing-plugins">Developing Plugins</a></li>
 <li><a class="reference internal" href="#plugin-library">Plugin Library</a></li>
 <li><a class="reference internal" href="#variables">Variables</a></li>
+<li><a class="reference internal" href="#creating-and-loading-states">Creating and Loading States</a></li>
 </ul>
 </li>
 </ul>

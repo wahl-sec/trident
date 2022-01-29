@@ -199,7 +199,7 @@
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">AnyStr</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Any</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
 
@@ -215,12 +215,12 @@
 <span class="sd">    :type config_file_section: str</span>
 <span class="sd">    """</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_file_path</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">config_file_section</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config_file_section</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_setup_parser</span><span class="p">(</span><span class="n">config_file_path</span><span class="p">,</span> <span class="n">config_file_section</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_setup_parser</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">config_file_path</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">,</span> <span class="n">config_file_section</span><span class="p">:</span> <span class="n">AnyStr</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">AnyStr</span><span class="p">]:</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">config_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config_file_section</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
         <span class="sd">"""Setup the config file parser from the given path and section.</span>
 
 <span class="sd">        :param config_file_path: The path to the config file on the host.</span>
@@ -252,13 +252,13 @@
 
         <span class="k">return</span> <span class="n">data</span><span class="p">[</span><span class="n">config_file_section</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="nf">_normalize_config_file_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_file_path</span><span class="p">:</span> <span class="n">AnyStr</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_normalize_config_file_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
         <span class="sd">"""Normalize the path to the config file using the convention of the platform that Trident is run on.</span>
 
 <span class="sd">        :param config_file_path: The path to the config file path to normalize.</span>
 <span class="sd">        :type config_file_path: str</span>
 <span class="sd">        :return: The platform normalized path.</span>
-<span class="sd">        :rtype: :class:`Path`</span>
+<span class="sd">        :rtype: :class:`pathlib.Path`</span>
 <span class="sd">        """</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">normalized_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">config_file_path</span><span class="p">)</span>
@@ -269,8 +269,8 @@
         <span class="k">return</span> <span class="n">normalized_path</span>
 
     <span class="k">def</span> <span class="nf">_convert_data_section</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">config_data_section</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">AnyStr</span><span class="p">]]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">AnyStr</span><span class="p">]]:</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">config_data_section</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="nb">str</span><span class="p">]]:</span>
         <span class="sd">"""Convert all the argument keys in the config dictionary to lowercase.</span>
 <span class="sd">        Ignores the plugin arguments keys since the arguments might be meant to be in any other case.</span>
 
@@ -293,9 +293,7 @@
 
         <span class="k">return</span> <span class="n">_convert</span><span class="p">(</span><span class="n">config_data_section</span><span class="p">,</span> <span class="p">{})</span>
 
-    <span class="k">def</span> <span class="nf">_verify_config_file_section</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">config_section_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">AnyStr</span><span class="p">]</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">_verify_config_file_section</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_section_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="sd">"""Verify the validity of the keys given in the config file section.</span>
 <span class="sd">        Ensures that the required arguments are provided in the section.</span>
 

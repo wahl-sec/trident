@@ -252,27 +252,29 @@
 <span class="sd">    :type thread_event: :class:`threading.Event`</span>
 <span class="sd">    """</span>
 
-    <span class="n">plugin_path</span><span class="p">:</span> <span class="n">AnyStr</span>
-    <span class="n">plugin_name</span><span class="p">:</span> <span class="n">AnyStr</span>
-    <span class="n">plugin_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
+    <span class="n">plugin_path</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">plugin_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">plugin_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span>
     <span class="n">plugin_module</span><span class="p">:</span> <span class="nb">object</span>
     <span class="n">plugin_instance</span><span class="p">:</span> <span class="nb">object</span>
-    <span class="n">resource_queues</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">]]</span>
+    <span class="n">resource_queues</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
     <span class="n">thread_event</span><span class="p">:</span> <span class="n">Event</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">plugin_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">plugin_name</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
-        <span class="n">plugin_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">store_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">runner_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">notification_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
-        <span class="n">resource_queues</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">AnyStr</span><span class="p">]],</span>
+        <span class="n">plugin_args</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">store_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">checkpoint_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">runner_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">notification_config</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span>
+        <span class="n">resource_queues</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plugin_path</span> <span class="o">=</span> <span class="n">plugin_path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">plugin_args</span> <span class="o">=</span> <span class="n">plugin_args</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">store_config</span> <span class="o">=</span> <span class="n">store_config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">checkpoint_config</span> <span class="o">=</span> <span class="n">checkpoint_config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">notification_config</span> <span class="o">=</span> <span class="n">notification_config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">resource_queues</span> <span class="o">=</span> <span class="n">resource_queues</span>
 
@@ -354,6 +356,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_data_daemon</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">notification_daemon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_initialize_notification_daemon</span><span class="p">()</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Trident runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">' initialized"</span><span class="p">)</span>
 
 <div class="viewcode-block" id="TridentRunner.start_runner"><a class="viewcode-back" href="../../../../trident/lib/runner.html#trident.lib.runner.trident.TridentRunner.start_runner">[docs]</a>    <span class="k">def</span> <span class="nf">start_runner</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
         <span class="sd">"""Start the initialized :class:`TridentRunner` by calling the plugin method `execute_plugin` with the provided arguments.</span>
@@ -364,6 +367,23 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="p">,</span> <span class="s2">"execute_plugin"</span><span class="p">):</span>
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Entry method 'execute_plugin' not defined."</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="p">,</span> <span class="s2">"plugin_state"</span><span class="p">):</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="n">plugin_state</span><span class="o">.</span><span class="n">fset</span>
+                    <span class="ow">is</span> <span class="kc">None</span>
+                <span class="p">):</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">"Checkpoint data: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">checkpoint_path</span><span class="si">}</span><span class="s2">' was found for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">' but no load state method was defined"</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">load_state_checkpoint</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="n">_state</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                            <span class="sa">f</span><span class="s2">"Checkpoint data: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">daemon_config</span><span class="o">.</span><span class="n">checkpoint_path</span><span class="si">}</span><span class="s2">' was empty for runner: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span>
+                        <span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">runner_state</span> <span class="o">=</span> <span class="n">_state</span>
 
             <span class="c1"># The thread event is used to allow the daemon to stop already started plugins.</span>
             <span class="k">if</span> <span class="p">(</span>
@@ -398,6 +418,27 @@
                 <span class="sa">f</span><span class="s2">"No results were returned from the plugin: '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="si">}</span><span class="s2">'"</span>
             <span class="p">)</span></div>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">runner_state</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">Any</span><span class="p">]]:</span>
+        <span class="sd">"""Get the current runner state used to restore the runner to a previous run of the plugin.</span>
+
+<span class="sd">        :return: The state for the runner if it exists, otherwise `None`</span>
+<span class="sd">        :rtype: Optional[Dict[Union[str, int], Any]]</span>
+<span class="sd">        """</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="p">,</span> <span class="s2">"plugin_state"</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="o">.</span><span class="n">plugin_state</span>
+
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@runner_state</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">runner_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="n">Any</span><span class="p">]):</span>
+        <span class="sd">"""Set the initial state for a runner based on previous checkpoint data.</span>
+
+<span class="sd">        :param state: The state to load in the runner as an initial state</span>
+<span class="sd">        :type state: Dict[Union[str, int], Any]</span>
+<span class="sd">        """</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">plugin_instance</span><span class="o">.</span><span class="n">plugin_state</span> <span class="o">=</span> <span class="n">state</span>
+
     <span class="k">def</span> <span class="nf">_initialize_data_daemon</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TridentDataDaemon</span><span class="p">:</span>
         <span class="sd">"""Initialize the :class:`TridentDataDaemon` connected to this runner from the :class:`TridentDataDaemonConfig`.</span>
 
@@ -405,17 +446,37 @@
 <span class="sd">        :return: The initialized :class:`TridentDataDaemon`.</span>
 <span class="sd">        :rtype: :class:`TridentDataDaemon`</span>
 <span class="sd">        """</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">store_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"no_store"</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">store_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">"no_store"</span>
+        <span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">checkpoint_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"no_checkpoint"</span><span class="p">):</span>
             <span class="k">return</span> <span class="kc">None</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">store_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"global_store"</span><span class="p">):</span>
-            <span class="n">store_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">store_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"global_store"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">store_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">"no_store"</span>
+        <span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">store_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"no_store"</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">store_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"global_store"</span><span class="p">):</span>
+                <span class="n">store_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">store_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"global_store"</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">store_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">store_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"path_store"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">store_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">store_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"path_store"</span><span class="p">)</span>
+            <span class="n">store_path</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">checkpoint_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="s2">"no_checkpoint"</span>
+        <span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">checkpoint_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"no_checkpoint"</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">checkpoint_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"checkpoint_path"</span><span class="p">):</span>
+                <span class="n">checkpoint_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">runner_config</span><span class="o">.</span><span class="n">checkpoint_config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="s2">"checkpoint_path"</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">checkpoint_path</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">try</span><span class="p">:</span>
             <span class="n">trident_data_config</span> <span class="o">=</span> <span class="n">TridentDataDaemonConfig</span><span class="p">(</span>
-                <span class="n">runner</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">store_path</span><span class="o">=</span><span class="n">store_path</span><span class="p">,</span> <span class="n">store_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span>
+                <span class="n">runner</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span>
+                <span class="n">store_path</span><span class="o">=</span><span class="n">store_path</span><span class="p">,</span>
+                <span class="n">store_name</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">runner_id</span><span class="p">,</span>
+                <span class="n">checkpoint_path</span><span class="o">=</span><span class="n">checkpoint_path</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="k">return</span> <span class="n">TridentDataDaemon</span><span class="p">(</span><span class="n">daemon_config</span><span class="o">=</span><span class="n">trident_data_config</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
@@ -470,7 +531,8 @@
                 <span class="k">return</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">store_runner_result</span><span class="p">({</span><span class="n">result_index</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">store_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_daemon</span><span class="o">.</span><span class="n">store_runner_result</span><span class="p">({</span><span class="n">result_index</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">notification_daemon</span><span class="o">.</span><span class="n">send_notification</span><span class="p">(</span><span class="n">content</span><span class="o">=</span><span class="p">{</span><span class="n">result_index</span><span class="p">:</span> <span class="n">result</span><span class="p">})</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">e</span>
