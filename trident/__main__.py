@@ -276,6 +276,11 @@ def apply_runtime_arguments(
                 for k, v in vars(args).items()
                 if k in ["dont_store_on_error", "filter_results"] and v is not None
             },
+            "checkpoint": {
+                k: v
+                for k, v in vars(args).items()
+                if k in ["checkpoint_path"] and v is not None
+            },
         },
         config,
     )

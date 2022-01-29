@@ -53,6 +53,7 @@ class TridentDataDaemonConfig:
         else:
             self.store_path = None
 
+        print(checkpoint_path)
         if checkpoint_path is not None or self.store_path:
             self.checkpoint_path = self._determine_checkpoint_path(
                 checkpoint_path, store_path
@@ -108,10 +109,8 @@ class TridentDataDaemonConfig:
             path_n = self._normalize_store_path(store_path)
 
         if path_n.suffix:
-            checkpoint_path_n = self._normalize_store_path(
-                f"{path_n.parent}/{self.runner.runner_id}_CHECKPOINT.json"
-            )
-        if path_n.is_dir() or path_n.exists():
+            checkpoint_path_n = self._normalize_store_path(path_n)
+        elif path_n.is_dir() or path_n.parent.exists():
             checkpoint_path_n = self._normalize_store_path(
                 f"{path_n}/{self.runner.runner_id}_CHECKPOINT.json"
             )

@@ -10,7 +10,7 @@ Parses and validates the required config file (JSON) passed to the program.
 import json
 from pathlib import Path
 
-from typing import Dict, Union, Any, AnyStr
+from typing import Dict, Union, Any
 
 import logging
 
@@ -26,12 +26,12 @@ class TridentConfigParser:
     :type config_file_section: str
     """
 
-    def __init__(self, config_file_path: AnyStr, config_file_section: AnyStr):
+    def __init__(self, config_file_path: str, config_file_section: str):
         self.args = self._setup_parser(config_file_path, config_file_section)
 
     def _setup_parser(
-        self, config_file_path: AnyStr, config_file_section: AnyStr
-    ) -> Dict[AnyStr, AnyStr]:
+        self, config_file_path: str, config_file_section: str
+    ) -> Dict[str, str]:
         """Setup the config file parser from the given path and section.
 
         :param config_file_path: The path to the config file on the host.
@@ -63,13 +63,13 @@ class TridentConfigParser:
 
         return data[config_file_section]
 
-    def _normalize_config_file_path(self, config_file_path: AnyStr) -> Path:
+    def _normalize_config_file_path(self, config_file_path: str) -> Path:
         """Normalize the path to the config file using the convention of the platform that Trident is run on.
 
         :param config_file_path: The path to the config file path to normalize.
         :type config_file_path: str
         :return: The platform normalized path.
-        :rtype: :class:`Path`
+        :rtype: :class:`pathlib.Path`
         """
         try:
             normalized_path = Path(config_file_path)
@@ -80,8 +80,8 @@ class TridentConfigParser:
         return normalized_path
 
     def _convert_data_section(
-        self, config_data_section: Dict[AnyStr, Union[Dict[AnyStr, Any], AnyStr]]
-    ) -> Dict[AnyStr, Union[Dict[AnyStr, Any], AnyStr]]:
+        self, config_data_section: Dict[str, Union[Dict[str, Any], str]]
+    ) -> Dict[str, Union[Dict[str, Any], str]]:
         """Convert all the argument keys in the config dictionary to lowercase.
         Ignores the plugin arguments keys since the arguments might be meant to be in any other case.
 
@@ -104,9 +104,7 @@ class TridentConfigParser:
 
         return _convert(config_data_section, {})
 
-    def _verify_config_file_section(
-        self, config_section_args: Dict[AnyStr, AnyStr]
-    ) -> bool:
+    def _verify_config_file_section(self, config_section_args: Dict[str, str]) -> bool:
         """Verify the validity of the keys given in the config file section.
         Ensures that the required arguments are provided in the section.
 
