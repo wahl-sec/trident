@@ -93,6 +93,11 @@ _Storage Configuration_
 -   `-s:g`, `--global-store`
     -   Define a path to a store used by all plugins. (Default: `None`)
 
+_Checkpoint Configuration_
+
+-   `-c:p`, `--checkpoint-path`
+    -   Define the path to where the checkpoints are located. (Default: `data`)
+
 #### **Configuration**
 
 Configuration of `Trident` is made through the configuration file, by default located at `config/trident.json`.
@@ -324,6 +329,12 @@ Example: Store values for all plugins in a global store except one runner that d
 }
 ```
 
+The `checkpoint` section allows for the following arguments:
+
+-   `checkpoint_path`
+    -   Specify the checkpoint path to store and load states from, if not provided the checkpoint path will be determined from the store path.
+    -   By not specifiying a `checkpoint_path` and not implementing the state methods then no checkpoint will be created.
+
 The `notification` section allows for the following arguments for `HTTP` notifications.
 
 -   `destination`
@@ -487,3 +498,29 @@ The library tries to implement each functionality using primarily generators to 
 By default `Trident` tries to pass the `thread_event` parameter to the plugin, this is of type `Event` from the `threading` library and is used to allow the system to halt the execution of `Trident` with keyboard interrupt. Note that the plugin needs to implement periodic checks of this variable using `thread_event.is_set()` in order for this to work. If the plugin does not implement the check then if `Trident` is passed an interrupt by the system then `Trident` will not be able to exit until the plugin operations finish.
 
 `Trident` allows the user to pass any initial parameters to the plugin by defining the `args` key in the plugin configuration followed by the value. `Trident` will try to pass each variable found in the `args` section of the plugin configuration to the `execute_plugin` method, so the method needs to have these parameters defined as well.
+
+#### **Creating and Loading States**
+
+When running plugins that take some time to run it might be necessary to interrupt the execution sometimes and continue later. Therefore `Trident` supports saving and loading plugin states using checkpoints similar to data stores. The checkpoints are saved as `JSON` but the format is up to the author of the plugin as they need to decide when to save and load the state.
+
+In order to save and load the states of the plugin the plugin needs to implement the `getter` and `setter` for `plugin_state` as described in the below minimal example.
+
+```python
+class FindFile:
+    def __init__(self):
+        self._state = None
+
+    @property
+    def plugin_state(self):
+        return self._state
+
+    @plugin_state.setter
+    def plugin_state(self, state):
+        self._state = state
+
+    def execute_plugin(self, thread_event, file_name):
+        # Find the file with the name file_name on the system, the starting point is in self._state
+        ...
+```
+
+The `getter` (`property`) and the `setter` (`plugin_state.setter`) can be implemented in any way the author wants as long as the `getter` returns a `JSON` serializable object.

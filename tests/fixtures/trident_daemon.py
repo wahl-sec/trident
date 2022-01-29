@@ -22,6 +22,7 @@ def trident_daemon_sync(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 }
             },
@@ -51,6 +52,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {"checkpoint_path": tmpdir},
                         },
                     },
                     "find_file": {
@@ -65,6 +67,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {"checkpoint_path": tmpdir},
                         },
                     },
                     "remove_files": {
@@ -79,6 +82,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {"checkpoint_path": tmpdir},
                         },
                     },
                     "move_files": {
@@ -96,6 +100,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {"checkpoint_path": tmpdir},
                         },
                     },
                     "copy_files": {
@@ -113,6 +118,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {"checkpoint_path": tmpdir},
                         },
                     },
                     "update_file_mode": {
@@ -127,6 +133,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {"checkpoint_path": tmpdir},
                         },
                     },
                     "create_files": {
@@ -144,6 +151,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {"checkpoint_path": tmpdir},
                         },
                     },
                     "archive_files": {
@@ -162,6 +170,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {"checkpoint_path": tmpdir},
                         },
                     },
                     "unarchive_files": {
@@ -179,6 +188,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {"checkpoint_path": tmpdir},
                         },
                     },
                     "match_file_content": {
@@ -196,6 +206,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {"checkpoint_path": tmpdir},
                         },
                     },
                     "create_executable_file": {
@@ -213,6 +224,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {"checkpoint_path": tmpdir},
                         },
                     },
                     "update_executable_file_mode": {
@@ -230,6 +242,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {"checkpoint_path": tmpdir},
                         },
                     },
                     "execute_file": {
@@ -248,6 +261,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {"checkpoint_path": tmpdir},
                         },
                     },
                     "find_filesystems": {
@@ -262,6 +276,7 @@ def trident_daemon_files_sync(request, tmpdir):
                             },
                             "runner": {"dont_store_on_error": False},
                             "notification": {},
+                            "checkpoint": {"checkpoint_path": tmpdir},
                         },
                     },
                 }.items()
@@ -287,6 +302,7 @@ def trident_daemon_async(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
                 "test1": {
@@ -299,6 +315,7 @@ def trident_daemon_async(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
                 "test2": {
@@ -311,6 +328,7 @@ def trident_daemon_async(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
                 "test3": {
@@ -323,6 +341,7 @@ def trident_daemon_async(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
                 "test4": {
@@ -335,6 +354,7 @@ def trident_daemon_async(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
             },
@@ -358,6 +378,7 @@ def trident_daemon_sync_global(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 }
             },
@@ -381,6 +402,7 @@ def trident_daemon_async_global(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
                 "test1": {
@@ -393,6 +415,7 @@ def trident_daemon_async_global(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
                 "test2": {
@@ -405,6 +428,7 @@ def trident_daemon_async_global(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
                 "test3": {
@@ -417,6 +441,7 @@ def trident_daemon_async_global(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
                 "test4": {
@@ -429,6 +454,7 @@ def trident_daemon_async_global(tmpdir):
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
             },
@@ -437,7 +463,7 @@ def trident_daemon_async_global(tmpdir):
 
 
 @pytest.fixture
-def trident_daemon_sync_no_store():
+def trident_daemon_sync_no_store(tmpdir):
     return TridentDaemon(
         TridentDaemonConfig(
             workers=1,
@@ -452,6 +478,7 @@ def trident_daemon_sync_no_store():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 }
             },
@@ -460,7 +487,7 @@ def trident_daemon_sync_no_store():
 
 
 @pytest.fixture
-def trident_daemon_async_no_store():
+def trident_daemon_async_no_store(tmpdir):
     return TridentDaemon(
         TridentDaemonConfig(
             workers=5,
@@ -475,6 +502,7 @@ def trident_daemon_async_no_store():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
                 "test1": {
@@ -487,6 +515,7 @@ def trident_daemon_async_no_store():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
                 "test2": {
@@ -499,6 +528,7 @@ def trident_daemon_async_no_store():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
                 "test3": {
@@ -511,6 +541,7 @@ def trident_daemon_async_no_store():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
                 "test4": {
@@ -523,6 +554,7 @@ def trident_daemon_async_no_store():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
             },
@@ -531,7 +563,7 @@ def trident_daemon_async_no_store():
 
 
 @pytest.fixture
-def trident_daemon_invalid_argument_store_sync():
+def trident_daemon_invalid_argument_store_sync(tmpdir):
     return TridentDaemon(
         TridentDaemonConfig(
             workers=1,
@@ -546,6 +578,7 @@ def trident_daemon_invalid_argument_store_sync():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 }
             },
@@ -554,7 +587,7 @@ def trident_daemon_invalid_argument_store_sync():
 
 
 @pytest.fixture
-def trident_daemon_invalid_argument_store_async():
+def trident_daemon_invalid_argument_store_async(tmpdir):
     return TridentDaemon(
         TridentDaemonConfig(
             workers=5,
@@ -569,6 +602,7 @@ def trident_daemon_invalid_argument_store_async():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
                 "test1": {
@@ -581,6 +615,7 @@ def trident_daemon_invalid_argument_store_async():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
                 "test2": {
@@ -593,6 +628,7 @@ def trident_daemon_invalid_argument_store_async():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
                 "test3": {
@@ -605,6 +641,7 @@ def trident_daemon_invalid_argument_store_async():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
                 "test4": {
@@ -617,6 +654,7 @@ def trident_daemon_invalid_argument_store_async():
                         },
                         "runner": {"dont_store_on_error": False},
                         "notification": {},
+                        "checkpoint": {"checkpoint_path": tmpdir},
                     },
                 },
             },

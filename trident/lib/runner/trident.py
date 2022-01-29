@@ -63,27 +63,29 @@ class TridentRunnerConfig:
     :type thread_event: :class:`threading.Event`
     """
 
-    plugin_path: AnyStr
-    plugin_name: AnyStr
-    plugin_args: Dict[AnyStr, Any]
+    plugin_path: str
+    plugin_name: str
+    plugin_args: Dict[str, Any]
     plugin_module: object
     plugin_instance: object
-    resource_queues: Dict[AnyStr, List[AnyStr]]
+    resource_queues: Dict[str, List[str]]
     thread_event: Event
 
     def __init__(
         self,
         plugin_path: str,
         plugin_name: Optional[str],
-        plugin_args: Dict[AnyStr, Any],
-        store_config: Dict[AnyStr, Any],
-        runner_config: Dict[AnyStr, Any],
-        notification_config: Dict[AnyStr, Any],
-        resource_queues: Dict[AnyStr, List[AnyStr]],
+        plugin_args: Dict[str, Any],
+        store_config: Dict[str, Any],
+        checkpoint_config: Dict[str, Any],
+        runner_config: Dict[str, Any],
+        notification_config: Dict[str, Any],
+        resource_queues: Dict[str, List[str]],
     ):
         self.plugin_path = plugin_path
         self.plugin_args = plugin_args
         self.store_config = store_config
+        self.checkpoint_config = checkpoint_config
         self.notification_config = notification_config
         self.resource_queues = resource_queues
 
@@ -165,6 +167,7 @@ class TridentRunner:
 
         self.data_daemon = self._initialize_data_daemon()
         self.notification_daemon = self._initialize_notification_daemon()
+        logger.debug(f"Trident runner: '{self.runner_id}' initialized")
 
     def start_runner(self) -> NoReturn:
         """Start the initialized :class:`TridentRunner` by calling the plugin method `execute_plugin` with the provided arguments.
@@ -175,6 +178,23 @@ class TridentRunner:
         try:
             if not hasattr(self.runner_config.plugin_instance, "execute_plugin"):
                 raise RuntimeError("Entry method 'execute_plugin' not defined.")
+
+            if hasattr(self.runner_config.plugin_instance, "plugin_state"):
+                if (
+                    self.runner_config.plugin_instance.__class__.plugin_state.fset
+                    is None
+                ):
+                    logger.warning(
+                        f"Checkpoint data: '{self.data_daemon.daemon_config.checkpoint_path}' was found for runner: '{self.runner_id}' but no load state method was defined"
+                    )
+                else:
+                    _state = self.data_daemon.load_state_checkpoint()
+                    if _state is None:
+                        logger.warning(
+                            f"Checkpoint data: '{self.data_daemon.daemon_config.checkpoint_path}' was empty for runner: '{self.runner_id}'"
+                        )
+                    else:
+                        self.runner_state = _state
 
             # The thread event is used to allow the daemon to stop already started plugins.
             if (
@@ -209,6 +229,27 @@ class TridentRunner:
                 f"No results were returned from the plugin: '{self.runner_id}'"
             )
 
+    @property
+    def runner_state(self) -> Optional[Dict[Union[str, int], Any]]:
+        """Get the current runner state used to restore the runner to a previous run of the plugin.
+
+        :return: The state for the runner if it exists, otherwise `None`
+        :rtype: Optional[Dict[Union[str, int], Any]]
+        """
+        if hasattr(self.runner_config.plugin_instance, "plugin_state"):
+            return self.runner_config.plugin_instance.plugin_state
+
+        return None
+
+    @runner_state.setter
+    def runner_state(self, state: Dict[Union[str, int], Any]):
+        """Set the initial state for a runner based on previous checkpoint data.
+
+        :param state: The state to load in the runner as an initial state
+        :type state: Dict[Union[str, int], Any]
+        """
+        self.runner_config.plugin_instance.plugin_state = state
+
     def _initialize_data_daemon(self) -> TridentDataDaemon:
         """Initialize the :class:`TridentDataDaemon` connected to this runner from the :class:`TridentDataDaemonConfig`.
 
@@ -216,17 +257,37 @@ class TridentRunner:
         :return: The initialized :class:`TridentDataDaemon`.
         :rtype: :class:`TridentDataDaemon`
         """
-        if self.runner_config.store_config.get("no_store"):
+        if self.runner_config.store_config.get(
+            "no_store"
+        ) and self.runner_config.checkpoint_config.get("no_checkpoint"):
             return None
 
-        if self.runner_config.store_config.get("global_store"):
-            store_path = self.runner_config.store_config.get("global_store")
+        if self.runner_config.store_config.get(
+            "no_store"
+        ) is None or not self.runner_config.store_config.get("no_store"):
+            if self.runner_config.store_config.get("global_store"):
+                store_path = self.runner_config.store_config.get("global_store")
+            else:
+                store_path = self.runner_config.store_config.get("path_store")
         else:
-            store_path = self.runner_config.store_config.get("path_store")
+            store_path = None
+
+        if self.runner_config.checkpoint_config.get(
+            "no_checkpoint"
+        ) is None or self.runner_config.checkpoint_config.get("no_checkpoint"):
+            if self.runner_config.checkpoint_config.get("checkpoint_path"):
+                checkpoint_path = self.runner_config.checkpoint_config.get(
+                    "checkpoint_path"
+                )
+            else:
+                checkpoint_path = None
 
         try:
             trident_data_config = TridentDataDaemonConfig(
-                runner=self, store_path=store_path, store_name=self.runner_id
+                runner=self,
+                store_path=store_path,
+                store_name=self.runner_id,
+                checkpoint_path=checkpoint_path,
             )
             return TridentDataDaemon(daemon_config=trident_data_config)
         except Exception as e:
@@ -281,7 +342,8 @@ class TridentRunner:
                 return
 
         try:
-            self.data_daemon.store_runner_result({result_index: result})
+            if self.data_daemon.store_data is not None:
+                self.data_daemon.store_runner_result({result_index: result})
             self.notification_daemon.send_notification(content={result_index: result})
         except Exception as e:
             raise e

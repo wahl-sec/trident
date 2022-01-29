@@ -58,14 +58,14 @@ def test_no_store_sync(trident_daemon_sync_no_store):
     trident_daemon_sync_no_store.start_all_runners()
     trident_daemon_sync_no_store.wait_for_runners()
     runner = next(iter(trident_daemon_sync_no_store._future_runners.values()))
-    assert runner.data_daemon is None
+    assert runner.data_daemon.daemon_config.store_path is None
 
 
 def test_no_store_async(trident_daemon_async_no_store):
     trident_daemon_async_no_store.start_all_runners()
     trident_daemon_async_no_store.wait_for_runners()
     runner = next(iter(trident_daemon_async_no_store._future_runners.values()))
-    assert runner.data_daemon is None
+    assert runner.data_daemon.daemon_config.store_path is None
 
 
 def test_invalid_store_arguments_sync(trident_daemon_invalid_argument_store_sync):
@@ -74,7 +74,7 @@ def test_invalid_store_arguments_sync(trident_daemon_invalid_argument_store_sync
     runner = next(
         iter(trident_daemon_invalid_argument_store_sync._future_runners.values())
     )
-    assert runner.data_daemon is None
+    assert runner.data_daemon.daemon_config.store_path is None
 
 
 def test_invalid_store_arguments_async(trident_daemon_invalid_argument_store_async):
@@ -83,4 +83,4 @@ def test_invalid_store_arguments_async(trident_daemon_invalid_argument_store_asy
     runner = next(
         iter(trident_daemon_invalid_argument_store_async._future_runners.values())
     )
-    assert runner.data_daemon is None
+    assert runner.data_daemon.daemon_config.store_path is None

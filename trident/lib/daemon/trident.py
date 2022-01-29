@@ -90,12 +90,14 @@ class TridentDaemon:
                 # Data Daemon not initialized or no store specified
                 continue
 
-            if not Path(runner.data_daemon.daemon_config.store_path).exists():
-                Path(runner.data_daemon.daemon_config.store_path).touch()
-            else:
-                runner.data_daemon.merge_store_data()
+            if runner.data_daemon.daemon_config.store_path:
+                if not Path(runner.data_daemon.daemon_config.store_path).exists():
+                    Path(runner.data_daemon.daemon_config.store_path).touch()
+                else:
+                    runner.data_daemon.merge_store_data()
 
-            runner.data_daemon.write_to_store()
+                runner.data_daemon.write_to_store()
+
             self._runner_resource_queues[
                 runner.data_daemon.daemon_config.store_path
             ].remove(runner.runner_id)
@@ -111,6 +113,26 @@ class TridentDaemon:
                 logger.warning(
                     f"Runner: '{runner.runner_id}' is in a running state and couldn't be halted immediately"
                 )
+
+            if runner.data_daemon.store_data is not None:
+                logger.info(
+                    f"Saving current data store to disk for runner: '{runner.runner_id}' at: '{runner.data_daemon.daemon_config.store_path}'"
+                )
+                if not Path(runner.data_daemon.daemon_config.store_path).exists():
+                    Path(runner.data_daemon.daemon_config.store_path).touch()
+                else:
+                    runner.data_daemon.merge_store_data()
+
+                runner.data_daemon.write_to_store()
+
+            if hasattr(runner.runner_config.plugin_instance, "plugin_state"):
+                logger.info(
+                    f"Saving current progress for runner: '{runner.runner_id}' in a checkpoint at: {runner.data_daemon.daemon_config.checkpoint_path}'"
+                )
+                Path(runner.data_daemon.daemon_config.checkpoint_path).touch(
+                    exist_ok=True
+                )
+                runner.data_daemon.create_state_checkpoint()
 
         self._executor.shutdown(wait=False)
 
@@ -169,6 +191,7 @@ class TridentDaemon:
                         plugin_name=plugin_name,
                         plugin_args=plugin_args,
                         store_config=plugin_config["args"]["store"],
+                        checkpoint_config=plugin_config["args"]["checkpoint"],
                         runner_config=plugin_config["args"]["runner"],
                         notification_config=plugin_config["args"]["notification"],
                         resource_queues=self._runner_resource_queues,

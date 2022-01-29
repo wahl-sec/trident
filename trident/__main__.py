@@ -27,6 +27,28 @@ logging.config.dictConfig(LOGGER_CONFIG)
 logger = logging.getLogger(__name__)
 
 
+class CustomFormatter(logging.Formatter):
+    BLUE = "\x1b[36;20m"
+    GRAY = "\x1b[38;20m"
+    YELLOW = "\x1b[33;20m"
+    RED = "\x1b[31;20m"
+    BOLD_RED = "\x1b[31;1m"
+    RESET = "\x1b[0m"
+
+    def __init__(self, _format: str):
+        self.formats = {
+            logging.DEBUG: self.GRAY + _format + self.RESET,
+            logging.INFO: self.BLUE + _format + self.RESET,
+            logging.WARNING: self.YELLOW + _format + self.RESET,
+            logging.ERROR: self.RED + _format + self.RESET,
+            logging.CRITICAL: self.BOLD_RED + _format + self.RESET,
+            logging.FATAL: self.BOLD_RED + _format + self.RESET,
+        }
+
+    def format(self, record):
+        return logging.Formatter(self.formats.get(record.levelno)).format(record)
+
+
 def setup_logging(args: Namespace, config: Dict[AnyStr, Union[AnyStr, Dict]]) -> None:
     """Selects the behavior of the logging that the program uses from the arguments and the config passed to the program.
 
@@ -59,6 +81,12 @@ def setup_logging(args: Namespace, config: Dict[AnyStr, Union[AnyStr, Dict]]) ->
         del MODIFIED_LOGGER_CONFIG["loggers"]["__main__"]
 
     logging.config.dictConfig(MODIFIED_LOGGER_CONFIG)
+    (handler,) = logging.getLogger(__name__).handlers
+    handler.setFormatter(
+        CustomFormatter(
+            MODIFIED_LOGGER_CONFIG["formatters"][config["logging_level"]]["format"]
+        )
+    )
 
 
 def validate_config(config: Dict[AnyStr, Dict]) -> Dict[AnyStr, Dict]:
@@ -71,7 +99,7 @@ def validate_config(config: Dict[AnyStr, Dict]) -> Dict[AnyStr, Dict]:
     :rtype: dict
     """
     for plugin_id, plugin_config in config["plugins"].items():
-        if not plugin_config["args"]["store"] and (
+        if not plugin_config["args"]["store"] or (
             "no_store" not in plugin_config["args"]["store"]
             or not plugin_config["args"]["store"]["no_store"]
         ):
@@ -80,12 +108,24 @@ def validate_config(config: Dict[AnyStr, Dict]) -> Dict[AnyStr, Dict]:
             )
 
             if "global_store" not in plugin_config["args"]["store"]:
-                logger.warning(f"Setting path for stores to 'data'")
+                logger.warning(
+                    f"No store path setting was specified, defaulting to 'data'"
+                )
                 plugin_config["args"]["store"]["path_store"] = "data"
 
+        if plugin_config["args"]["checkpoint"].get(
+            "checkpoint_path"
+        ) is None and plugin_config["args"]["store"].get("no_store"):
+            logger.warning(
+                f"No checkpoint path was given and no store was defined, defaulting to 'data'"
+            )
+            plugin_config["args"]["checkpoint"]["checkpoint_path"] = "data"
+
     if not config["args"]["daemon"]:
-        logger.warning(f"No 'daemon' args were specified, setting default values")
-        logger.warning(f"Setting worker count to '5'")
+        logger.warning(f"No daemon args were specified, setting default values")
+        logger.warning(
+            f"No worker count setting specified, setting worker count to '5'"
+        )
         config["args"]["daemon"] = {"workers": 5}
 
     return config
@@ -107,15 +147,20 @@ def setup_plugin_arguments(
     for plugin_id, plugin_config in config["plugins"].items():
         if "args" in config:
             if "args" not in plugin_config:
-                plugin_config["args"] = {"store": {}, "runner": {}, "notification": {}}
+                plugin_config["args"] = {
+                    "store": {},
+                    "checkpoint": {},
+                    "runner": {},
+                    "notification": {},
+                }
 
             # Store and runner existence are necessary for the validation
-            for category in ["store", "runner", "notification"]:
+            for category in ["store", "checkpoint", "runner", "notification"]:
                 if category not in plugin_config["args"]:
                     plugin_config["args"][category] = {}
 
             for section in config["args"]:
-                if section not in ["store", "runner"]:
+                if section not in ["store", "checkpoint", "runner"]:
                     continue
 
                 if section not in plugin_config["args"]:
@@ -230,6 +275,11 @@ def apply_runtime_arguments(
                 k: v
                 for k, v in vars(args).items()
                 if k in ["dont_store_on_error", "filter_results"] and v is not None
+            },
+            "checkpoint": {
+                k: v
+                for k, v in vars(args).items()
+                if k in ["checkpoint_path"] and v is not None
             },
         },
         config,

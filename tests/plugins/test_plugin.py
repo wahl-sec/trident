@@ -5,6 +5,17 @@ from random import randint
 
 
 class TestPlugin:
+    def __init__(self):
+        self._state = None
+
+    @property
+    def plugin_state(self):
+        return self._state
+
+    @plugin_state.setter
+    def plugin_state(self, state):
+        self._state = state
+
     def _add(self, x, y):
         return x + y
 
