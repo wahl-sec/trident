@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:impish-20211015
 
 ADD Makefile /
 ADD trident /trident
