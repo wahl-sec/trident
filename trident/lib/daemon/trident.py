@@ -90,12 +90,14 @@ class TridentDaemon:
                 # Data Daemon not initialized or no store specified
                 continue
 
-            if not Path(runner.data_daemon.daemon_config.store_path).exists():
-                Path(runner.data_daemon.daemon_config.store_path).touch()
-            else:
-                runner.data_daemon.merge_store_data()
+            if runner.data_daemon.daemon_config.store_path:
+                if not Path(runner.data_daemon.daemon_config.store_path).exists():
+                    Path(runner.data_daemon.daemon_config.store_path).touch()
+                else:
+                    runner.data_daemon.merge_store_data()
 
-            runner.data_daemon.write_to_store()
+                runner.data_daemon.write_to_store()
+
             self._runner_resource_queues[
                 runner.data_daemon.daemon_config.store_path
             ].remove(runner.runner_id)

@@ -76,7 +76,7 @@ class TridentDataDaemonConfig:
                 f"Using existing store path: '{store_path_n}' for runner: '{self.runner.runner_id}'"
             )
             return store_path_n
-        elif store_path_n.is_dir() or store_path_n.exists():
+        elif store_path_n.is_dir() or store_path_n.parent.exists():
             logger.debug(
                 f"Creating store in path: '{store_path_n}' for runner: '{self.runner.runner_id}'"
             )

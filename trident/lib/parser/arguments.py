@@ -42,6 +42,7 @@ class TridentArgumentParser:
         self._collect_optional_arguments()
         self._collect_plugin_arguments()
         self._collect_storage_arguments()
+        self._collect_checkpoint_arguments()
         self._collect_required_arguments()
 
     def _collect_optional_arguments(self) -> NoReturn:
@@ -107,6 +108,18 @@ class TridentArgumentParser:
             "--global-store",
             type=str,
             help="Use a global store for all runners.",
+        )
+
+    def _collect_checkpoint_arguments(self) -> NoReturn:
+        """Define the arguments used to defined the checkpoint behaviour."""
+        group = self.parser.add_argument_group(title="Trident Checkpoint")
+        group.add_argument(
+            "-c:p",
+            "--checkpoint-path",
+            type=str,
+            metavar="PATH",
+            help="Path to where on the filesystem to store the Trident checkpoint.",
+            default=None,
         )
 
     def _collect_required_arguments(self) -> NoReturn:
