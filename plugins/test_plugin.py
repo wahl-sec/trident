@@ -34,3 +34,19 @@ class TestPlugin:
 
             self._state[entry.path] = 1
             yield str(entry.path)
+
+
+class TestPluginTwo:
+    def __init__(self):
+        self._state = None
+
+    @property
+    def plugin_state(self):
+        return self._state
+
+    @plugin_state.setter
+    def plugin_state(self, state):
+        self._state = state
+
+    def execute_plugin(self, thread_event, archive):
+        yield "Test"

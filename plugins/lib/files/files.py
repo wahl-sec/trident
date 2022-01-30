@@ -532,7 +532,7 @@ def archive_entry(
     level: Optional[int] = None,
     preserve_path: bool = False,
     exceptions: bool = True,
-):
+) -> str:
     """Archive an entry using a given format.
 
     :param path: Paths to the entries to create an archive from
@@ -547,6 +547,8 @@ def archive_entry(
     :type preserve_path: bool, optional
     :param exceptions: Raise exceptions that occur to the plugin for it to handle, if set to `False` no exceptions will be raised, defaults to `True`
     :type exceptions: bool, optional
+    :return: The path on the system to the created archive
+    :rtype: str
     """
     _archive = Path(archive.path) if isinstance(archive, Entry) else Path(archive)
     try:
@@ -611,6 +613,8 @@ def archive_entry(
     except Exception as exc:
         if exceptions:
             raise exc from None
+
+    return str(_archive)
 
 
 def unarchive_entry(
