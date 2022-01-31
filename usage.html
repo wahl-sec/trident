@@ -744,6 +744,124 @@
 </pre></div>
 </div>
 </section>
+<section id="plugin-pipelines">
+<h2>Plugin Pipelines<a class="headerlink" href="#plugin-pipelines" title="Permalink to this headline">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Trident</span></code> supports defining plugin pipelines with individual steps executing a certain functionality. The steps are entirely defined in the <code class="docutils literal notranslate"><span class="pre">JSON</span></code> configuration file as described below.</p>
+<p>Example: The following configuration has two plugins: <code class="docutils literal notranslate"><span class="pre">plugin0</span></code> and <code class="docutils literal notranslate"><span class="pre">plugin1</span></code>. <code class="docutils literal notranslate"><span class="pre">plugin0</span></code> is a normal plugin as described before and <code class="docutils literal notranslate"><span class="pre">plugin1</span></code> is a plugin pipeline. The pipeline consists of three steps, the first step finds files using the library method <code class="docutils literal notranslate"><span class="pre">entries</span></code>, it has its own arguments defined by the <code class="docutils literal notranslate"><span class="pre">args</span></code> section and also the <cite>out</cite> section defining the name of the <cite>variable</cite> the output of the method might provide. The second step creates an archive from the identified files from the first step. The final step is a plugin is as described before which backs up the archive.</p>
+<div class="highlight-JSON notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="p">{</span><span class="w"></span>
+<span class="linenos"> 2</span><span class="w">    </span><span class="nt">"TRIDENT"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos"> 3</span><span class="w">        </span><span class="nt">"logging_level"</span><span class="p">:</span><span class="w"> </span><span class="s2">"INFO"</span><span class="p">,</span><span class="w"></span>
+<span class="linenos"> 4</span><span class="w">        </span><span class="nt">"plugins"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos"> 5</span><span class="w">            </span><span class="nt">"plugin0"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos"> 6</span><span class="w">                </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"plugins.plugin"</span><span class="p">,</span><span class="w"></span>
+<span class="linenos"> 7</span><span class="w">                </span><span class="nt">"plugin_args"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos"> 8</span><span class="w">                    </span><span class="nt">"value"</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"></span>
+<span class="linenos"> 9</span><span class="w">                </span><span class="p">},</span><span class="w"></span>
+<span class="linenos">10</span><span class="w">                </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">11</span><span class="w">                    </span><span class="nt">"runner"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">12</span><span class="w">                        </span><span class="nt">"dont_store_on_error"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">13</span><span class="w">                        </span><span class="nt">"filter_results"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"[a-z]"</span><span class="p">,</span><span class="w"> </span><span class="s2">"[A-Z]"</span><span class="p">]</span><span class="w"></span>
+<span class="linenos">14</span><span class="w">                    </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">15</span><span class="w">                </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">16</span><span class="w">            </span><span class="p">},</span><span class="w"></span>
+<span class="linenos">17</span><span class="w">            </span><span class="nt">"plugin1"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">18</span><span class="w">                </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Backup Files"</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">19</span><span class="w">                </span><span class="nt">"plugin_args"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"></span>
+<span class="linenos">20</span><span class="w">                </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"></span>
+<span class="linenos">21</span><span class="w">                </span><span class="nt">"steps"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"></span>
+<span class="linenos">22</span><span class="w">                    </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">23</span><span class="w">                        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Find Files"</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">24</span><span class="w">                        </span><span class="nt">"instruction"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">25</span><span class="w">                            </span><span class="nt">"ref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"plugins.lib.files.files.entries"</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">26</span><span class="w">                            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"method"</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">27</span><span class="w">                            </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">28</span><span class="w">                                </span><span class="nt">"path"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/path/to/folder"</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">29</span><span class="w">                                </span><span class="nt">"patterns"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"pattern"</span><span class="p">]</span><span class="w"></span>
+<span class="linenos">30</span><span class="w">                            </span><span class="p">},</span><span class="w"></span>
+<span class="linenos">31</span><span class="w">                            </span><span class="nt">"out"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">32</span><span class="w">                                </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"path"</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">33</span><span class="w">                                </span><span class="nt">"all"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
+<span class="linenos">34</span><span class="w">                            </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">35</span><span class="w">                        </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">36</span><span class="w">                    </span><span class="p">},</span><span class="w"></span>
+<span class="linenos">37</span><span class="w">                    </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">38</span><span class="w">                        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Archive Files"</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">39</span><span class="w">                        </span><span class="nt">"instruction"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">40</span><span class="w">                            </span><span class="nt">"ref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"plugins.lib.files.files.archive_entry"</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">41</span><span class="w">                            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"method"</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">42</span><span class="w">                            </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">43</span><span class="w">                                </span><span class="nt">"archive"</span><span class="p">:</span><span class="w"> </span><span class="s2">"/path/to/archive.tar.gz"</span><span class="w"></span>
+<span class="linenos">44</span><span class="w">                            </span><span class="p">},</span><span class="w"></span>
+<span class="linenos">45</span><span class="w">                            </span><span class="nt">"out"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">46</span><span class="w">                                </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"archive"</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">47</span><span class="w">                                </span><span class="nt">"all"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
+<span class="linenos">48</span><span class="w">                            </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">49</span><span class="w">                        </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">50</span><span class="w">                    </span><span class="p">},</span><span class="w"></span>
+<span class="linenos">51</span><span class="w">                    </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">52</span><span class="w">                        </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Backup Files"</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">53</span><span class="w">                        </span><span class="nt">"instruction"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">54</span><span class="w">                            </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"BackupArchive"</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">55</span><span class="w">                            </span><span class="nt">"ref"</span><span class="p">:</span><span class="w"> </span><span class="s2">"plugins.backup_archive"</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">56</span><span class="w">                            </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"plugin"</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">57</span><span class="w">                            </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span><span class="w"></span>
+<span class="linenos">58</span><span class="w">                            </span><span class="nt">"out"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">59</span><span class="w">                                </span><span class="nt">"name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"result"</span><span class="p">,</span><span class="w"></span>
+<span class="linenos">60</span><span class="w">                                </span><span class="nt">"all"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"></span>
+<span class="linenos">61</span><span class="w">                            </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">62</span><span class="w">                        </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">63</span><span class="w">                    </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">64</span><span class="w">                </span><span class="p">]</span><span class="w"></span>
+<span class="linenos">65</span><span class="w">            </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">66</span><span class="w">        </span><span class="p">},</span><span class="w"></span>
+<span class="linenos">67</span><span class="w">        </span><span class="nt">"args"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">68</span><span class="w">            </span><span class="nt">"daemon"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<span class="linenos">69</span><span class="w">                </span><span class="nt">"workers"</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="w"></span>
+<span class="linenos">70</span><span class="w">            </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">71</span><span class="w">        </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">72</span><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<span class="linenos">73</span><span class="p">}</span><span class="w"></span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">instruction</span></code> section allows for the following arguments:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">ref</span></code></dt><dd><ul>
+<li><p>The reference method or plugin to execute as part of the step, required.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">name</span></code></dt><dd><ul>
+<li><p>Name of the step, required.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">type</span></code></dt><dd><ul>
+<li><p>The type of the step, must be either <code class="docutils literal notranslate"><span class="pre">plugin</span></code> or <code class="docutils literal notranslate"><span class="pre">method</span></code>, required.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">args</span></code></dt><dd><ul>
+<li><p>Arguments to pass the reference method or plugin in combination with any potential previous variables.</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">out</span></code></dt><dd><ul>
+<li><p>The potential output variables. Contains the <code class="docutils literal notranslate"><span class="pre">name</span></code> of the variable (<code class="docutils literal notranslate"><span class="pre">required</span></code>) and if the step should wait for all results (<code class="docutils literal notranslate"><span class="pre">all</span></code>).</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
 <section id="developing-plugins">
 <h2>Developing Plugins<a class="headerlink" href="#developing-plugins" title="Permalink to this headline">¶</a></h2>
 <p>Trident plugins are normal <code class="docutils literal notranslate"><span class="pre">Python</span></code> modules and the actual plugin is a class that needs to be named just as the name of the <code class="docutils literal notranslate"><span class="pre">Python</span></code> module, so if you have the plugin <code class="docutils literal notranslate"><span class="pre">find_file.py</span></code> then the class in the plugin needs to be named <code class="docutils literal notranslate"><span class="pre">FindFile</span></code>.</p>
@@ -848,6 +966,7 @@
 <li><a class="reference internal" href="#">Trident Usage</a><ul>
 <li><a class="reference internal" href="#arguments">Arguments</a></li>
 <li><a class="reference internal" href="#configuration">Configuration</a></li>
+<li><a class="reference internal" href="#plugin-pipelines">Plugin Pipelines</a></li>
 <li><a class="reference internal" href="#developing-plugins">Developing Plugins</a></li>
 <li><a class="reference internal" href="#plugin-library">Plugin Library</a></li>
 <li><a class="reference internal" href="#variables">Variables</a></li>
