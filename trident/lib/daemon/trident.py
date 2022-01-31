@@ -20,7 +20,13 @@ import logging
 
 logger = logging.getLogger("__main__")
 
-from trident.lib.runner.trident import TridentRunnerConfig, TridentRunner
+from trident.lib.runner.trident import (
+    TridentRunnerConfig,
+    TridentRunner,
+    TridentStepsRunner,
+    TridentStepsRunnerConfig,
+    _TridentDefaultRunnerConfig,
+)
 
 
 @dataclass
@@ -65,6 +71,8 @@ class TridentDaemon:
                 executor.submit(runner.start_runner): runner for runner in self.runners
             }
 
+            self.wait_for_runners()
+
     def wait_for_runners(self) -> NoReturn:
         """Wait for each runner future to report as completed meaning that each :class:`TridentRunner` has finished.
         Raises exception for each future that encountered an exception while running.
@@ -77,6 +85,10 @@ class TridentDaemon:
                 future.result()
             except Exception as e:
                 raise e
+
+            logger.info(
+                f"Runner: '{runner.runner_id}' finished execution for plugin: '{runner.runner_config.plugin_name}'"
+            )
 
             try:
                 if (
@@ -96,6 +108,9 @@ class TridentDaemon:
                 else:
                     runner.data_daemon.merge_store_data()
 
+                logger.info(
+                    f"Writing output from plugin '{runner.runner_config.plugin_name}' for runner: '{runner.runner_id}' at: '{runner.data_daemon.daemon_config.store_path}'"
+                )
                 runner.data_daemon.write_to_store()
 
             self._runner_resource_queues[
@@ -125,7 +140,9 @@ class TridentDaemon:
 
                 runner.data_daemon.write_to_store()
 
-            if hasattr(runner.runner_config.plugin_instance, "plugin_state"):
+            if isinstance(runner, TridentRunner) and hasattr(
+                runner.runner_config.plugin_instance, "plugin_state"
+            ):
                 logger.info(
                     f"Saving current progress for runner: '{runner.runner_id}' in a checkpoint at: {runner.data_daemon.daemon_config.checkpoint_path}'"
                 )
@@ -137,22 +154,26 @@ class TridentDaemon:
         self._executor.shutdown(wait=False)
 
     def _initialize_runner(
-        self, runner_config: TridentRunnerConfig, runner_id: AnyStr
+        self, runner_config: _TridentDefaultRunnerConfig, runner_id: AnyStr
     ) -> TridentRunner:
         """Initialize a runner given the config :class:`TridentRunnerConfig`, runner identifier and the data config :class:`TridentDataDaemonConfig`.
         The runner :class:`TridentRunner` controls the execution and handling for each plugin.
 
-        :param runner_config: The config for :class:`TridentRunnerConfig` used to initialize the class.
-        :type runner_config: TridentRunnerConfig
+        :param runner_config: The config for :class:`TridentRunnerConfig` or :class:`TridentStepsRunnerConfig` used to initialize the class.
+        :type runner_config: _TridentDefaultRunnerConfig
         :param runner_id: The unique indentifier for each :class:`TridentRunner`.
         :type runner_id: str
         :raises Exception: If any issues occurs whilst initializing the :class:`TridentRunner`.
-        :return: The :class:`TridentRunner` instance created from the config :class:`TridentRunnerConfig`.
+        :return: The :class:`TridentRunner` instance created from the config :class:`TridentRunnerConfig` or :class:`TridentStepsRunnerConfig`.
         :rtype: TridentRunner
         """
-        logger.info(f"Initializing plugin: '{runner_config.plugin_path}'")
+        logger.info(f"Initializing runner for plugin: '{runner_config.plugin_name}'")
         try:
-            return TridentRunner(runner_config, runner_id)
+            if isinstance(runner_config, TridentRunnerConfig):
+                return TridentRunner(runner_config, runner_id)
+            elif isinstance(runner_config, TridentStepsRunnerConfig):
+                return TridentStepsRunner(runner_config, runner_id)
+
         except Exception as e:
             raise e
 
@@ -169,44 +190,72 @@ class TridentDaemon:
             if "disabled" in plugin_config and plugin_config["disabled"]:
                 continue
 
-            if "path" not in plugin_config:
+            if "path" in plugin_config:
+                plugin_name = plugin_config["name"] if "name" in plugin_config else None
+
+                if "plugin_args" not in plugin_config:
+                    logger.debug(f"No arguments specified for plugin: '{plugin_id}'")
+                    plugin_args = {}
+                else:
+                    plugin_args = plugin_config["plugin_args"]
+
+                try:
+                    runner = self._initialize_runner(
+                        runner_config=TridentRunnerConfig(
+                            plugin_path=plugin_config["path"],
+                            plugin_name=plugin_name,
+                            plugin_args=plugin_args,
+                            store_config=plugin_config["args"]["store"],
+                            checkpoint_config=plugin_config["args"]["checkpoint"],
+                            runner_config=plugin_config["args"]["runner"],
+                            notification_config=plugin_config["args"]["notification"],
+                            resource_queues=self._runner_resource_queues,
+                        ),
+                        runner_id=plugin_id,
+                    )
+
+                    _initialized_runners.append(runner)
+                except Exception as e:
+                    logger.error(
+                        f"Failed to initialize a trident runner for plugin: '{plugin_id}' due to previous error: {e}"
+                    )
+                    raise e
+            elif "steps" in plugin_config:
+                plugin_name = plugin_config["name"] if plugin_config["name"] else None
+
+                if "plugin_args" not in plugin_config:
+                    logger.debug(f"No arguments specified for plugin: '{plugin_id}'")
+                    plugin_args = {}
+                else:
+                    plugin_args = plugin_config["plugin_args"]
+
+                try:
+                    runner = self._initialize_runner(
+                        runner_config=TridentStepsRunnerConfig(
+                            plugin_name=plugin_name,
+                            plugin_args=plugin_args,
+                            plugin_steps=plugin_config["steps"],
+                            store_config=plugin_config["args"]["store"],
+                            checkpoint_config=plugin_config["args"]["checkpoint"],
+                            runner_config=plugin_config["args"]["runner"],
+                            notification_config=plugin_config["args"]["notification"],
+                            resource_queues=self._runner_resource_queues,
+                        ),
+                        runner_id=plugin_id,
+                    )
+
+                    _initialized_runners.append(runner)
+                except Exception as e:
+                    logger.error(
+                        f"Failed to initialize a trident steps runner for plugin: '{plugin_id}' due to previous error: {e}"
+                    )
+                    raise e
+            else:
                 raise ValueError(
-                    f"Missing path to plugin for plugin: '{plugin_id}' in config."
-                )
-            else:
-                plugin_path = plugin_config["path"]
-
-            plugin_name = plugin_config["name"] if "name" in plugin_config else None
-
-            if "plugin_args" not in plugin_config:
-                logger.debug(f"No arguments specified for plugin: '{plugin_id}'")
-                plugin_args = {}
-            else:
-                plugin_args = plugin_config["plugin_args"]
-
-            try:
-                runner = self._initialize_runner(
-                    runner_config=TridentRunnerConfig(
-                        plugin_path=plugin_path,
-                        plugin_name=plugin_name,
-                        plugin_args=plugin_args,
-                        store_config=plugin_config["args"]["store"],
-                        checkpoint_config=plugin_config["args"]["checkpoint"],
-                        runner_config=plugin_config["args"]["runner"],
-                        notification_config=plugin_config["args"]["notification"],
-                        resource_queues=self._runner_resource_queues,
-                    ),
-                    runner_id=plugin_id,
+                    f"Failed to initialize plugin: '{plugin_id}' due to missing the 'path' or 'steps' keyword"
                 )
 
-                _initialized_runners.append(runner)
-            except Exception as e:
-                logger.error(
-                    f"Failed to initialize a trident runner for plugin: '{plugin_id}' due to previous error: {e}"
-                )
-                raise e
-
-        logger.info(
-            f"Initialized ({len(_initialized_runners)}) out of ({len(self.daemon_config.plugins)}) plugins"
-        )
+            logger.info(
+                f"Initialized ({len(_initialized_runners)}) out of ({len(self.daemon_config.plugins)}) plugins"
+            )
         return _initialized_runners

@@ -30,6 +30,7 @@ logger = logging.getLogger(__name__)
 class CustomFormatter(logging.Formatter):
     BLUE = "\x1b[36;20m"
     GRAY = "\x1b[38;20m"
+    PURPLE = "\x1b[35;20m"
     YELLOW = "\x1b[33;20m"
     RED = "\x1b[31;20m"
     BOLD_RED = "\x1b[31;1m"
@@ -37,7 +38,7 @@ class CustomFormatter(logging.Formatter):
 
     def __init__(self, _format: str):
         self.formats = {
-            logging.DEBUG: self.GRAY + _format + self.RESET,
+            logging.DEBUG: self.PURPLE + _format + self.RESET,
             logging.INFO: self.BLUE + _format + self.RESET,
             logging.WARNING: self.YELLOW + _format + self.RESET,
             logging.ERROR: self.RED + _format + self.RESET,

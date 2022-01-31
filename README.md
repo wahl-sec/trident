@@ -472,6 +472,101 @@ Example: Two plugins were the values of one of the plugins are stored if the run
 }
 ```
 
+### **Plugin Pipelines** <a name="pipelines"></a>
+
+`Trident` supports defining plugin pipelines with individual steps executing a certain functionality. The steps are entirely defined in the `JSON` configuration file as described below.
+
+Example: The following configuration has two plugins: `plugin0` and `plugin1`. `plugin0` is a normal plugin as described before and `plugin1` is a plugin pipeline. The pipeline consists of three steps, the first step finds files using the library method `entries`, it has its own arguments defined by the `args` section and also the `out` section defining the name of the `variable` the output of the method might provide. The second step creates an archive from the identified files from the first step. The final step is a plugin is as described before which backs up the archive.
+
+```json
+{
+    "TRIDENT": {
+        "logging_level": "INFO",
+        "plugins": {
+            "plugin0": {
+                "path": "plugins.plugin",
+                "plugin_args": {
+                    "value": 0
+                },
+                "args": {
+                    "runner": {
+                        "dont_store_on_error": true,
+                        "filter_results": ["[a-z]", "[A-Z]"]
+                    }
+                }
+            },
+            "plugin1": {
+                "name": "Backup Files",
+                "plugin_args": {},
+                "args": {},
+                "steps": [
+                    {
+                        "name": "Find Files",
+                        "instruction": {
+                            "ref": "plugins.lib.files.files.entries",
+                            "type": "method",
+                            "args": {
+                                "path": "/path/to/folder",
+                                "patterns": ["pattern"]
+                            },
+                            "out": {
+                                "name": "path",
+                                "all": true
+                            }
+                        }
+                    },
+                    {
+                        "name": "Archive Files",
+                        "instruction": {
+                            "ref": "plugins.lib.files.files.archive_entry",
+                            "type": "method",
+                            "args": {
+                                "archive": "/path/to/archive.tar.gz"
+                            },
+                            "out": {
+                                "name": "archive",
+                                "all": true
+                            }
+                        }
+                    },
+                    {
+                        "name": "Backup Files",
+                        "instruction": {
+                            "name": "BackupArchive",
+                            "ref": "plugins.backup_archive",
+                            "type": "plugin",
+                            "args": {},
+                            "out": {
+                                "name": "result",
+                                "all": true
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "args": {
+            "daemon": {
+                "workers": 2
+            }
+        }
+    }
+}
+```
+
+The `instruction` section allows for the following arguments:
+
+-   `ref`
+    -   The reference method or plugin to execute as part of the step, required.
+-   `name`
+    -   Name of the step, required.
+-   `type`
+    -   The type of the step, must be either `plugin` or `method`, required.
+-   `args`
+    -   Arguments to pass the reference method or plugin in combination with any potential previous variables.
+-   `out`
+    -   The potential output variables. Contains the `name` of the variable (`required`) and if the step should wait for all results (`all`).
+
 ### **Developing Plugins** <a name="developing"></a>
 
 `Trident` plugins are normal `Python` modules and the actual plugin is a class that needs to be named just as the name of the `Python` module, so if you have the plugin `find_file.py` then the class in the plugin needs to be named `FindFile`.

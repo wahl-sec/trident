@@ -53,7 +53,6 @@ class TridentDataDaemonConfig:
         else:
             self.store_path = None
 
-        print(checkpoint_path)
         if checkpoint_path is not None or self.store_path:
             self.checkpoint_path = self._determine_checkpoint_path(
                 checkpoint_path, store_path
