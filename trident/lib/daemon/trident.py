@@ -71,6 +71,8 @@ class TridentDaemon:
                 executor.submit(runner.start_runner): runner for runner in self.runners
             }
 
+            self.wait_for_runners()
+
     def wait_for_runners(self) -> NoReturn:
         """Wait for each runner future to report as completed meaning that each :class:`TridentRunner` has finished.
         Raises exception for each future that encountered an exception while running.
@@ -83,6 +85,10 @@ class TridentDaemon:
                 future.result()
             except Exception as e:
                 raise e
+
+            logger.info(
+                f"Runner: '{runner.runner_id}' finished execution for plugin: '{runner.runner_config.plugin_name}'"
+            )
 
             try:
                 if (
@@ -102,6 +108,9 @@ class TridentDaemon:
                 else:
                     runner.data_daemon.merge_store_data()
 
+                logger.info(
+                    f"Writing output from plugin '{runner.runner_config.plugin_name}' for runner: '{runner.runner_id}' at: '{runner.data_daemon.daemon_config.store_path}'"
+                )
                 runner.data_daemon.write_to_store()
 
             self._runner_resource_queues[

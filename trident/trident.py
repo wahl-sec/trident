@@ -113,7 +113,6 @@ class Trident:
         """
         try:
             self.trident_daemon.start_all_runners()
-            self.trident_daemon.wait_for_runners()
         except Exception as e:
             raise e
 

@@ -14,7 +14,6 @@ from importlib import import_module
 import re
 
 from typing import (
-    Callable,
     NewType,
     Dict,
     Optional,
@@ -30,6 +29,7 @@ from typing import (
 Module = NewType("Module", object)
 PluginClass = NewType("PluginClass", object)
 
+from types import GeneratorType, MethodType
 import logging
 
 logger = logging.getLogger("__main__")
@@ -103,14 +103,14 @@ class _TridentDefaultRunnerConfig:
             raise e
 
     def _sanitize_parameters(
-        self, parameters: Dict[str, Any], method_reference: Callable
+        self, parameters: Dict[str, Any], method_reference: MethodType
     ) -> Dict[str, Any]:
         """Sanitize and filter out any parameters that can't be passed to the given plugin.
 
         :param parameters: The parameters to be filtered before being passed
         :type parameters: Dict[str, Any]
         :param method_reference: The reference of the method to filter parameters for
-        :type method_reference: Callable
+        :type method_reference: MethodType
         """
         return {
             key: value
@@ -181,6 +181,8 @@ class TridentRunnerConfig(_TridentDefaultRunnerConfig):
 
 class _TridentDefaultRunner:
     """Trident runner class containing common functionality."""
+
+    is_running: bool = False
 
     def _initialize_data_daemon(self) -> TridentDataDaemon:
         """Initialize the :class:`TridentDataDaemon` connected to this runner from the :class:`TridentDataDaemonConfig`.
@@ -267,6 +269,7 @@ class _TridentDefaultRunner:
         if not hasattr(runner_config.plugin_instance, "execute_plugin"):
             raise RuntimeError("Entry method 'execute_plugin' not defined.")
 
+        self.is_running = True
         if hasattr(runner_config.plugin_instance, "plugin_state"):
             if runner_config.plugin_instance.__class__.plugin_state.fset is None:
                 logger.warning(
@@ -318,7 +321,10 @@ class _TridentDefaultRunner:
                 )
         except Exception as e:
             logger.error(f"Runner: '{self.runner_id}' encountered error: {e}")
+            self.is_running = False
             raise e
+
+        self.is_running = False
 
     def _evaluate_result(self, result: Any, result_index: int) -> NoReturn:
         """Evaluate the result yielded/returned from the plugin for each iteration.
@@ -332,12 +338,23 @@ class _TridentDefaultRunner:
         if self.data_daemon is None or self.runner_config.thread_event.is_set():
             return
 
-        if getattr(self.runner_config, "filter_results"):
-            for pattern in getattr(self.runner_config, "filter_results"):
-                match = re.match(pattern, result)
+        if self.runner_config.filter_results:
+            for pattern in self.runner_config.filter_results:
+                if not isinstance(result, (str, bytes)):
+                    _result = str(result)
+
+                    if not isinstance(_result, (str, bytes)):
+                        logger.warning(
+                            f"Result was not of type string so couldn't match any patterns for runner: '{self.runner_id}'"
+                        )
+                        break
+                else:
+                    _result = result
+
+                match = re.match(pattern, _result)
                 if match is not None and match.group(0):
                     logger.debug(
-                        f"Result: '{result}' matched pattern: '{pattern}' for runner: '{self.runner_id}'"
+                        f"Result: '{_result}' matched pattern: '{pattern}' for runner: '{self.runner_id}'"
                     )
                     break
             else:
@@ -358,6 +375,7 @@ class _TridentDefaultRunner:
         generator: Generator[Any, Any, Any],
         variables: Optional[Dict[str, Any]] = None,
         variable_key: Optional[str] = None,
+        all_results: bool = False,
     ) -> NoReturn:
         """Evaluate the initialized plugin generator for each returned value.
 
@@ -367,6 +385,8 @@ class _TridentDefaultRunner:
         :type variables: Optional[Dict[str, Any]], optional
         :param variable_key: If a specific variable key is needed to store the results for, if `None` it defaults to the index, defaults to None
         :type variable_key: Optional[str], optional
+        :param all_results: Wait for all results before returning, used by steps runners to wait for results in yield operations and plugins
+        :type all_results: bool
         :raises StopIteration: If generator did not return any more values from the plugin.
         :raises Exception: If any errors occured when trying to access the next value.
         """
@@ -380,7 +400,10 @@ class _TridentDefaultRunner:
                         if _key not in variables:
                             variables[_key] = []
 
-                        variables[_key].append(result)
+                        if all_results and isinstance(generator, GeneratorType):
+                            variables[_key].extend([result] + list(generator))
+                        else:
+                            variables[_key].append(next(generator))
                 except TypeError as e:
                     result = generator
                     if variables is not None:
@@ -486,7 +509,9 @@ class TridentStepInstructionConfig(_TridentDefaultRunnerConfig):
     args: Dict[str, Any]
     out: str
 
-    def __init__(self, name: str, ref: str, type: str, args: Dict[str, Any], out: str):
+    def __init__(
+        self, name: str, ref: str, type: str, args: Dict[str, Any], out: Dict[str, Any]
+    ):
         self.name = name
         self.ref = ref
         self.type = type
@@ -506,22 +531,24 @@ class TridentStepConfig:
     :param step_instruction: The instruction configuration specifying the instruction to use and type.
     :type step_instruction: :class:`TridentStepInstructionConfig`
     :param method_reference: The reference to the method to call when using a 'method' step
-    :type method_reference: Callable
+    :type method_reference: MethodType
     """
 
     plugin_name: str
     step_name: str
     step_instruction: TridentStepInstructionConfig
-    method_reference: Callable = None
+    method_reference: MethodType = None
 
     def __init__(
-        self, plugin_name: str, step_name: str, step_instruction: Dict[str, Any]
+        self,
+        plugin_name: str,
+        step_name: str,
+        step_instruction: Dict[str, Any],
     ):
         self.plugin_name = plugin_name
         self.step_name = step_name
 
         self.step_instruction = self._initialize_step_instruction(step_instruction)
-
         if self.step_instruction.type == "method":
             self.method_reference = self._initialize_step_method(
                 method_path=self.step_instruction.ref
@@ -554,6 +581,14 @@ class TridentStepConfig:
                 f"Step instruction: '{self.step_name}' for plugin: '{self.plugin_name}' did not contain necessary 'type' or was otherwise malformed"
             )
 
+        if "out" in step_instruction and (
+            "name" not in step_instruction["out"]
+            or not isinstance(step_instruction["out"]["name"], str)
+        ):
+            raise ValueError(
+                f"Step instruction: '{self.step_name}' for plugin: '{self.plugin_name}' did not contain necessary 'out' or was otherwise malformed, 'name' was malformed"
+            )
+
         if step_instruction["type"] not in ["plugin", "method"]:
             raise ValueError(
                 f"Step instruction: '{self.step_name}' for plugin: '{self.plugin_name}' was not of type 'plugin' or 'method'"
@@ -567,7 +602,7 @@ class TridentStepConfig:
             out=step_instruction["out"] if "out" in step_instruction else None,
         )
 
-    def _initialize_step_method(self, method_path: str) -> Union[Callable, None]:
+    def _initialize_step_method(self, method_path: str) -> Union[MethodType, None]:
         """Initialize the method to be used by the :class:`TridentStepsRunner`.
         Tries to import the module given the path provided and tries to initialize a reference to the method provided.
 
@@ -716,6 +751,8 @@ class TridentStepsRunner(_TridentDefaultRunner):
                 f"Step method was not properly initialized for step: '{step.step_name}' for runner: '{self.runner_id}'"
             )
 
+        self.is_running = True
+
         # TODO: Investigate if possible to introduce some sort of checkpoint state loading for steps
 
         try:
@@ -737,6 +774,9 @@ class TridentStepsRunner(_TridentDefaultRunner):
                         runner_generator,
                         variables=self.variables,
                         variable_key=variable_key,
+                        all_results=step.step_instruction.out["all"]
+                        if "all" in step.step_instruction.out
+                        else None,
                     )
                 except Exception as e:
                     raise e
@@ -747,7 +787,10 @@ class TridentStepsRunner(_TridentDefaultRunner):
                     )
         except Exception as e:
             logger.error(f"Runner: '{self.runner_id}' encountered error: {e}")
+            self.is_running = False
             raise e
+
+        self.is_running = False
 
     def start_runner(self) -> NoReturn:
         """Execute a step and evaluate the results for that step instruction.
@@ -779,14 +822,14 @@ class TridentStepsRunner(_TridentDefaultRunner):
                         runner_config=None,
                     ),
                     variables=self.variables,
-                    variable_key=step.step_instruction.out
+                    variable_key=step.step_instruction.out["name"]
                     if hasattr(step.step_instruction, "out")
                     else None,
                 )
             elif step.step_instruction.type == "method":
                 self._start_method_runner(
                     step=step,
-                    variable_key=step.step_instruction.out
+                    variable_key=step.step_instruction.out["name"]
                     if hasattr(step.step_instruction, "out")
                     else None,
                 )

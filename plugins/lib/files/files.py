@@ -78,6 +78,9 @@ class Entry:
     def __dict__(self):
         return asdict(self)
 
+    def __str__(self):
+        return self.path
+
 
 def entry(path: str, follow_symlinks: bool = True, exceptions: bool = True) -> Entry:
     """Given an absolute path to an entry returns its entry representation.
