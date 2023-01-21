@@ -1,5 +1,5 @@
 # Development Environment
-venv/*
+*venv/*
 *__pycache__*
 .pytest_cache/*
 .DS_Store
@@ -13,6 +13,7 @@ dist/*
 *.pyc
 *.so
 *.o
+*_pb2*.py*
 
 # Documentation
 docs/build/*

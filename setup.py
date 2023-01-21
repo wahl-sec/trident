@@ -31,6 +31,8 @@ setuptools.setup(
             "sphinx>=4.1.2",
             "furo==2021.7.28b40",
             "black>=21.7b0",
+            "grpcio>=1.51.1",
+            "grpcio-tools>=1.51.1",
         ]
     },
     zip_safe=False,

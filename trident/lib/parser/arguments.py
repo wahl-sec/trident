@@ -11,7 +11,7 @@ Parses and validate arguments passed to the program.
 from argparse import ArgumentParser
 from sys import maxsize
 
-from typing import NoReturn, Any
+from typing import Any
 
 import logging
 
@@ -37,15 +37,16 @@ class TridentArgumentParser:
         )
         return parser
 
-    def _collect_arguments(self) -> NoReturn:
+    def _collect_arguments(self) -> None:
         """Collect all argument definitions from optional, plugin, storage and required arguments."""
         self._collect_optional_arguments()
         self._collect_plugin_arguments()
         self._collect_storage_arguments()
         self._collect_checkpoint_arguments()
         self._collect_required_arguments()
+        self._collect_interface_arguments()
 
-    def _collect_optional_arguments(self) -> NoReturn:
+    def _collect_optional_arguments(self) -> None:
         """Define the optional arguments for Trident, like logging level and the amount of workers to use."""
         group = self.parser.add_argument_group(title="Trident Logging")
         logging_group = group.add_mutually_exclusive_group()
@@ -73,7 +74,7 @@ class TridentArgumentParser:
             " Defaults to '1' which means Trident will run all plugins sequentially. Must be a positive integer.",
         )
 
-    def _collect_plugin_arguments(self) -> NoReturn:
+    def _collect_plugin_arguments(self) -> None:
         """Define the arguments applied on all the plugins in Trident."""
         group = self.parser.add_argument_group(title="Trident Plugin(s)")
         group.add_argument(
@@ -83,7 +84,7 @@ class TridentArgumentParser:
             "-p:f", "--filter-results", type=str, nargs="+", help="Filter "
         )
 
-    def _collect_storage_arguments(self) -> NoReturn:
+    def _collect_storage_arguments(self) -> None:
         """Define the arguments used to define the storage behaviour."""
         arg_group = self.parser.add_argument_group(title="Trident Storage")
         arg_group.add_argument(
@@ -110,7 +111,7 @@ class TridentArgumentParser:
             help="Use a global store for all runners.",
         )
 
-    def _collect_checkpoint_arguments(self) -> NoReturn:
+    def _collect_checkpoint_arguments(self) -> None:
         """Define the arguments used to defined the checkpoint behaviour."""
         group = self.parser.add_argument_group(title="Trident Checkpoint")
         group.add_argument(
@@ -122,7 +123,7 @@ class TridentArgumentParser:
             default=None,
         )
 
-    def _collect_required_arguments(self) -> NoReturn:
+    def _collect_required_arguments(self) -> None:
         """Define the required arguments used for the Trident program."""
         group = self.parser.add_argument_group(title="Trident Required Arguments")
         group.add_argument(
@@ -136,6 +137,25 @@ class TridentArgumentParser:
             "--section",
             help="Trident Config File Section. Defaults to 'TRIDENT'",
             default="TRIDENT",
+        )
+
+    def _collect_interface_arguments(self) -> None:
+        """Define the arguments used to define the interface behaviour."""
+        group = self.parser.add_argument_group(title="Trident Interface")
+        group.add_argument(
+            "-i:s",
+            "--interface-sender",
+            help="Connect to another Trident interface (default: %(default)s)",
+            metavar="IP:PORT",
+            default=None,
+            nargs="+",
+        )
+        group.add_argument(
+            "-i:r",
+            "--interface-receiver",
+            help="Listen for incoming messages from other Trident interfaces on a given port (default: %(default)s)",
+            metavar="PORT",
+            default=None,
         )
 
     def _valid_positive_integer(self, value: Any) -> int:

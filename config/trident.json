@@ -2,7 +2,27 @@
     "TRIDENT": {
         "logging_level": "DEBUG",
         "plugins": {
-            "plugin0": {}
+            "plugin0": {
+                "path": "plugins.files.find_files",
+                "plugin_args": {
+                    "path": "/home/nzxt/documents/"
+                }
+            }
+        },
+        "args": {
+            "daemon": {
+                "interface": {
+                    "sender": [
+                        {
+                            "ip": "127.0.0.1",
+                            "port": 8989
+                        }
+                    ],
+                    "receiver": {
+                        "port": 8989
+                    }
+                }
+            }
         }
     }
 }

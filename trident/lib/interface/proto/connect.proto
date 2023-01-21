@@ -1,0 +1,15 @@
+// Trident Daemon Connection Protocol
+// Message specifications for setting up connections
+// between Trident daemons
+
+syntax = "proto3";
+
+package daemon;
+
+service DaemonConnect {
+  rpc Connect(DaemonConnectRequest) returns (DaemonConnectReply);
+}
+
+message DaemonConnectRequest { string name = 1; }
+
+message DaemonConnectReply { string name = 1; }

@@ -7,6 +7,8 @@
 """
 
 from dataclasses import dataclass
+import concurrent.futures
+from os import initgroups
 
 from typing import Dict, Union, NoReturn
 
@@ -26,7 +28,7 @@ class TridentConfig:
     """
 
     trident_config: Dict[str, str]
-    trident_daemon_config: Dict[str, Union[str, int]]
+    trident_daemon_config: Dict[str, str | int | Dict[str, str]]
 
     def __init__(self, kwargs: Dict[str, str]):
         self.trident_config = {
@@ -38,12 +40,13 @@ class TridentConfig:
         self.trident_daemon_config = {
             "plugins": kwargs.get("plugins"),
             "workers": kwargs["args"]["daemon"].get("workers"),
+            "interface": kwargs["args"]["daemon"].get("interface"),
         }
 
         self._verify_trident_config()
         self._verify_trident_daemon_config()
 
-    def _verify_trident_config(self) -> NoReturn:
+    def _verify_trident_config(self) -> None:
         """Verify the validity of the configuration for logging and other optional argument.
 
         :raises ValueError: If the configuration is not valid.
@@ -61,14 +64,14 @@ class TridentConfig:
                 f"Logging level: '{self.trident_config['logging_level']}' was overriden by verbose flag"
             )
 
-    def _verify_trident_daemon_config(self) -> NoReturn:
+    def _verify_trident_daemon_config(self) -> None:
         """Verify the validity of the :class:`TridentDaemonConfig`.
 
         :raises ValueError: If the configuration is not valid.
         """
         try:
             int(self.trident_daemon_config["workers"])
-        except ValueError:
+        except (TypeError, ValueError):
             raise ValueError(f"Value of workers is not a valid positive integer")
 
         if int(self.trident_daemon_config["workers"]) <= 0:
@@ -106,13 +109,28 @@ class Trident:
         except Exception as e:
             raise e
 
-    def start_trident_daemon(self) -> NoReturn:
+    def start_trident_daemon(self) -> None:
         """Start the :class:`TridentDaemon` by starting each :class:`TridentRunner` and wait for them to end.
 
         :raises Exception: If any error occurs when starting/waiting for the runners.
         """
         try:
-            self.trident_daemon.start_all_runners()
+            initializers = [
+                self.trident_daemon.start_listen_interface,
+                self.trident_daemon.start_all_runners,
+            ]
+
+            # I am not sure how this will work for the start_all_runners, since that will also start threads?
+            with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+                futures = {
+                    executor.submit(initializer): initializer
+                    for initializer in initializers
+                }
+
+                for future in concurrent.futures.as_completed(futures):
+                    initializer = futures[future]
+                    logger.debug(f"Initializer: '{initializer}' finished execution")
+
         except Exception as e:
             raise e
 

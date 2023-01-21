@@ -254,7 +254,7 @@ class _TridentDefaultRunner:
         runner_config: TridentRunnerConfig,
         variables: Optional[Dict[str, Any]] = None,
         variable_key: Optional[str] = None,
-    ) -> NoReturn:
+    ) -> None:
         """Start an initialized plugin by calling the method `execute_plugin` with the provided arguments.
         This method is called when the plugin is a normal runner.
 

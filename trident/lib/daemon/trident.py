@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from pathlib import Path
 import concurrent.futures
 
-from typing import List, Dict, NoReturn, NewType, AnyStr
+from typing import List, Dict, NoReturn, NewType, AnyStr, Optional
 
 TridentDataDaemonConfig = NewType("TridentDataDaemonConfig", None)
 
@@ -20,6 +20,14 @@ import logging
 
 logger = logging.getLogger("__main__")
 
+from trident.lib.interface.trident import (
+    TridentInterface,
+    TridentInterfaceConfig,
+    TridentInterfaceReceiverConfig,
+    TridentInterfaceSenderConfig,
+    TridentReceiver,
+    TridentSender,
+)
 from trident.lib.runner.trident import (
     TridentRunnerConfig,
     TridentRunner,
@@ -31,7 +39,7 @@ from trident.lib.runner.trident import (
 
 @dataclass
 class TridentDaemonConfig:
-    """Config class for the :class:`TridentDaemon` controlling each :class:`TridentRunner`.
+    """Config class for :class:`TridentDaemon` controlling each :class:`TridentRunner`.
 
     :param workers: The amount of workers that the daemon should use at most.
     :type workers: int
@@ -44,7 +52,8 @@ class TridentDaemonConfig:
     """
 
     workers: int
-    plugins: Dict[AnyStr, AnyStr]
+    plugins: Dict[str, str]
+    interface: Dict[str, str]
 
 
 class TridentDaemon:
@@ -60,6 +69,7 @@ class TridentDaemon:
         self._runner_resource_queues = {}
         self._future_runners = None
         self.runners = self._initialize_runners()
+        self.interface = self._initialize_interface()
 
     def start_all_runners(self) -> NoReturn:
         """Creates a :class:`concurrent.futures.Future` for each :class:`TridentRunner` and start each runner asynchronously."""
@@ -153,6 +163,41 @@ class TridentDaemon:
 
         self._executor.shutdown(wait=False)
 
+    def start_listen_interface(self) -> None:
+        """Start the :class:`TridentInterface` to open up for receiving messages to other
+        :class:`TridentDaemon` instances.
+        """
+        self.interface.listen()
+
+    def _initialize_interface(self) -> TridentInterface:
+        """Initialize the :class:`TridentInterface` for :class:`TridentDaemon`.
+
+        :raises ValueError: If the interface cannot be initialized.
+        :raises Exception: If any other issue initializing the :class:`TridentInterface` occurs.
+        :return: The initialized :class:`TridentInterface`
+        :rtype: :class:`TridentInterface`
+        """
+        # Initialize the listener config
+        _receiver: Optional[TridentReceiver] = None
+        if self.daemon_config.interface.get("receiver"):
+            _receiver_config = TridentInterfaceReceiverConfig(
+                port=self.daemon_config.interface["receiver"]["port"]
+            )
+            _receiver = TridentReceiver(receiver_config=_receiver_config)
+
+        # Initialize the sender config
+        _senders: List[TridentSender] = []
+        if self.daemon_config.interface.get("sender"):
+            for _sender in self.daemon_config.interface.get("sender"):
+                _sender_config = TridentInterfaceSenderConfig(
+                    ip=_sender["ip"], port=_sender["port"]
+                )
+                _senders.append(TridentSender(sender_config=_sender_config))
+
+        return TridentInterface(
+            TridentInterfaceConfig(senders=_senders, receiver=_receiver)
+        )
+
     def _initialize_runner(
         self, runner_config: _TridentDefaultRunnerConfig, runner_id: AnyStr
     ) -> TridentRunner:
@@ -165,7 +210,7 @@ class TridentDaemon:
         :type runner_id: str
         :raises Exception: If any issues occurs whilst initializing the :class:`TridentRunner`.
         :return: The :class:`TridentRunner` instance created from the config :class:`TridentRunnerConfig` or :class:`TridentStepsRunnerConfig`.
-        :rtype: TridentRunner
+        :rtype: :class:`TridentRunner`
         """
         logger.info(f"Initializing runner for plugin: '{runner_config.plugin_name}'")
         try:
@@ -183,7 +228,7 @@ class TridentDaemon:
         :raises ValueError: If the plugin does not exist from the path provided.
         :raises Exception: If any other issue initializing the :class:`TridentRunner` occurs.
         :return: A list of the :class:`TridentRunner` objects representing each plugin.
-        :rtype: list
+        :rtype: List[:class:`TridentRunner`]
         """
         _initialized_runners = []
         for plugin_id, plugin_config in self.daemon_config.plugins.items():

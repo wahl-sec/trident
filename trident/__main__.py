@@ -14,7 +14,7 @@ import time
 import traceback
 from datetime import datetime
 
-from typing import Dict, AnyStr, NewType, Union
+from typing import Any, Dict, NewType, Union
 
 Namespace = NewType("Namespace", None)
 
@@ -50,7 +50,9 @@ class CustomFormatter(logging.Formatter):
         return logging.Formatter(self.formats.get(record.levelno)).format(record)
 
 
-def setup_logging(args: Namespace, config: Dict[AnyStr, Union[AnyStr, Dict]]) -> None:
+def setup_logging(
+    args: Namespace, config: Dict[str, Union[str, Dict[str, Any]]]
+) -> None:
     """Selects the behavior of the logging that the program uses from the arguments and the config passed to the program.
 
     :param args: Config passed as arguments to the program.
@@ -90,7 +92,7 @@ def setup_logging(args: Namespace, config: Dict[AnyStr, Union[AnyStr, Dict]]) ->
     )
 
 
-def validate_config(config: Dict[AnyStr, Dict]) -> Dict[AnyStr, Dict]:
+def validate_config(config: Dict[str, Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
     """Validate that the config contains the necessary options.
     If it doesn't then add the default values for missing options.
 
@@ -105,7 +107,7 @@ def validate_config(config: Dict[AnyStr, Dict]) -> Dict[AnyStr, Dict]:
             or not plugin_config["args"]["store"]["no_store"]
         ):
             logger.warning(
-                f"No 'store' args were specified for: '{plugin_id}', setting default values"
+                f"No store args were specified for: '{plugin_id}', setting default values"
             )
 
             if "global_store" not in plugin_config["args"]["store"]:
@@ -124,17 +126,20 @@ def validate_config(config: Dict[AnyStr, Dict]) -> Dict[AnyStr, Dict]:
 
     if not config["args"]["daemon"]:
         logger.warning(f"No daemon args were specified, setting default values")
+        config["args"]["daemon"] = {}
+
+    if not config["args"]["daemon"].get("worker"):
         logger.warning(
             f"No worker count setting specified, setting worker count to '5'"
         )
-        config["args"]["daemon"] = {"workers": 5}
+        config["args"]["daemon"]["workers"] = 5
 
     return config
 
 
 def setup_plugin_arguments(
-    args: Dict[AnyStr, AnyStr], config: Dict[AnyStr, Dict]
-) -> Dict[AnyStr, Dict]:
+    args: Dict[str, str], config: Dict[str, Dict[str, Any]]
+) -> Dict[str, Dict[str, Any]]:
     """Setup the arguments for each plugin, if any arguments related to plugins are defined in the arguments
     then those arguments will override/add the value in the config.
 
@@ -189,8 +194,8 @@ def setup_plugin_arguments(
 
 
 def setup_daemon_arguments(
-    args: Dict[AnyStr, AnyStr], config: Dict[AnyStr, Dict]
-) -> Dict[AnyStr, Dict]:
+    args: Dict[str, str], config: Dict[str, Dict[str, Any]]
+) -> Dict[str, Dict[str, Any]]:
     """Setup the arguments for the daemon, if any arguments related to the daemon are defined in the arguments
     then those arguments will override/add the value in the config.
 
@@ -214,8 +219,8 @@ def setup_daemon_arguments(
 
 
 def setup_trident_arguments(
-    args: Dict[AnyStr, AnyStr], config: Dict[AnyStr, Dict]
-) -> Dict[AnyStr, Dict]:
+    args: Dict[str, Any], config: Dict[str, Dict[str, Any]]
+) -> Dict[str, Dict[str, Any]]:
     """Setup the arguments for Trident, if any arguments related to Trident are defined in the arguments
     then those arguments will override/add the value in the config.
 
@@ -239,7 +244,7 @@ def setup_trident_arguments(
 
 
 def apply_runtime_arguments(
-    args: Namespace, config: Dict[AnyStr, Union[AnyStr, Dict]]
+    args: Namespace, config: Dict[str, Union[str, Dict[str, Any]]]
 ) -> None:
     """Applies and combines the arguments passed by arguments and the from the config selected.
     If the config values collides with the arguments values, then the argument values are selected.
@@ -285,6 +290,7 @@ def apply_runtime_arguments(
         },
         config,
     )
+    print(vars(args))
     config = setup_daemon_arguments(
         {
             "daemon": {
@@ -318,6 +324,7 @@ if __name__ == "__main__":
         trident_argument_parser.args, trident_config_parser.args
     )
     logger = logging.getLogger(__name__)
+    print(config)
 
     try:
         trident_config = TridentConfig(config)
