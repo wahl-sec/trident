@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import setuptools
-from glob import glob
 
 with open("README.md", "r") as README:
     long_description = README.read()
@@ -26,11 +25,12 @@ setuptools.setup(
     install_requires=["psutil>=5.9.0"],
     extras_require={
         "dev": [
-            "wheel>=0.35.1",
-            "pytest>=6.2.1",
-            "sphinx>=4.1.2",
-            "furo==2021.7.28b40",
-            "black>=21.7b0",
+            "wheel>=0.38.4",
+            "pytest>=7.2.1",
+            "sphinx>=6.1.3",
+            "furo==2022.12.7",
+            "black>=23.1.0",
+            "mypy>=1.0.0"
         ]
     },
     zip_safe=False,
